@@ -3,168 +3,193 @@ SARI-SARI SMART - PROGRESS REPORT
 ================================================================================
 Date: June 24, 2026
 Project: HTML Prototype for Sari-Sari Store Management App
+Version: v2 (refactored based on interview findings)
 ================================================================================
 
 PROJECT OVERVIEW
 --------------------------------------------------------------------------------
-Sari-Sari Smart is a mobile-first, simplified sales, inventory, and debt-tracking
-application designed for traditional sari-sari store owners. The prototype is built
-as a multi-page HTML application with shared CSS and JavaScript.
+Sari-Sari Smart is a mobile-first daily business companion for traditional sari-sari
+store owners. Refactored from an item-by-item POS system to a daily awareness tool
+based on interview findings. Three pillars: Stock Tracker | Daily Cash Summary |
+Utang Notebook.
 
 ================================================================================
-FILES (13 total)
+FILES (14 total)
 ================================================================================
 
 Core Files:
   1. style.css         - Complete stylesheet with phone frame, theme, all screen styles
   2. app.js            - Page-aware JavaScript with state management, localization, logic
 
-HTML Pages (10):
-  3. index.html        - Entry point: splash screen + setup form → redirects to sales
-  4. sales.html        - Sales list, New Sale button, tutorial overlay, confirm modal
-  5. new_sale.html     - Product search, cart with quantity controls, cash/debt payment
-  6. inventory.html    - Product cards with image+name, filter bar with chips, product detail overlay
-  7. add_product.html  - Add/edit product form, restock overlay
-  8. debts.html        - Debt summary, customer list, customer detail & payment overlays
-  9. new_debt.html     - Manual debt entry form
-  10. reports.html     - Day/Week/Month toggles, sales/profit, transactions, best-sellers
-  11. help.html        - Help menu, replay tutorial, how-to-use accordion overlay
-  12. setting.html     - Language, text size, store info, data management, confirm modal
+HTML Pages (11):
+  3. index.html        - Intro screen: splash + setup overlay → redirects to home or tutorial
+  4. home.html         - NEW: Dashboard with 4 summary cards (Earnings, Stock, Debts, EOD) + business tips
+  5. sales.html        - Daily Cash Summary: Gastos + Kita → auto-calculates profit & revolving fund
+  6. new_sale.html     - Repurposed: Add a Specific Sale (notable items/utang purchases)
+  7. inventory.html    - Stocks with visual status (Marami Pa/Medyo Kulang/Wala Na)
+  8. add_product.html  - Add Stock form with markup pricing helper (cost × markup% → suggested price)
+  9. debts.html        - Utang tracking: customer list, detail overlay, payment recording
+  10. new_debt.html    - Manual debt entry form
+  11. reports.html     - Day/Week/Month toggles, sales/profit, transactions, best-sellers (not in nav)
+  12. help.html        - Help menu, replay tutorial, how-to-use accordion overlay
+  13. setting.html     - Language, text size, store info, data management (no bottom nav)
 
 Documentation:
-  13. instructions.txt - Full product specification document
+  14. instructions.txt  - Original product specification
 
 ================================================================================
 ALL MODULES IMPLEMENTED
 ================================================================================
 
 [✓] 1. Onboarding / First-time tutorial
-     - Splash screen with animated loader
+     - Splash screen with animated loader (index.html)
      - Setup form (store name, owner name, language)
-     - Mandatory tutorial on first launch (5 steps, guided overlay with highlights)
+     - Mandatory tutorial on first launch (8 steps, guided overlay with highlights, cross-page)
      - Replayable tutorial from Help
 
-[✓] 2. Sales
-     - Today's sales list with items, amounts, payment mode
-     - New Sale flow: product search → cart with +/- controls → payment
-     - Cash mode with amount paid and change calculation
-     - Debt mode with customer name entry and suggestions
-     - Confirmation modal before completing sale
-     - Success toast notification
-     - Automatic stock deduction on sale
+[✓] 2. Home Dashboard (NEW)
+     "Kamusta ang Tindahan Ngayon?" summary screen
+     - 4 summary cards: Today's Earnings, Stock Alert, Outstanding Debts, End-of-Day
+     - Business tip card — personalized based on actual store data:
+       Priority 1: Out-of-stock items
+       Priority 2: Low-stock items (name + quantity)
+       Priority 3: Sales not recorded today
+       Priority 4: Outstanding debts with customer count
+       Priority 5: Sales recorded but EOD not done
+       Priority 6: All caught up (positive feedback)
+       Fallback: Rotating tips
+     - Tap cards navigate to relevant pages
+     - End-of-Day card triggers 3-step closing routine
 
-[✓] 3. Inventory
-     - Product cards with generic product icon + name (minimal, clickable design)
-     - Red border + background highlight for low-stock products
-     - Filter button beside search bar toggles filter chip bar
-     - Filter chips: All, Low Stock, and unit types (Piece, Sachet, Bottle, Pack, Can, kg)
-     - Search + filter work together
-     - Product detail overlay (tap card): shows icon, cost/selling price, stock level, threshold, unit
-     - Edit and Restock buttons in product detail overlay
-     - Add Product form (name, cost/selling price, stock, threshold, unit)
-     - Edit Product (same form, pre-filled)
-     - Restock overlay with live preview
+[✓] 3. Daily Cash Summary (Sales screen, redesigned)
+     - Two big inputs: Gastos sa Paninda + Kinikita Ngayon
+     - Auto-calculates: Gross Profit, Estimated Net Profit, Revolving Fund
+     - Live preview as user types
+     - Already-recorded state with checkmark
+     - Add Specific Sale section for notable items/utang purchases
+     - Specific sale auto-creates debt entry if customer name provided
 
-[✓] 4. Debts
+[✓] 4. Stocks (Inventory, redesigned)
+     - Color-coded visual status cards: 🟢 Plenty / 🟠 Getting Low / 🔴 Out of Stock
+     - "Kulang Na" section at top showing running-low items
+     - Tap card to cycle status (Plenty → Low → Out → Plenty)
+     - Quick "Sold" button to deduct stock quantity
+     - Markup helper: enter cost + markup % → auto-suggests selling price
+     - Edit/Restock via add_product.html
+
+[✓] 5. Utang (Debts)
      - Total outstanding summary card (green)
      - Customer debt list with balances and last activity
      - Customer detail overlay with debt/payment history
      - Record Payment overlay with remaining balance preview
      - Fully settled indicator (✓)
      - Manual debt entry via new_debt page
-     - Automatic debt recording from sales (Debt payment mode)
+     - Auto-debt recording from Specific Sale when customer named
 
-[✓] 5. Reports
+[✓] 6. End-of-Day Closing Routine (NEW)
+     - 3-step guided process:
+       Step 1: Cash in drawer (enter amount)
+       Step 2: Stock check (quick visual, shows low-stock count)
+       Step 3: Debt payments (shows today's payments)
+     - Final summary: earnings, profit, low-stock count, outstanding debts
+     - One-tap finish
+
+[✓] 7. Reports (embedded, accessible directly)
      - Period toggles: Day / Week / Month
      - Total Sales and Profit summary cards
      - Recent transactions list
      - Best-selling products ranking
      - Low-stock items summary
 
-[✓] 6. Help
+[✓] 8. Help
      - Menu: Replay Tutorial, How to Use, Contact/Info, About
      - How to Use accordion (4 topics: Sales, Products, Debts, Reports)
      - Toast-based quick info for Contact and About
 
-[✓] 7. Settings
+[✓] 9. Settings
      - Language switch (English / Filipino)
      - Text size (Standard / Large / Extra Large)
      - Store information (name, owner)
      - Data management (Export, Import placeholder, Reset)
      - Confirmation modal for destructive actions
+     - No bottom nav (matches add_product/new_sale/new_debt pattern)
 
 ================================================================================
 FEATURES IMPLEMENTED
 ================================================================================
 
-Must-have:
+Core (post-interview):
   [✓] Mobile-first layout (393×852px phone frame)
-  [✓] Bottom navigation (5 tabs: Sales, Inventory, Debts, Reports, Help)
-  [✓] First-launch tutorial (mandatory guided walkthrough)
-  [✓] Sales entry (product search, cart, payment)
-  [✓] Inventory list with filter, search, product detail overlay, and add/edit products
-  [✓] Debt list and payment recording
-  [✓] Simple reports (period-based sales, profit, best-sellers)
-  [✓] Settings with language switch (EN/FIL)
-  [✓] Clean English default labels with data-i18n structure
+  [✓] Home dashboard with 4 summary cards + personalized business tips
+  [✓] Bottom navigation (5 tabs: Home, Stocks, Sales, Utang, Help)
+  [✓] First-launch tutorial (8-step guided walkthrough across all pages)
+  [✓] Daily Cash Summary (Gastos + Kita → auto profit)
+  [✓] Stock status system (Plenty / Getting Low / Out of Stock with color codes)
+  [✓] End-of-Day closing routine (3-step guided process)
+  [✓] Utang tracking and payment recording
+  [✓] Settings with language switch (EN/FIL) and text size
+  [✓] Markup pricing helper (cost × markup% → suggested selling price)
+  [✓] localStorage persistence (products, stock statuses, daily entries, debts, EOD data)
 
 Should-have:
   [✓] Replay tutorial from Help (with Skip button)
-  [✓] Low-stock warnings (badge indicator)
-  [✓] Confirmation modals (complete sale, reset data)
+  [✓] Low-stock warnings (badge indicator, color-coded cards)
+  [✓] Confirmation modals (reset data)
   [✓] Text size settings (3 levels)
-  [✓] localStorage persistence (settings, products, sales, debts)
-  [✓] Toast notification system (success/error)
+  [✓] Toast notification system (success/error, bottom-anchored)
   [✓] Suggested customer names on debt entry
+  [✓] Search on Stocks page
+  [✓] Quick "Sold" button for stock deduction
+  [✓] Splash screen separated from dashboard (home.html vs index.html)
 
-Excluded (per spec):
+Excluded (by design):
+  [–] Item-by-item POS (replaced by Daily Cash Summary)
   [–] Barcode scanning
   [–] E-wallet integration
   [–] Cloud sync
   [–] User accounts
   [–] Supplier management
-  [–] Advanced analytics
+  [–] Advanced analytics / charts
   [–] Social sharing
-  [–] AI recommendations
   [–] Notification systems
   [–] Multi-store support
-  [–] Complex charts
-  [–] Printer integration
 
 ================================================================================
 ARCHITECTURE
 ================================================================================
 
 Multi-Page Structure:
-  - 10 HTML files, each with its own phone frame
+  - 11 HTML files, each with its own phone frame
   - Shared style.css for consistent theming
-  - Shared app.js with page-aware initialization
+  - Shared app.js with page-aware initialization (switch/case per page name)
 
 Navigation:
   - Bottom nav uses <a> tags for native page navigation
-  - 5 main nav pages (sales, inventory, debts, reports, help) have bottom nav with bottom-nav id
-  - 3 sub-pages (new_sale, add_product, new_debt) have NO bottom nav — only header with back + gear
+  - 5 main nav pages (home, stocks/inventory, sales, utang/debts, help) have bottom nav
+  - Sub-pages (new_sale, add_product, new_debt, setting) have NO bottom nav
   - Sub-pages highlight parent nav tab via pageToNav mapping
   - Settings gear passes ?from=PAGENAME for smart back-button destination
-  - Sub-pages mapped through pageToNav (new_sale→sales, add_product→inventory, new_debt→debts)
 
 State Management:
-  - In-memory state object (state) with full application data
-  - localStorage persistence across all pages (same origin)
-  - Products, sales, customers, debts preserved between page loads
+  - In-memory state object with full application data
+  - localStorage keys: sss_settings, sss_products, sss_sales, sss_customers,
+    sss_debts, sss_usedNames, sss_stockStatuses, sss_dailyEntries,
+    sss_specificSales, sss_eodData
+  - New state fields: stockStatuses, dailyEntries, specificSales, endOfDayData
 
 Localization:
   - Two languages: English (default) and Filipino
   - data-i18n attributes on all user-facing text
-  - applyLanguage() function updates all text dynamically
+  - applyLanguage() updates all text dynamically + refreshes all views
   - Translation dictionary with 100+ keys per language
 
-Data Flow:
-  1. User completes sale on new_sale.html → sale saved to state + localStorage → redirect to sales.html
-  2. Add/edit product on add_product.html → product saved → redirect to inventory.html
-  3. Record debt on new_debt.html → debt saved → redirect to debts.html
-  4. Record payment on debts.html overlay → payment saved → refresh debts list
-  5. Settings changes on setting.html → saved to state → applied immediately
+Data Flow (v2):
+  1. User visits home → cards show real-time summaries of all data
+  2. Sales page → enter gastos + kita → dailyEntry saved → home card updates
+  3. Stocks page → tap to cycle status, Sold button to deduct → stockStatuses updated
+  4. Specific sale → auto-creates debt if customer named
+  5. End-of-Day → 3 steps → eodData saved → home card shows completion
+  6. Settings → saved to state → applied immediately
 
 ================================================================================
 DESIGN
@@ -176,6 +201,7 @@ Visual Direction:
   - Surfaces: White with subtle borders
   - Accent: Warm yellow/amber (#f59e0b)
   - Danger: Muted red (#dc2626)
+  - Blue info: #0284c7
   - Typography: Inter font family
   - Rounded corners, soft cards, large touch targets
   - Clean, calm, uncluttered interface
@@ -191,52 +217,72 @@ Phone Frame:
   - Responsive scaling for smaller viewports
 
 Tutorial:
-  - 8-step guided tour across all 5 main pages (sales, inventory, debts, reports, help)
+  - 8-step guided tour: Sales → Stocks → Utang → Home → Help
   - Smart box positioning: auto-places tutorial box at top or bottom based on highlight location
   - Cross-page navigation with localStorage state persistence
   - Replayable from Help page
+  - Splash screen skipped during tutorial for fast transitions
 
-Layout:
-  - .app-content has 16px horizontal padding for consistent edge spacing
-  - H2 page titles removed (header already shows page name via JS)
-  - Product cards use vertical layout (info on top, actions below) to handle variable-length text
-  - .btn-card has white-space: nowrap to prevent text wrapping in buttons
+Key Layout Decisions:
+  - home.html vs index.html: Dashboard separate from intro/splash
+  - Bottom nav on main pages only (home, stocks, sales, utang, help)
+  - Toast at bottom of screen (above home bar)
+  - Stock cards with colored left border and accent backgrounds
+  - Daily sales with large peso input fields
+  - EOD with step-by-step numbered cards
 
 ================================================================================
 FIXES & CHANGES LOG
 ================================================================================
 
-[✓] Fixed: `page` ReferenceError in init() — caused splash screen to freeze (removed dead code)
+=== v1 fixes ===
+[✓] Fixed: `page` ReferenceError in init() — caused splash screen to freeze
 [✓] Fixed: .app-content lacked horizontal padding — text was flush against phone edges
-[✓] Fixed: Tutorial highlight offset — was positioned relative to #app instead of tutorial-overlay
-[✓] Fixed: Tutorial box blocked highlighted elements — now auto-positions based on screen location
-[✓] Fixed: Tutorial only covered Sales page — expanded to all 5 main pages
-[✓] Fixed: Product card format changed on language switch — changed to vertical column layout
-[✓] Fixed: Settings back button always went to sales.html — now uses ?from= query parameter
+[✓] Fixed: Tutorial highlight offset — positioned relative to tutorial-overlay
+[✓] Fixed: Tutorial box blocked highlighted elements — auto-positions based on screen location
+[✓] Fixed: Tutorial only covered Sales — expanded to all pages
+[✓] Fixed: Product card format broke on language switch — changed to vertical column layout
+[✓] Fixed: Settings back button always went to sales — now uses ?from= query parameter
 [✓] Fixed: Sub-pages settings back mapped raw pageName — now maps through pageToNav
-[✓] Fixed: Sub-pages had bottom navigation bar — removed from new_sale, add_product, new_debt
-[✓] Fixed: Redundant h2 page titles below header — removed from all 5 main pages
-[✓] Fixed: Dead .panel-header CSS class — removed
-[✓] Verified: Language and text size functionality on settings page works correctly
-[✓] Added: Filter button (funnel icon) beside search bar on Inventory page — toggles filter chip bar
-[✓] Added: Filter chips for All, Low Stock, and unit types (Piece, Sachet, Bottle, Pack, Can, kg) with active state
-[✓] Added: Redesigned inventory cards — show generic product icon + name only, clickable, with red border/background for low-stock items
-[✓] Added: Product detail overlay — tap inventory card opens full detail view (cost/selling price, stock, threshold, unit) with Edit and Restock links
-[✓] Added: "All" / "Lahat" string keys to localization dictionary for filter chip
-[✓] Added: Close product detail overlay by clicking outside the content area (convenience)
-[✓] Fixed: Search bar margin-bottom bug — restored margin on `.search-bar` while `.search-filter-row .search-bar` override keeps inventory layout correct
+[✓] Fixed: Sub-pages had bottom navigation — removed from new_sale, add_product, new_debt
+[✓] Fixed: Redundant h2 page titles below header — removed
+[✓] Added: Filter toggles, chips, product detail overlay with Edit/Restock on Inventory
+[✓] Added: "All" string key to localization
+[✓] Added: Close overlay by clicking outside content area
+
+=== v2 refactor (interview-based) ===
+[✓] Rewrote core from item-by-item POS to daily business companion model
+[✓] New Home dashboard with 4 summary cards + personalized business tips
+[✓] Sales screen → Daily Cash Summary (Gastos + Kita → auto profit)
+[✓] Stocks screen → color-coded visual status system (Plenty/Low/Out)
+[✓] Add Stock form → markup pricing helper (cost × markup% → suggested price)
+[✓] New End-of-Day closing routine (3-step guided process)
+[✓] Navigation reordered: Home → Stocks → Sales → Utang → Help
+[✓] Reports removed from nav (accessible directly)
+[✓] New state model: dailyEntries, stockStatuses, specificSales, endOfDayData
+
+=== Post-refactor fixes ===
+[✓] Fixed: Tutorial step 5/8 opened setup overlay on index.html — added ?tutorial=true check
+[✓] Fixed: Tutorial splash delay made transitions sluggish — skipped during tutorial
+[✓] Fixed: Setting page had bottom nav — removed to match sub-page pattern
+[✓] Split: Created home.html as standalone dashboard, index.html only handles intro
+[✓] Added: Personalized business tips based on actual store data (out-of-stock, low stock, unrecorded sales, debts, EOD status)
+[✓] Fixed: Dead code in getBusinessTip() — removed unused specificSalesToday variable
+[✓] Fixed: Overlap in getBusinessTip() — Priority 1 and 2 both checked out-of-stock items
+[✓] Changed: Toast position from top to bottom of screen
 
 ================================================================================
 NEXT STEPS / POTENTIAL ENHANCEMENTS
 ================================================================================
 
-1. Add undo functionality for completed sales (5-second undo toast)
+1. Add undo functionality for stock deductions (5-second undo toast)
 2. Implement export/import data features (currently console.log placeholder)
-3. Add keyboard navigation and ARIA labels for better accessibility
-4. Create unit tests for core business logic (sales calculations, debt tracking)
-5. Polish empty states with illustrations or more helpful messages
-6. Add haptic/visual feedback for button taps on mobile
-7. Implement the optional chart in Reports (simple bar chart for sales trends)
+3. Show business tips in Filipino when language is set to FIL
+4. Make business tip area tappable — expand to full list of insights
+5. Add unit tests for core business logic (sales calculations, debt tracking)
+6. Polish empty states with illustrations or more helpful messages
+7. Compare today's sales to yesterday's for trend insights
+8. Add the optional chart in Reports (simple bar chart for sales trends)
 
 ================================================================================
 END OF PROGRESS REPORT

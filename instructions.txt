@@ -1,0 +1,846 @@
+Sari-Sari Smart  
+HTML Prototype Product Rundown for AI Agents
+
+
+
+ 1. Product Positioning
+
+Sari-Sari Smart is a mobile-first, simplified sales, inventory, and debt-tracking application designed for traditional sari-sari store owners.
+
+The product should not be treated as a modern enterprise POS clone. Its value lies in:
+
+- low learning curve,
+- simple navigation,
+- clear wording,
+- minimal but essential features,
+- smartphone-friendly interaction,
+- accessibility for older and less tech-savvy users.
+
+The prototype should visually and behaviorally communicate:
+
+- familiarity,
+- clarity,
+- safety,
+- ease of use,
+- confidence-building.
+
+
+
+ 2. Default Language and Localization Rules
+
+ Language Rules
+
+- Default language must be English
+- Language must be changeable in Settings
+- The system should be designed to support localization from the beginning
+- All visible text should be structured in a way that can later be mapped to translation keys
+
+ Initial Language Support
+
+The prototype should support at least:
+
+- English as default
+- Filipino as alternate language
+
+ Localization Requirements
+
+AI agents should avoid hardcoding user-facing text directly into all components where possible. Instead, design around a lightweight text dictionary structure such as:
+
+```js
+const strings = {
+  en: {
+    sales: "Sales",
+    inventory: "Inventory",
+    debts: "Debts",
+    reports: "Reports",
+    help: "Help",
+    next: "Next",
+    skip: "Skip",
+    save: "Save"
+  },
+  fil: {
+    sales: "Benta",
+    inventory: "Stocks",
+    debts: "Utang",
+    reports: "Ulat",
+    help: "Tulong",
+    next: "Susunod",
+    skip: "Laktawan",
+    save: "I-save"
+  }
+};
+```
+
+The prototype does not need a complete production localization engine, but its structure should make language switching realistic and easy.
+
+
+
+ 3. Core UX Philosophy
+
+AI agents should optimize for the following:
+
+ 3.1 Simplicity over completeness
+The prototype should deliberately include only the features needed for the research direction:
+
+- simple sales entry,
+- simple inventory tracking,
+- simple debt tracking,
+- simple reports,
+- tutorial and help.
+
+Do not introduce advanced POS concepts unless explicitly scoped.
+
+ 3.2 One primary action per screen
+Each screen should have one obvious main action. Avoid crowded layouts.
+
+ 3.3 Mobile-first behavior
+All layouts should be designed around a smartphone viewport first.
+
+Recommended design width:
+- 390px to 430px wide
+
+ 3.4 Large touch targets
+Buttons, cards, rows, and tabs should be finger-friendly.
+
+ 3.5 Readable typography
+Text should be easy to read for older adults.
+
+ 3.6 Safe interaction
+Actions should be reversible or require confirmation where appropriate.
+
+ 3.7 Familiar terminology
+Use plain labels. Avoid business software jargon.
+
+
+
+ 4. Prototype Scope
+
+The HTML prototype should simulate the essential structure and flows of the application.
+
+ Included prototype modules
+
+1. Onboarding / First-time tutorial
+2. Sales
+3. Inventory
+4. Debts
+5. Reports
+6. Help
+7. Settings
+
+
+
+ 5. Information Architecture
+
+The app should use a bottom navigation bar as the primary navigation pattern.
+
+ Main navigation tabs
+
+1. Sales
+2. Inventory
+3. Debts
+4. Reports
+5. Help
+
+ Secondary options
+Settings may be:
+- placed inside Help, or
+- accessible through a small but visible gear icon in the top-right area
+
+For simplicity in the prototype, Settings can live inside Help first.
+
+
+
+ 6. Visual Design Direction
+
+AI agents should produce a UI that looks:
+
+- calm,
+- friendly,
+- lightweight,
+- uncluttered,
+- trustworthy.
+
+ Suggested palette
+
+- Primary: green
+- Background: off-white / soft neutral
+- Surface/cards: white
+- Accent: warm yellow or orange
+- Warning: soft orange
+- Danger: muted red
+- Text: charcoal / dark gray
+
+ Typography
+Use a clean sans-serif font such as:
+- Inter,
+- Poppins,
+- Nunito,
+- or system UI fallback
+
+ Shape language
+- rounded corners,
+- soft cards,
+- large buttons,
+- moderate spacing.
+
+Avoid:
+- dense tables,
+- tiny icons,
+- technical dashboards,
+- overuse of charts,
+- dark mode as the default unless later scoped.
+
+
+
+ 7. First Launch Flow
+
+The prototype should support a first-launch mandatory tutorial sequence.
+
+ First-launch flow order
+
+1. Splash screen
+2. Simple welcome/setup screen
+3. Tutorial intro
+4. Guided walkthrough
+5. Land on main app
+
+ Setup screen fields
+
+Keep setup minimal:
+- Store name
+- Owner name
+
+Optional:
+- Language selector, defaulting to English
+
+ First-launch tutorial rules
+
+- The tutorial is mandatory on first launch
+- No Skip button during first launch
+- After onboarding is complete, the tutorial can be replayed from Help
+- Replayed tutorial should include a Skip button
+
+For the prototype, first-launch state can be simulated with:
+```js
+localStorage.setItem("hasCompletedTutorial", "true");
+```
+
+
+
+ 8. Tutorial System Requirements
+
+The tutorial is a major differentiator of the project and should be prototyped clearly.
+
+ Tutorial style
+Use a guided overlay system with:
+
+- dimmed background,
+- highlighted target element,
+- floating instruction box,
+- step indicator,
+- Next button,
+- optional action-based progression.
+
+ Tutorial content principles
+
+- Use short sentences
+- Explain one concept at a time
+- Focus on action and meaning
+- Avoid technical wording
+
+ Suggested tutorial sequence
+
+1. Bottom navigation overview
+2. Sales screen overview
+3. New sale flow
+4. Inventory overview
+5. Add/edit product
+6. Debts overview
+7. Record payment
+8. Reports overview
+9. Help / replay tutorial
+10. Completion message
+
+ Tutorial replay behavior
+
+When launched from Help:
+- show Skip button,
+- allow exit at any point.
+
+
+
+ 9. Screen-Level Functional Rundown
+
+
+
+ 9.1 Sales Screen
+
+ Purpose
+This is the most frequently used screen. It should make daily transaction recording feel quick and non-intimidating.
+
+ Primary elements
+
+- Header with page title: Sales
+- Date display
+- Large primary button: New Sale
+- List of recent sales for the current day
+
+ New Sale flow
+
+The New Sale view should include:
+
+ A. Product search / product list
+- Search field
+- Scrollable product list
+- Each product item shows:
+  - product name
+  - selling price
+
+ B. Quantity selection
+When a product is selected:
+- show plus/minus controls
+- show quantity value clearly
+
+ C. Sale cart / item list
+Display:
+- selected item name
+- quantity
+- subtotal
+- remove option
+
+ D. Total section
+Display:
+- total amount
+- amount paid input
+- automatic change calculation
+
+ E. Payment mode
+Simple choices:
+- Cash
+- Debt
+
+If Debt is selected:
+- ask for customer name
+- optionally suggest existing customer names
+
+ F. Finish action
+Large button:
+- Complete Sale
+
+ Confirmation modal
+Before finalizing:
+- list items
+- total
+- payment mode
+- amount paid if applicable
+
+ Post-save feedback
+Show a lightweight success message:
+- “Sale saved.”
+
+Optional prototype enhancement:
+- undo action for a few seconds
+
+
+
+ 9.2 Inventory Screen
+
+ Purpose
+Allow users to see products, stock levels, and low-stock warnings without complexity.
+
+ Primary elements
+
+- Header: Inventory
+- Search field
+- Large primary button: Add Product
+- Product list cards
+
+ Product card contents
+
+Each card should show:
+- product name
+- current stock
+- selling price
+- low-stock visual indicator
+
+Optional actions:
+- Edit
+- Restock
+
+ Add/Edit Product form
+
+Fields:
+- Product name
+- Cost price
+- Selling price
+- Current stock
+- Low-stock threshold
+
+Optional prototype field:
+- Unit type (piece, sachet, bottle), but only if kept simple
+
+ Buttons
+- Save
+- Cancel
+
+ Restock flow
+
+Simple modal or screen:
+- current stock
+- quantity to add
+- new resulting stock preview
+- confirm button
+
+
+
+ 9.3 Debts Screen
+
+ Purpose
+Track customer utang clearly and simply.
+
+ Primary elements
+
+- Header: Debts
+- Total outstanding debt summary
+- Large primary button: New Debt
+- Customer debt list
+
+ Debt list card contents
+
+Each card should show:
+- customer name
+- current balance
+- last activity date
+- action button: Record Payment
+
+Optional card action:
+- tap card to open debt history
+
+ New Debt flow
+
+Two design options exist:
+
+ Option A: Debt created from Sales
+If a user selects “Debt” as payment mode in Sales, the debt is automatically recorded.
+
+ Option B: Dedicated manual debt entry
+Allow manual debt record creation directly in Debts.
+
+For the prototype, support both visually if possible, but prioritize:
+- debt creation through Sales,
+- payment update through Debts.
+
+ Customer debt details
+
+On customer detail screen:
+- current balance
+- debt history
+- payment history
+- button to record payment
+
+ Record payment flow
+
+Fields:
+- payment amount
+- optional note
+- updated remaining balance preview
+
+Button:
+- Save Payment
+
+Confirmation:
+- “Payment saved.”
+
+If fully paid:
+- indicate clearly:
+  - “Fully settled”
+
+
+
+ 9.4 Reports Screen
+
+ Purpose
+Provide useful information without overwhelming the user.
+
+ Principle
+This should not look like accounting software.
+
+ Main report cards
+
+Display summary cards for:
+
+- Today
+- This Week
+- This Month
+
+Each card shows:
+- total sales
+- profit
+
+ Additional sections
+
+- Recent transactions
+- Best-selling products
+- Low-stock items summary
+
+ Filtering
+Simple period toggles:
+- Day
+- Week
+- Month
+
+Avoid advanced filter controls in the first version.
+
+ Visuals
+Prefer:
+- cards,
+- lists,
+- simple stat rows.
+
+Avoid:
+- complicated graphs,
+- dense tables,
+- multi-series charts.
+
+If using a chart at all, it should be optional and extremely simple.
+
+
+
+ 9.5 Help Screen
+
+ Purpose
+Provide reassurance, learning support, and easy re-entry to guidance.
+
+ Main options
+
+- Replay Tutorial
+- How to Use
+- Contact/Info placeholder
+- About App
+- Settings
+
+ How to Use content
+
+Simple grouped help topics:
+- Recording a Sale
+- Adding Products
+- Tracking Debts
+- Viewing Reports
+
+These can be accordion cards or simple list items leading to short pages.
+
+
+
+ 9.6 Settings Screen
+
+ Purpose
+Allow customization without cluttering the main experience.
+
+ Required settings
+
+ A. Language
+- Default: English
+- Options:
+  - English
+  - Filipino
+
+ B. Text size
+Allow three levels:
+- Standard
+- Large
+- Extra Large
+
+ C. Tutorial / Help preferences
+- Replay tutorial
+
+ D. Store information
+- Store name
+- Owner name
+
+ E. Theme or color mode
+Optional only if easy to implement; not necessary for the first prototype
+
+ F. Data management
+Prototype placeholders:
+- Export data
+- Import data
+- Reset sample data
+
+
+
+ 10. Feature Prioritization
+
+AI agents should treat these as must-have, should-have, and exclude-for-now.
+
+ Must-have
+- Mobile-first layout
+- Bottom navigation
+- First-launch tutorial
+- Sales entry
+- Inventory list and add/edit
+- Debt list and payment recording
+- Simple reports
+- Settings with language switch
+- Clean English default labels
+
+ Should-have
+- Replay tutorial
+- Low-stock warnings
+- Confirmation modals
+- Undo feedback
+- Text size settings
+- Mock local storage persistence
+
+ Exclude for now
+- Barcode scanning
+- e-wallet integration
+- cloud sync
+- user accounts
+- supplier management
+- advanced analytics
+- social sharing
+- AI recommendations
+- notification systems
+- multi-store support
+- complex charts
+- printer integration
+
+
+
+ 11. Recommended UX Behaviors
+
+ Confirm risky actions
+Use confirmation modals for:
+- deleting a product
+- completing a sale
+- resetting data
+
+ Inline validation
+Errors should appear close to the field and in plain language.
+
+Bad:
+- “Form submission failed.”
+
+Good:
+- “Please enter a product name.”
+
+ Success feedback
+Use simple success messages:
+- “Product saved.”
+- “Sale saved.”
+- “Payment recorded.”
+
+ Keep flows short
+Every major task should require as few steps as possible.
+
+
+
+ 12. Recommended UI Copy Tone
+
+The app tone should be:
+
+- simple,
+- respectful,
+- calm,
+- helpful.
+
+Avoid:
+- technical language,
+- slang-heavy copy,
+- aggressive warnings,
+- overly playful language that reduces clarity.
+
+ Example copy style
+
+Good:
+- “Add Product”
+- “Record Payment”
+- “Low Stock”
+- “Save”
+- “Try Again”
+
+Less ideal:
+- “Initialize inventory object”
+- “Transaction completed successfully in local store”
+- “Proceed to next module”
+
+
+
+ 13. Suggested HTML Prototype Structure
+
+AI agents building the prototype can choose either:
+
+ Option A: Single-page prototype
+Use one HTML file with:
+- hidden sections,
+- state switching via JS,
+- modal overlays,
+- tutorial system.
+
+ Option B: Multi-page prototype
+Use separate HTML files:
+- `index.html`
+- `sales.html`
+- `inventory.html`
+- `debts.html`
+- `reports.html`
+- `help.html`
+- `settings.html`
+
+For fast iteration and tutorial logic, single-page is preferred.
+
+ Suggested component structure
+
+- App shell
+- Header
+- Bottom nav
+- Main content panels
+- Modal system
+- Tutorial overlay system
+- Settings drawer/modal
+- Toast notification system
+
+
+
+ 14. State Simulation Recommendations
+
+Since this is an HTML prototype, AI agents should simulate data with:
+
+- in-memory JS objects, or
+- `localStorage`
+
+ Suggested mock data entities
+
+- products
+- sales
+- customers
+- debts
+- debtPayments
+- settings
+- tutorialProgress
+
+ Sample settings object
+
+```js
+const settings = {
+  language: "en",
+  textSize: "large",
+  storeName: "My Store",
+  ownerName: "Owner",
+  hasCompletedTutorial: false
+};
+```
+
+
+
+ 15. Accessibility and Usability Requirements
+
+AI agents should treat these as intentional design constraints, not optional polish.
+
+ Required
+- large tappable buttons
+- high contrast text
+- clear spacing
+- visible labels on icons
+- no icon-only critical actions
+- no hidden gestures required to use the app
+- no mandatory horizontal scrolling
+- clear empty states
+
+ Strongly recommended
+- keyboard navigability in prototype
+- aria labels where practical
+- visible focus styles
+- semantic HTML structure
+
+
+
+ 16. Unique Features That Fit the Study Direction
+
+These are the features that make the project aligned with the revised research direction.
+
+ 16.1 Mandatory first-use guided tutorial
+This directly addresses low digital confidence.
+
+ 16.2 Replayable tutorial from Help
+Supports gradual learning and confidence recovery.
+
+ 16.3 Simplified mode by design
+The entire app is effectively a simplified mode rather than a professional POS interface.
+
+ 16.4 Language customization
+Supports accessibility and comfort.
+
+ 16.5 Adjustable text size
+Very relevant for older users.
+
+ 16.6 Minimal essential workflows
+Only core sari-sari tasks are present.
+
+ 16.7 Mobile-first and phone-appropriate UI
+Important because many users will not have tablets or POS devices.
+
+
+
+ 17. Suggested MVP Prototype Build Order
+
+AI agents should ideally build in this order:
+
+ Phase 1
+- App shell
+- Navigation
+- Visual theme
+- Screen placeholders
+
+ Phase 2
+- Sales screen flow
+- Inventory list and add/edit product
+
+ Phase 3
+- Debts screen and payment flow
+- Reports summary cards
+
+ Phase 4
+- Help and Settings
+- Language switching
+- Text size switching
+
+ Phase 5
+- Tutorial overlay system
+- First-launch logic
+- Replay tutorial logic
+
+ Phase 6
+- Validation
+- Toasts
+- Confirmation modals
+- Sample persistence
+
+
+
+ 18. Final Product Characterization
+
+AI agents should build the prototype as:
+
+> A simple, supportive, beginner-friendly store management assistant that helps sari-sari store owners record sales, track stock, and monitor debts using a calm, easy-to-learn mobile interface.
+
+It should not feel like:
+- enterprise software,
+- cashier software for chain stores,
+- analytics-heavy accounting software,
+- a crowded Android admin panel.
+
+It should feel like:
+- a digital notebook with guidance,
+- a basic store helper,
+- something safe to try,
+- something easy to relearn.
+
+
+
+If needed next, a follow-up can be generated in either of these formats:
+
+1. full screen-by-screen wireframe specification,  
+2. HTML/CSS component plan,  
+3. single-page prototype file structure, or  
+4. UI text dictionary for English and Filipino.

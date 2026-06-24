@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sari-Sari Smart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="app-container" id="app">
+
+      <!-- HEADER (hidden during splash, shown for setup) -->
+      <header class="app-header">
+        <h1 class="header-title" id="headerTitle">Sari-Sari Smart</h1>
+        <a class="header-btn" id="settingsBtn" href="setting.html" aria-label="Settings">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </a>
+      </header>
+
+      <!-- CONTENT (empty — just placeholder for the overlay to sit on top of) -->
+      <main class="app-content" id="appContent"></main>
+
+      <!-- SPLASH SCREEN -->
+      <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+          <div class="splash-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <h1 class="splash-title">Sari-Sari Smart</h1>
+          <p class="splash-subtitle" data-i18n="splashSubtitle">Your simple store helper</p>
+          <div class="splash-loader"></div>
+        </div>
+      </div>
+
+      <!-- SETUP OVERLAY -->
+      <div class="overlay" id="setupOverlay">
+        <div class="overlay-content overlay-sm">
+          <div class="overlay-header">
+            <h2 data-i18n="welcome">Welcome to Sari-Sari Smart!</h2>
+            <p data-i18n="setupPrompt">Let's get started. Tell us about your store.</p>
+          </div>
+          <div class="form-group">
+            <label for="setupStoreName" data-i18n="storeName">Store Name</label>
+            <input type="text" id="setupStoreName" class="form-input" placeholder="e.g. Maria's Store" data-i18n-placeholder="storeNamePlaceholder">
+          </div>
+          <div class="form-group">
+            <label for="setupOwnerName" data-i18n="ownerName">Owner Name</label>
+            <input type="text" id="setupOwnerName" class="form-input" placeholder="e.g. Maria Santos" data-i18n-placeholder="ownerNamePlaceholder">
+          </div>
+          <div class="form-group">
+            <label for="setupLanguage" data-i18n="language">Language</label>
+            <select id="setupLanguage" class="form-input">
+              <option value="en">English</option>
+              <option value="fil">Filipino</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-full" id="btnSetupDone" data-i18n="getStarted">Get Started</button>
+        </div>
+      </div>
+
+      <!-- TOAST -->
+      <div class="toast-container" id="toastContainer"></div>
+
+    </div>
+    <div class="phone-home-bar"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

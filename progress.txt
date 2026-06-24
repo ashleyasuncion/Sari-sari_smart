@@ -1,0 +1,243 @@
+================================================================================
+SARI-SARI SMART - PROGRESS REPORT
+================================================================================
+Date: June 24, 2026
+Project: HTML Prototype for Sari-Sari Store Management App
+================================================================================
+
+PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+Sari-Sari Smart is a mobile-first, simplified sales, inventory, and debt-tracking
+application designed for traditional sari-sari store owners. The prototype is built
+as a multi-page HTML application with shared CSS and JavaScript.
+
+================================================================================
+FILES (13 total)
+================================================================================
+
+Core Files:
+  1. style.css         - Complete stylesheet with phone frame, theme, all screen styles
+  2. app.js            - Page-aware JavaScript with state management, localization, logic
+
+HTML Pages (10):
+  3. index.html        - Entry point: splash screen + setup form → redirects to sales
+  4. sales.html        - Sales list, New Sale button, tutorial overlay, confirm modal
+  5. new_sale.html     - Product search, cart with quantity controls, cash/debt payment
+  6. inventory.html    - Product cards with image+name, filter bar with chips, product detail overlay
+  7. add_product.html  - Add/edit product form, restock overlay
+  8. debts.html        - Debt summary, customer list, customer detail & payment overlays
+  9. new_debt.html     - Manual debt entry form
+  10. reports.html     - Day/Week/Month toggles, sales/profit, transactions, best-sellers
+  11. help.html        - Help menu, replay tutorial, how-to-use accordion overlay
+  12. setting.html     - Language, text size, store info, data management, confirm modal
+
+Documentation:
+  13. instructions.txt - Full product specification document
+
+================================================================================
+ALL MODULES IMPLEMENTED
+================================================================================
+
+[✓] 1. Onboarding / First-time tutorial
+     - Splash screen with animated loader
+     - Setup form (store name, owner name, language)
+     - Mandatory tutorial on first launch (5 steps, guided overlay with highlights)
+     - Replayable tutorial from Help
+
+[✓] 2. Sales
+     - Today's sales list with items, amounts, payment mode
+     - New Sale flow: product search → cart with +/- controls → payment
+     - Cash mode with amount paid and change calculation
+     - Debt mode with customer name entry and suggestions
+     - Confirmation modal before completing sale
+     - Success toast notification
+     - Automatic stock deduction on sale
+
+[✓] 3. Inventory
+     - Product cards with generic product icon + name (minimal, clickable design)
+     - Red border + background highlight for low-stock products
+     - Filter button beside search bar toggles filter chip bar
+     - Filter chips: All, Low Stock, and unit types (Piece, Sachet, Bottle, Pack, Can, kg)
+     - Search + filter work together
+     - Product detail overlay (tap card): shows icon, cost/selling price, stock level, threshold, unit
+     - Edit and Restock buttons in product detail overlay
+     - Add Product form (name, cost/selling price, stock, threshold, unit)
+     - Edit Product (same form, pre-filled)
+     - Restock overlay with live preview
+
+[✓] 4. Debts
+     - Total outstanding summary card (green)
+     - Customer debt list with balances and last activity
+     - Customer detail overlay with debt/payment history
+     - Record Payment overlay with remaining balance preview
+     - Fully settled indicator (✓)
+     - Manual debt entry via new_debt page
+     - Automatic debt recording from sales (Debt payment mode)
+
+[✓] 5. Reports
+     - Period toggles: Day / Week / Month
+     - Total Sales and Profit summary cards
+     - Recent transactions list
+     - Best-selling products ranking
+     - Low-stock items summary
+
+[✓] 6. Help
+     - Menu: Replay Tutorial, How to Use, Contact/Info, About
+     - How to Use accordion (4 topics: Sales, Products, Debts, Reports)
+     - Toast-based quick info for Contact and About
+
+[✓] 7. Settings
+     - Language switch (English / Filipino)
+     - Text size (Standard / Large / Extra Large)
+     - Store information (name, owner)
+     - Data management (Export, Import placeholder, Reset)
+     - Confirmation modal for destructive actions
+
+================================================================================
+FEATURES IMPLEMENTED
+================================================================================
+
+Must-have:
+  [✓] Mobile-first layout (393×852px phone frame)
+  [✓] Bottom navigation (5 tabs: Sales, Inventory, Debts, Reports, Help)
+  [✓] First-launch tutorial (mandatory guided walkthrough)
+  [✓] Sales entry (product search, cart, payment)
+  [✓] Inventory list with filter, search, product detail overlay, and add/edit products
+  [✓] Debt list and payment recording
+  [✓] Simple reports (period-based sales, profit, best-sellers)
+  [✓] Settings with language switch (EN/FIL)
+  [✓] Clean English default labels with data-i18n structure
+
+Should-have:
+  [✓] Replay tutorial from Help (with Skip button)
+  [✓] Low-stock warnings (badge indicator)
+  [✓] Confirmation modals (complete sale, reset data)
+  [✓] Text size settings (3 levels)
+  [✓] localStorage persistence (settings, products, sales, debts)
+  [✓] Toast notification system (success/error)
+  [✓] Suggested customer names on debt entry
+
+Excluded (per spec):
+  [–] Barcode scanning
+  [–] E-wallet integration
+  [–] Cloud sync
+  [–] User accounts
+  [–] Supplier management
+  [–] Advanced analytics
+  [–] Social sharing
+  [–] AI recommendations
+  [–] Notification systems
+  [–] Multi-store support
+  [–] Complex charts
+  [–] Printer integration
+
+================================================================================
+ARCHITECTURE
+================================================================================
+
+Multi-Page Structure:
+  - 10 HTML files, each with its own phone frame
+  - Shared style.css for consistent theming
+  - Shared app.js with page-aware initialization
+
+Navigation:
+  - Bottom nav uses <a> tags for native page navigation
+  - 5 main nav pages (sales, inventory, debts, reports, help) have bottom nav with bottom-nav id
+  - 3 sub-pages (new_sale, add_product, new_debt) have NO bottom nav — only header with back + gear
+  - Sub-pages highlight parent nav tab via pageToNav mapping
+  - Settings gear passes ?from=PAGENAME for smart back-button destination
+  - Sub-pages mapped through pageToNav (new_sale→sales, add_product→inventory, new_debt→debts)
+
+State Management:
+  - In-memory state object (state) with full application data
+  - localStorage persistence across all pages (same origin)
+  - Products, sales, customers, debts preserved between page loads
+
+Localization:
+  - Two languages: English (default) and Filipino
+  - data-i18n attributes on all user-facing text
+  - applyLanguage() function updates all text dynamically
+  - Translation dictionary with 100+ keys per language
+
+Data Flow:
+  1. User completes sale on new_sale.html → sale saved to state + localStorage → redirect to sales.html
+  2. Add/edit product on add_product.html → product saved → redirect to inventory.html
+  3. Record debt on new_debt.html → debt saved → redirect to debts.html
+  4. Record payment on debts.html overlay → payment saved → refresh debts list
+  5. Settings changes on setting.html → saved to state → applied immediately
+
+================================================================================
+DESIGN
+================================================================================
+
+Visual Direction:
+  - Primary: Green (#16a34a)
+  - Background: Off-white (#f8faf9)
+  - Surfaces: White with subtle borders
+  - Accent: Warm yellow/amber (#f59e0b)
+  - Danger: Muted red (#dc2626)
+  - Typography: Inter font family
+  - Rounded corners, soft cards, large touch targets
+  - Clean, calm, uncluttered interface
+
+Typography:
+  - 3 text sizes (Standard 15px base, Large 17px, Extra Large 19px)
+  - Sans-serif (Inter), good readability for older users
+
+Phone Frame:
+  - 393×852px (iPhone-like dimensions)
+  - Realistic notch and home bar
+  - Dark border with shadow for desktop display
+  - Responsive scaling for smaller viewports
+
+Tutorial:
+  - 8-step guided tour across all 5 main pages (sales, inventory, debts, reports, help)
+  - Smart box positioning: auto-places tutorial box at top or bottom based on highlight location
+  - Cross-page navigation with localStorage state persistence
+  - Replayable from Help page
+
+Layout:
+  - .app-content has 16px horizontal padding for consistent edge spacing
+  - H2 page titles removed (header already shows page name via JS)
+  - Product cards use vertical layout (info on top, actions below) to handle variable-length text
+  - .btn-card has white-space: nowrap to prevent text wrapping in buttons
+
+================================================================================
+FIXES & CHANGES LOG
+================================================================================
+
+[✓] Fixed: `page` ReferenceError in init() — caused splash screen to freeze (removed dead code)
+[✓] Fixed: .app-content lacked horizontal padding — text was flush against phone edges
+[✓] Fixed: Tutorial highlight offset — was positioned relative to #app instead of tutorial-overlay
+[✓] Fixed: Tutorial box blocked highlighted elements — now auto-positions based on screen location
+[✓] Fixed: Tutorial only covered Sales page — expanded to all 5 main pages
+[✓] Fixed: Product card format changed on language switch — changed to vertical column layout
+[✓] Fixed: Settings back button always went to sales.html — now uses ?from= query parameter
+[✓] Fixed: Sub-pages settings back mapped raw pageName — now maps through pageToNav
+[✓] Fixed: Sub-pages had bottom navigation bar — removed from new_sale, add_product, new_debt
+[✓] Fixed: Redundant h2 page titles below header — removed from all 5 main pages
+[✓] Fixed: Dead .panel-header CSS class — removed
+[✓] Verified: Language and text size functionality on settings page works correctly
+[✓] Added: Filter button (funnel icon) beside search bar on Inventory page — toggles filter chip bar
+[✓] Added: Filter chips for All, Low Stock, and unit types (Piece, Sachet, Bottle, Pack, Can, kg) with active state
+[✓] Added: Redesigned inventory cards — show generic product icon + name only, clickable, with red border/background for low-stock items
+[✓] Added: Product detail overlay — tap inventory card opens full detail view (cost/selling price, stock, threshold, unit) with Edit and Restock links
+[✓] Added: "All" / "Lahat" string keys to localization dictionary for filter chip
+[✓] Added: Close product detail overlay by clicking outside the content area (convenience)
+[✓] Fixed: Search bar margin-bottom bug — restored margin on `.search-bar` while `.search-filter-row .search-bar` override keeps inventory layout correct
+
+================================================================================
+NEXT STEPS / POTENTIAL ENHANCEMENTS
+================================================================================
+
+1. Add undo functionality for completed sales (5-second undo toast)
+2. Implement export/import data features (currently console.log placeholder)
+3. Add keyboard navigation and ARIA labels for better accessibility
+4. Create unit tests for core business logic (sales calculations, debt tracking)
+5. Polish empty states with illustrations or more helpful messages
+6. Add haptic/visual feedback for button taps on mobile
+7. Implement the optional chart in Reports (simple bar chart for sales trends)
+
+================================================================================
+END OF PROGRESS REPORT
+================================================================================

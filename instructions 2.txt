@@ -1,0 +1,236 @@
+Revised Feature Directives for AI Agents
+
+
+
+ Feature 1: Daily Sales Entry (Replaces Full POS)
+
+ Description
+Instead of item-by-item transaction logging, the primary sales input is a daily cash summary.
+
+ Workflow
+
+The main sales action is called:
+- "Record Today's Sales" or "I-record ang Benta"
+
+The screen asks two simple things:
+
+1. How much did you spend buying stock today?
+   - Large number input
+   - Label: "Gastos sa Paninda" (Stock Expenses)
+
+2. How much cash did you receive today?
+   - Large number input
+   - Label: "Kinikita Ngayon" (Today's Earnings)
+
+The app then automatically computes and displays:
+
+- Gross Profit: Earnings minus stock expenses
+- Estimated Net Profit: Based on a percentage she sets (default 10%)
+- Revolving Fund: Amount that goes back into buying stock
+
+ Optional Quick Addition
+For users who want to log a specific notable sale (like a large utang purchase), a secondary option exists:
+
+- "Add a Specific Sale" button
+- Minimal fields: item description, amount
+- This is optional, not required
+
+
+
+ Feature 2: Stock Tracker (Her Most Wanted Feature)
+
+ Description
+A simple list where she enters what she bought and how much. The app tracks the count. She can manually deduct when items sell or do a quick visual check-in.
+
+ Workflow A: Adding New Stock
+
+1. She taps "Add Stock"
+2. Fields:
+   - Item name
+   - Quantity added
+   - Cost per unit (optional but useful)
+   - Selling price
+   - Markup percentage (auto-calculated or manually entered)
+3. App saves and shows updated count
+
+ Workflow B: Quick Stock Check-In
+
+A fast alternative to counting individually. She taps an item and selects a visual status:
+
+- Marami Pa (Plenty)
+- Medyo Kulang (Getting Low)
+- Wala Na (Out of Stock)
+
+This matches her current "eyeballing" habit while still creating a digital record.
+
+ Workflow C: Deduct Stock
+
+When she sells something and wants to log it:
+
+- She taps the item
+- Taps "Nabenta" (Sold)
+- Enters quantity sold
+- App updates the count
+
+ Stock Overview Screen
+
+Shows all items as cards with:
+
+- Item name
+- Current count or status
+- Color indicator (green, orange, red)
+- A "Restock" quick action
+
+At the top, a section called "Kulang Na" (Running Low) highlights items she needs to buy.
+
+
+
+ Feature 3: Utang Tracker (Digital Slip of Paper)
+
+ Description
+A clean, simple replacement for her scrap paper system.
+
+ Workflow
+
+Adding a new debt:
+
+1. Customer name
+2. Amount owed
+3. Optional: what it was for
+4. Date is auto-filled
+
+Recording a payment:
+
+1. Tap customer name
+2. Tap "Nagbayad" (Paid)
+3. Enter amount paid
+4. App shows remaining balance
+
+ Utang Overview
+
+- List of all customers with outstanding balances
+- Total outstanding amount shown at the top
+- Settled debts archived separately
+
+
+
+ Feature 4: Daily Business Summary (Her Five Questions Answered)
+
+ Description
+This is the most important screen in the app. It is the first thing she should see when she opens the app each day. It directly answers her five daily questions.
+
+ Screen Layout
+
+A clean card-based screen titled:
+
+"Kamusta ang Tindahan Ngayon?" (How is the Store Today?)
+
+Card 1: Kita Ngayon (Today's Earnings)
+- Shows: total sales entered, estimated profit
+
+Card 2: Stock Alert
+- Shows: items running low or out of stock
+
+Card 3: Utang Ngayon (Outstanding Debts)
+- Shows: total amount owed to her
+
+Card 4: Business Tip *(optional, simple)*
+- A rotating simple tip based on her data
+- Example: "Ang noodles ay madalas na kulang. Isaalang-alang ang mag-restock."
+- This directly addresses her request for a "business tip" feature
+
+
+
+ Feature 5: Pricing Helper (Supports Her Markup Logic)
+
+ Description
+Since she already understands markup pricing, the app can support this without teaching her.
+
+ Where it lives
+Inside the Stock Tracker, on the Add Stock or Edit Item screen.
+
+ Fields
+- Cost price
+- Markup percentage (her default is 20% for slow-moving, small number for fast-moving)
+- App auto-calculates and shows suggested selling price
+
+ Visual feedback
+- "At 20% markup, sell this at ₱XX.XX"
+- She can accept or override
+
+
+
+ Feature 6: End-of-Day Closing Routine
+
+ Description
+A short guided activity she can do before closing the store. It walks her through three quick steps:
+
+Step 1: How much cash is in the drawer now?
+Step 2: Which items looked low today? (Quick visual checklist of her items)
+Step 3: Anyone paid their utang today? (Quick payment recording)
+
+After completing all three, the app shows a simple summary:
+
+> "Today: Earned ₱1,500. Profit: ₱150. Low stock: 3 items. Outstanding debts: ₱250."
+
+This single routine replaces her entire current manual process and gives her more organized data.
+
+
+
+ Feature 7: Tutorial and Step-by-Step Help
+
+ Reference model
+The GCash printed guide her nephew made. The app's tutorial should feel exactly like that guide, except it is interactive and always available.
+
+ Tutorial design
+Refer to the earlier tutorial system design. No changes needed except:
+
+- Tone should be warm and patient
+- Steps should be extremely short and specific
+- Every step should have a clear visual reference
+- The Help section should feel like "calling the nephew"
+
+
+
+ Revised Navigation Structure for AI Agents
+
+Based on the transcript, the navigation priorities should shift:
+
+| Tab | Label | Priority Reason |
+||||
+| 1 | Home / Summary | Her five daily questions answered in one place |
+| 2 | Stocks | Her most wanted feature |
+| 3 | Sales | Daily cash entry, not full POS |
+| 4 | Utang | Digital slip of paper |
+| 5 | Help | The nephew replacement |
+
+Reports and Settings can live inside Home or Help to reduce navigation complexity.
+
+
+
+ What AI Agents Should Deprioritize
+
+Based on the transcript:
+
+- Full item-by-item POS flow - She does not use this mental model
+- Supplier management - Not mentioned, not needed
+- Complex profit and loss statements - She wants simple yes/no on profitability
+- Barcode scanning - She implied speed and simplicity, not scanning
+- Online payments - Not mentioned
+- Multiple user accounts - She works alone
+
+
+
+ Summary for AI Agents
+
+The application has been reframed based on real interview data. Build it as:
+
+> A daily business awareness companion for a solo sari-sari store owner who tracks cash flow by totals, manages stock by memory and visual checking, and tracks debt on scraps of paper. The app should make those three habits easier, more organized, and less losable, without asking her to change how she fundamentally thinks about her store.
+
+The three pillars of the app are now:
+
+1. Stock Tracker - what she wants most
+2. Daily Cash Summary - what she already does, made easier
+3. Utang Notebook - what she needs most digitized
+
+Everything else supports these three pillars.

@@ -1607,6 +1607,66 @@ select.form-input {
 }
 
 /* ============================================
+   STATUS CHIP SELECTOR
+   ============================================ */
+.status-options {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.status-chip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-family: var(--font);
+  font-size: var(--text-sm, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+.status-chip:hover {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+}
+.status-chip.active {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-weight: 600;
+}
+.status-chip.active[data-status="low"] {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: #b45309;
+}
+.status-chip.active[data-status="out"] {
+  border-color: var(--danger);
+  background: var(--danger-light);
+  color: var(--danger);
+}
+.status-chip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+}
+.status-chip .dot.green {
+  background: var(--primary);
+}
+.status-chip .dot.orange {
+  background: var(--accent);
+}
+.status-chip .dot.red {
+  background: var(--danger);
+}
+
+/* ============================================
    CONFIRMATION MODAL
    ============================================ */
 .confirm-icon {

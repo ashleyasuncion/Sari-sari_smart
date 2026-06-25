@@ -1,0 +1,87 @@
+================================================================================
+ANDROID STUDIO CAPSTONE — ANALYSIS & RECOMMENDATIONS
+================================================================================
+
+Note: This HTML prototype serves as a rapid design/UX prototype for the actual
+capstone deliverable, which will be built in Android Studio (Java/Kotlin).
+
+=== ROLE OF THIS HTML PROTOTYPE ===
+
+This prototype fulfills these strategic roles in the capstone process:
+
+  [✓] Rapid design validation tool — test UX before writing Android code
+  [✓] Shareable with advisors/stakeholders — no Android SDK or emulator needed
+  [✓] User testing vehicle — clickable prototype for feedback rounds
+  [✓] Visual specification — pixel reference for Android implementation
+  [✓] Process documentation — evidence of design methodology for capstone panel
+
+=== ANDROID CAPSTONE — MINIMUM REQUIREMENTS ===
+
+To be a strong capstone, the Android app should demonstrate:
+
+  [ ] Architecture: MVVM with ViewModel + LiveData/Flow/StateFlow
+  [ ] Database: Room (local SQLite) for offline-capable storage
+  [ ] UI Framework: Material Design 3 with either:
+        - Jetpack Compose (modern, recommended)
+        - Traditional XML layouts with RecyclerViews and Navigation Component
+  [ ] State management: Unidirectional data flow pattern
+  [ ] Testing: Unit tests (JUnit) + UI tests (Espresso or Compose UI tests)
+  [ ] All 3 pillars ported from this prototype:
+        - Stock Tracker (with color-coded status system)
+        - Daily Cash Summary (Gastos + Kita → auto profit/revolving fund)
+        - Utang Notebook (customer tracking, payment recording)
+
+=== STANDOUT FEATURES ===
+
+The strongest version of this capstone will demonstrate:
+
+  1. User-centered design process:
+     - Real interviews with sari-sari store owners
+     - HTML prototype for rapid iteration based on feedback
+     - Final Android app as the production deliverable
+     - This tells a compelling story to the capstone panel
+
+  2. Smart tool choice:
+     - HTML/CSS/JS for fast prototyping (right tool for exploration)
+     - Native Android for production (right tool for deployment)
+     - Shows engineering judgment, not just coding ability
+
+  3. Thoughtful UX for target users:
+     - Large touch targets for older/less tech-savvy users
+     - Simple terminology (not enterprise POS jargon)
+     - Calm, friendly green theme
+     - Color-coded visual status system (familiar mental model)
+     - 3-step End-of-Day routine replaces manual paper process
+
+=== POTENTIAL ARCHITECTURE DECISIONS ===
+
+  Database:
+    - Room (local SQLite) — best if app doesn't need cross-device sync
+    - Firebase Firestore — if cloud backup/sharing is needed
+    - Recommend: Room for simplicity and offline reliability
+
+  UI:
+    - Jetpack Compose — modern, less boilerplate, good for capstone impression
+    - XML layouts — more established, larger community resources
+    - Recommend: Compose if comfortable learning it, XML if time-constrained
+
+  Additional features to consider for the Android version:
+    - Basic item-selection sale flow (product search → cart → payment mode)
+    - CSV/PDF data export
+    - Simple sales trend chart (optional)
+    - Search/filter on all list screens
+
+=== CAPSTONE PITCH ===
+
+"I identified a real problem through user interviews with actual sari-sari store
+owners, iterated on a clickable HTML prototype based on their feedback, and built
+a full-stack native Android application addressing their specific needs with MVVM
+architecture, Room database, and Material Design."
+
+This narrative — user research → rapid prototyping → production Android app — is
+stronger than a feature list alone and demonstrates both technical and design
+competency.
+
+================================================================================
+END - ANALYSIS
+================================================================================

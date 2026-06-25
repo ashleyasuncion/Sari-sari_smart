@@ -182,6 +182,14 @@
       productSaved: 'Item saved.',
       all: 'All',
       backToSales: 'Back to Sales',
+      tutorial1: 'Welcome to Sari-Sari Smart! This quick tour will show you around.',
+      tutorial2: 'This is the Sales screen. Tap "Record Today\'s Sales" and enter your stock expenses and earnings for the day.',
+      tutorial3: 'The Stocks page shows all your items with color-coded status: green = plenty, orange = getting low, red = out of stock.',
+      tutorial4: 'Tap any item to update its status or deduct stock when something sells.',
+      tutorial5: 'The Utang page tracks customer debts. Tap "New Debt" to add a manual entry, or tap a customer to record payments.',
+      tutorial6: 'The Home screen gives you a snapshot of your store: today\'s earnings, stock alerts, debts, and business tips.',
+      tutorial7: 'From the Help screen you can replay this tutorial, read the guide, or contact support.',
+      tutorial8: 'You\'re all set! Start using Sari-Sari Smart to manage your store.',
     },
     fil: {
       // Nav
@@ -345,6 +353,14 @@
       productSaved: 'Na-save ang item.',
       all: 'Lahat',
       backToSales: 'Bumalik sa Benta',
+      tutorial1: 'Maligayang pagdating sa Sari-Sari Smart! Ang maikling tour na ito ay magpapakita sa iyo.',
+      tutorial2: 'Ito ang Sales screen. I-tap ang "Record Today\'s Sales" at ilagay ang iyong gastos sa paninda at kita para sa araw na ito.',
+      tutorial3: 'Ang Stocks page ay nagpapakita ng lahat ng iyong item na may color-coded status: green = marami pa, orange = medyo kulang, red = wala na.',
+      tutorial4: 'I-tap ang kahit anong item para i-update ang status nito o bawasan ang stock kapag may naibenta.',
+      tutorial5: 'Ang Utang page ay sumusubaybay sa mga utang ng kostumer. I-tap ang "New Debt" para magdagdag ng manu-manong entry, o i-tap ang isang kostumer para magtala ng bayad.',
+      tutorial6: 'Ang Home screen ay nagbibigay sa iyo ng snapshot ng iyong tindahan: kita ngayon, stock alert, utang, at tips sa negosyo.',
+      tutorial7: 'Mula sa Help screen, maaari mong i-replay ang tutorial na ito, basahin ang gabay, o makipag-ugnayan sa support.',
+      tutorial8: 'Handa ka na! Simulan ang paggamit ng Sari-Sari Smart para pamahalaan ang iyong tindahan.',
     }
   };
 
@@ -787,7 +803,8 @@
 
     const today = todayStr();
     const todayEntry = state.dailyEntries.find(e => e.date === today);
-    const todaySales = todayEntry ? todayEntry.earnings : 0;
+    const todaySpecificTotal = getTodaySpecificSalesTotal();
+    const todaySales = todayEntry ? todayEntry.earnings : todaySpecificTotal;
     const todayProfit = todayEntry ? todayEntry.netProfit : 0;
     const totalDebt = state.debts.reduce((sum, d) => sum + d.remainingBalance, 0);
     const lowItems = getLowStockItems();
@@ -918,6 +935,13 @@
     });
   }
 
+  function getTodaySpecificSalesTotal() {
+    const today = todayStr();
+    return state.specificSales
+      .filter(s => isSameDay(s.createdAt || s.date, today))
+      .reduce(function(sum, s) { return sum + s.amount; }, 0);
+  }
+
   // ============================================
   // DAILY SALES
   // ============================================
@@ -1024,6 +1048,22 @@
 
     state.specificSales.push(sale);
 
+    // Deduct from inventory if description matches a product name
+    const matchedProduct = state.products.find(function(p) {
+      return p.name.toLowerCase() === desc.toLowerCase();
+    });
+    if (matchedProduct && matchedProduct.sellingPrice > 0) {
+      var qtySold = Math.round(amount / matchedProduct.sellingPrice);
+      if (qtySold > 0 && qtySold <= matchedProduct.quantity) {
+        matchedProduct.quantity -= qtySold;
+        if (matchedProduct.quantity <= 0) {
+          state.stockStatuses[matchedProduct.id] = 'out';
+        } else if (matchedProduct.quantity <= (matchedProduct.lowStockThreshold || 5)) {
+          state.stockStatuses[matchedProduct.id] = 'low';
+        }
+      }
+    }
+
     // If customer, also record as debt
     if (customer) {
       let cust = state.customers.find(c => c.name.toLowerCase() === customer.toLowerCase());
@@ -1055,6 +1095,8 @@
     renderSpecificSalesList();
     renderDebtsList();
     updateDebtSummary();
+    renderHomeDashboard();
+    renderDailySalesForm();
   }
 
   // ============================================
@@ -1167,9 +1209,16 @@
       dom.stockDetailCost.textContent = formatCurrency(product.costPrice || 0);
       dom.stockDetailPrice.textContent = formatCurrency(product.sellingPrice || 0);
 
+      // Update edit link with product ID
+      const editLink = document.getElementById('stockDetailEditLink');
+      if (editLink) editLink.href = 'add_product.html?edit=' + productId;
+
+      // Highlight current status chip
       const currentStatus = state.stockStatuses[productId] || 'plenty';
-      const statusLabels = { plenty: t('maramiPa'), low: t('medyoKulang'), out: t('walaNa') };
-      dom.stockStatusCurrent.textContent = statusLabels[currentStatus] || t('maramiPa');
+      const statusChips = document.querySelectorAll('.status-chip');
+      statusChips.forEach(function(chip) {
+        chip.classList.toggle('active', chip.dataset.status === currentStatus);
+      });
 
       dom.stockDetailOverlay.classList.add('open');
     }
@@ -1179,22 +1228,16 @@
     if (dom.stockDetailOverlay) dom.stockDetailOverlay.classList.remove('open');
   }
 
-  function updateStockStatus() {
-    const pid = dom.stockDetailOverlay ? dom.stockDetailOverlay.dataset.productId : null;
-    if (!pid) return;
-
-    const statuses = ['plenty', 'low', 'out'];
-    const current = state.stockStatuses[pid] || 'plenty';
-    const nextIdx = (statuses.indexOf(current) + 1) % statuses.length;
-    const nextStatus = statuses[nextIdx];
-
-    state.stockStatuses[pid] = nextStatus;
-
-    const statusLabels = { plenty: t('maramiPa'), low: t('medyoKulang'), out: t('walaNa') };
-    dom.stockStatusCurrent.textContent = statusLabels[nextStatus];
-
+  function setStockStatus(productId, status) {
+    state.stockStatuses[productId] = status;
     saveState();
     renderStocksList();
+
+    // Update chips highlight
+    var statusChips = document.querySelectorAll('.status-chip');
+    statusChips.forEach(function(chip) {
+      chip.classList.toggle('active', chip.dataset.status === status);
+    });
   }
 
   function openDeductStock(productId) {
@@ -1207,6 +1250,18 @@
         dom.stockDetailCost.textContent = formatCurrency(product.costPrice || 0);
         dom.stockDetailPrice.textContent = formatCurrency(product.sellingPrice || 0);
         dom.stockDeductQty.value = 1;
+
+        // Update edit link with product ID
+        const editLink = document.getElementById('stockDetailEditLink');
+        if (editLink) editLink.href = 'add_product.html?edit=' + productId;
+
+        // Highlight current status chip
+        const currentStatus = state.stockStatuses[productId] || 'plenty';
+        const statusChips = document.querySelectorAll('.status-chip');
+        statusChips.forEach(function(chip) {
+          chip.classList.toggle('active', chip.dataset.status === currentStatus);
+        });
+
         dom.stockDetailOverlay.classList.add('open');
       }
     }
@@ -1327,7 +1382,8 @@
     };
 
     const todayEntry = state.dailyEntries.find(e => e.date === today);
-    const earnings = todayEntry ? todayEntry.earnings : 0;
+    const todaySpecificTotal = getTodaySpecificSalesTotal();
+    const earnings = todayEntry ? todayEntry.earnings : todaySpecificTotal;
     const profit = todayEntry ? todayEntry.netProfit : 0;
     const lowCount = getLowStockItems().length;
     const totalDebt = state.debts.reduce((sum, d) => sum + d.remainingBalance, 0);
@@ -1599,8 +1655,17 @@
     if (dom.btnStockDetailBack) {
       dom.btnStockDetailBack.addEventListener('click', closeStockDetail);
     }
-    if (dom.btnUpdateStockStatus) {
-      dom.btnUpdateStockStatus.addEventListener('click', updateStockStatus);
+    // Status chip click handler (event delegation)
+    var statusOptions = document.getElementById('stockStatusOptions');
+    if (statusOptions) {
+      statusOptions.addEventListener('click', function(e) {
+        var chip = e.target.closest('.status-chip');
+        if (!chip) return;
+        var pid = dom.stockDetailOverlay ? dom.stockDetailOverlay.dataset.productId : null;
+        if (pid) {
+          setStockStatus(pid, chip.dataset.status);
+        }
+      });
     }
     if (dom.btnConfirmDeduct) {
       dom.btnConfirmDeduct.addEventListener('click', confirmDeductStock);
@@ -1638,11 +1703,23 @@
 
     if (restockId) {
       const product = state.products.find(p => p.id === restockId);
-      if (product && dom.stockPageTitle) {
-        dom.stockPageTitle.textContent = t('restock') + ' - ' + product.name;
-        if (dom.stockItemName) dom.stockItemName.value = product.name;
-        if (dom.stockItemName) dom.stockItemName.readOnly = true;
+      if (product) {
+        if (dom.stockPageTitle) dom.stockPageTitle.textContent = t('restock') + ' - ' + product.name;
+        if (dom.stockItemName) { dom.stockItemName.value = product.name; dom.stockItemName.readOnly = true; }
         if (dom.editStockIdHidden) dom.editStockIdHidden.value = restockId;
+        // Pre-fill cost and selling price from existing product
+        if (dom.stockCostPrice) dom.stockCostPrice.value = product.costPrice || '';
+        if (dom.stockSellPrice) dom.stockSellPrice.value = product.sellingPrice || '';
+        if (dom.stockMarkup) {
+          // Calculate markup from existing cost and selling price
+          var cost = product.costPrice || 0;
+          var price = product.sellingPrice || 0;
+          if (cost > 0) {
+            var markup = Math.round(((price - cost) / cost) * 100);
+            dom.stockMarkup.value = markup > 0 ? markup : (state.settings.defaultMarkup || 20);
+          }
+        }
+        updateMarkupPreview();
       }
     }
 
@@ -1884,14 +1961,14 @@
   // TUTORIAL
   // ============================================
   const tutorialSteps = [
-    { text: 'Welcome to Sari-Sari Smart! This quick tour will show you around.', highlight: null, page: 'sales', align: 'auto' },
-    { text: 'This is the Sales screen. Tap "Record Today\'s Sales" and enter your stock expenses and earnings for the day.', highlight: '#btnSaveDailySales', page: 'sales', align: 'auto' },
-    { text: 'The Stocks page shows all your items with color-coded status: green = plenty, orange = getting low, red = out of stock.', highlight: '#btnAddStock', page: 'inventory', align: 'auto' },
-    { text: 'Tap any item to update its status or deduct stock when something sells.', highlight: null, page: 'inventory', align: 'auto' },
-    { text: 'The Utang page tracks customer debts. Tap "New Debt" to add a manual entry, or tap a customer to record payments.', highlight: '#btnNewDebt', page: 'debts', align: 'auto' },
-    { text: 'The Home screen gives you a snapshot of your store: today\'s earnings, stock alerts, debts, and business tips.', highlight: null, page: 'home', align: 'auto' },
-    { text: 'From the Help screen you can replay this tutorial, read the guide, or contact support.', highlight: null, page: 'help', align: 'auto' },
-    { text: 'You\'re all set! Start using Sari-Sari Smart to manage your store.', highlight: null, page: 'help', align: 'auto' }
+    { textKey: 'tutorial1', highlight: null, page: 'sales', align: 'auto' },
+    { textKey: 'tutorial2', highlight: '#btnSaveDailySales', page: 'sales', align: 'auto' },
+    { textKey: 'tutorial3', highlight: '#btnAddStock', page: 'inventory', align: 'auto' },
+    { textKey: 'tutorial4', highlight: null, page: 'inventory', align: 'auto' },
+    { textKey: 'tutorial5', highlight: '#btnNewDebt', page: 'debts', align: 'auto' },
+    { textKey: 'tutorial6', highlight: null, page: 'home', align: 'auto' },
+    { textKey: 'tutorial7', highlight: null, page: 'help', align: 'auto' },
+    { textKey: 'tutorial8', highlight: null, page: 'help', align: 'auto' }
   ];
 
   function getTutorialBoxAlignment(highlightSelector) {
@@ -1939,7 +2016,7 @@
     var step = tutorialSteps[stepIndex];
     if (!step) { endTutorial(); return; }
 
-    if (dom.tutorialText) dom.tutorialText.textContent = step.text;
+    if (dom.tutorialText) dom.tutorialText.textContent = t(step.textKey);
     if (dom.tutorialCurrent) dom.tutorialCurrent.textContent = stepIndex + 1;
     if (dom.tutorialTotal) dom.tutorialTotal.textContent = tutorialSteps.length;
 
@@ -2143,7 +2220,8 @@
       completed: true, completedAt: new Date().toISOString()
     };
     const todayEntry = state.dailyEntries.find(function(e) { return e.date === today; });
-    const earnings = todayEntry ? todayEntry.earnings : 0;
+    var todaySpecificTotal = getTodaySpecificSalesTotal();
+    const earnings = todayEntry ? todayEntry.earnings : todaySpecificTotal;
     const profit = todayEntry ? todayEntry.netProfit : 0;
     const lowCount = getLowStockItems().length;
     const totalDebt = state.debts.reduce(function(sum, d) { return sum + d.remainingBalance; }, 0);

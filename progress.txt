@@ -1,9 +1,9 @@
 ================================================================================
 SARI-SARI SMART - PROGRESS REPORT
 ================================================================================
-Date: June 24, 2026
+Date: June 25, 2026
 Project: HTML Prototype for Sari-Sari Store Management App
-Version: v2 (refactored based on interview findings)
+Version: v2.1 (post-fix: specific sale inventory deduction + earnings sync)
 ================================================================================
 
 PROJECT OVERVIEW
@@ -23,7 +23,7 @@ Core Files:
 
 HTML Pages (11):
   3. index.html        - Intro screen: splash + setup overlay → redirects to home or tutorial
-  4. home.html         - NEW: Dashboard with 4 summary cards (Earnings, Stock, Debts, EOD) + business tips
+  4. home.html         - Dashboard with 4 summary cards (Earnings, Stock, Debts, EOD) + business tips
   5. sales.html        - Daily Cash Summary: Gastos + Kita → auto-calculates profit & revolving fund
   6. new_sale.html     - Repurposed: Add a Specific Sale (notable items/utang purchases)
   7. inventory.html    - Stocks with visual status (Marami Pa/Medyo Kulang/Wala Na)
@@ -47,7 +47,7 @@ ALL MODULES IMPLEMENTED
      - Mandatory tutorial on first launch (8 steps, guided overlay with highlights, cross-page)
      - Replayable tutorial from Help
 
-[✓] 2. Home Dashboard (NEW)
+[✓] 2. Home Dashboard
      "Kamusta ang Tindahan Ngayon?" summary screen
      - 4 summary cards: Today's Earnings, Stock Alert, Outstanding Debts, End-of-Day
      - Business tip card — personalized based on actual store data:
@@ -61,7 +61,7 @@ ALL MODULES IMPLEMENTED
      - Tap cards navigate to relevant pages
      - End-of-Day card triggers 3-step closing routine
 
-[✓] 3. Daily Cash Summary (Sales screen, redesigned)
+[✓] 3. Daily Cash Summary (Sales screen)
      - Two big inputs: Gastos sa Paninda + Kinikita Ngayon
      - Auto-calculates: Gross Profit, Estimated Net Profit, Revolving Fund
      - Live preview as user types
@@ -69,7 +69,7 @@ ALL MODULES IMPLEMENTED
      - Add Specific Sale section for notable items/utang purchases
      - Specific sale auto-creates debt entry if customer name provided
 
-[✓] 4. Stocks (Inventory, redesigned)
+[✓] 4. Stocks (Inventory)
      - Color-coded visual status cards: 🟢 Plenty / 🟠 Getting Low / 🔴 Out of Stock
      - "Kulang Na" section at top showing running-low items
      - Tap card to cycle status (Plenty → Low → Out → Plenty)
@@ -86,7 +86,7 @@ ALL MODULES IMPLEMENTED
      - Manual debt entry via new_debt page
      - Auto-debt recording from Specific Sale when customer named
 
-[✓] 6. End-of-Day Closing Routine (NEW)
+[✓] 6. End-of-Day Closing Routine
      - 3-step guided process:
        Step 1: Cash in drawer (enter amount)
        Step 2: Stock check (quick visual, shows low-stock count)
@@ -142,6 +142,13 @@ Should-have:
   [✓] Quick "Sold" button for stock deduction
   [✓] Splash screen separated from dashboard (home.html vs index.html)
 
+Bug Fixes (v2.1):
+  [✓] Fixed: Specific sale now deducts inventory when description matches a product name
+  [✓] Fixed: Specific sale amounts are reflected in Today's Earnings on dashboard
+  [✓] Added: getTodaySpecificSalesTotal() helper — sums today's specific sale amounts
+  [✓] Added: Home dashboard & EOD use specific sales total as fallback when no daily entry exists
+  [✓] Added: Home dashboard and Sales form auto-refresh after saving a specific sale
+
 Excluded (by design):
   [–] Item-by-item POS (replaced by Daily Cash Summary)
   [–] Barcode scanning
@@ -183,13 +190,15 @@ Localization:
   - applyLanguage() updates all text dynamically + refreshes all views
   - Translation dictionary with 100+ keys per language
 
-Data Flow (v2):
+Data Flow (v2.1):
   1. User visits home → cards show real-time summaries of all data
   2. Sales page → enter gastos + kita → dailyEntry saved → home card updates
   3. Stocks page → tap to cycle status, Sold button to deduct → stockStatuses updated
-  4. Specific sale → auto-creates debt if customer named
-  5. End-of-Day → 3 steps → eodData saved → home card shows completion
-  6. Settings → saved to state → applied immediately
+  4. Specific sale → auto-deducts inventory if description matches product name
+  5. Specific sale → amount reflected in Today's Earnings on home (fallback if no daily entry)
+  6. Specific sale → auto-creates debt if customer named
+  7. End-of-Day → 3 steps → eodData saved → home card shows completion
+  8. Settings → saved to state → applied immediately
 
 ================================================================================
 DESIGN
@@ -271,18 +280,78 @@ FIXES & CHANGES LOG
 [✓] Fixed: Overlap in getBusinessTip() — Priority 1 and 2 both checked out-of-stock items
 [✓] Changed: Toast position from top to bottom of screen
 
+=== v2.1 bug fixes (June 25, 2026) ===
+[✓] Fixed: Inventory not deducted when saving a specific sale
+     - Description is matched against product names (case-insensitive exact match)
+     - Quantity sold calculated as Math.round(amount / product.sellingPrice)
+     - Stock deducted and stock status auto-updated (out/low/plenty)
+     - Guards: sellingPrice > 0, qtySold > 0, qtySold <= available quantity
+
+[✓] Fixed: Specific sale amounts not reflected in Today's Earnings
+     - Added getTodaySpecificSalesTotal() helper function
+     - Home dashboard: shows specific sales total when no Daily Cash Summary exists
+     - End-of-Day summary: same fallback logic
+     - If Daily Cash Summary is recorded, it takes priority (authoritative total)
+     - Home dashboard and Sales form auto-refresh after saving a specific sale
+
 ================================================================================
-NEXT STEPS / POTENTIAL ENHANCEMENTS
+NEXT STEPS / POTENTIAL ENHANCEMENTS (HTML Prototype)
 ================================================================================
 
-1. Add undo functionality for stock deductions (5-second undo toast)
-2. Implement export/import data features (currently console.log placeholder)
-3. Show business tips in Filipino when language is set to FIL
-4. Make business tip area tappable — expand to full list of insights
-5. Add unit tests for core business logic (sales calculations, debt tracking)
+1. Make inventory matching smarter — support partial name matching (e.g. "Bread"
+   matches "Bread Loaf") and add a quantity field to the specific sale form
+2. Add undo functionality for stock deductions (5-second undo toast)
+3. Implement export/import data features (currently console.log placeholder)
+4. Show business tips in Filipino when language is set to FIL
+5. Make business tip area tappable — expand to full list of insights
 6. Polish empty states with illustrations or more helpful messages
 7. Compare today's sales to yesterday's for trend insights
 8. Add the optional chart in Reports (simple bar chart for sales trends)
+
+================================================================================
+FUTURE IDEAS (Long-Term Roadmap)
+================================================================================
+
+=== Option 1: Full POS System ===
+Transform "Add Specific Sale" into a complete POS system similar to existing
+commercial POS solutions with full item selection, cart management, and
+transaction logging.
+
+=== Option 2 (PREFERRED): Kiosk-Style POS ===
+Replace the "Add Specific Sale" button with a "Kiosk POS" button. The kiosk
+would simulate a modern POS experience on the user's phone using large buttons
+and step-by-step screens.
+
+Example flow:
+  1. Select product(s) from inventory
+  2. Select quantity
+  3. Choose payment details:
+     - Cash
+     - GCash
+     - Split payment
+     - Debt/Utang
+  4. If debt-based, proceed to another screen to input debtor information
+
+=== Voice Commands (Future Enhancement) ===
+The user could speak naturally, for example:
+  "Two pieces of bread worth 20 pesos, payment via GCash, split in half,
+   the other half is cash."
+
+The system would:
+  1. Convert speech to text
+  2. Use AI/NLP to analyze the intent
+  3. Extract: product name, quantity, amount, payment method,
+     debt information (if any)
+  4. Automatically record the transaction
+
+================================================================================
+ANDROID STUDIO CAPSTONE — ANALYSIS
+================================================================================
+
+The Android Studio capstone analysis has been moved to a separate file:
+  analysis.txt
+  (See analysis.txt for full recommendations, requirements, architecture decisions,
+   and capstone pitch)
 
 ================================================================================
 END OF PROGRESS REPORT

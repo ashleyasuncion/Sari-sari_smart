@@ -455,6 +455,7 @@
     dom.allStocksList = $('allStocksList');
     dom.stockSearch = $('stockSearch');
     dom.btnAddStock = $('btnAddStock');
+    dom.allItemsLabel = $('allItemsLabel');
 
     // Stock detail / deduct overlay
     dom.stockDetailOverlay = $('stockDetailOverlay');
@@ -1104,15 +1105,24 @@
   // ============================================
   function renderStocksList() {
     if (!dom.allStocksList) return;
-    const query = dom.stockSearch ? dom.stockSearch.value.toLowerCase() : '';
+    var query = dom.stockSearch ? dom.stockSearch.value.toLowerCase() : '';
 
-    let products = state.products;
-    if (query) products = products.filter(p => p.name.toLowerCase().includes(query));
+    var products = state.products;
+    if (query) products = products.filter(function(p) { return p.name.toLowerCase().includes(query); });
 
-    // Render "Kulang Na" section
-    renderKulangNaSection();
+    // Render "Kulang Na" section — pass query so it filters low items too
+    var hasMatchingLowItems = renderKulangNaSection(query);
 
-    if (products.length === 0) {
+    // If searching and low-stock items match the query, hide "All Items" to avoid duplicates
+    if (query && hasMatchingLowItems) {
+      if (dom.allItemsLabel) dom.allItemsLabel.style.display = 'none';
+      if (dom.allStocksList) dom.allStocksList.style.display = 'none';
+    } else {
+      if (dom.allItemsLabel) dom.allItemsLabel.style.display = '';
+      if (dom.allStocksList) dom.allStocksList.style.display = '';
+    }
+
+    if (products.length === 0 && !hasMatchingLowItems) {
       dom.allStocksList.innerHTML = '<div class="empty-state">' + t('noStockItems') + '</div>';
       return;
     }
@@ -1161,17 +1171,24 @@
     });
   }
 
-  function renderKulangNaSection() {
-    if (!dom.kulangNaList) return;
-    const lowItems = getLowStockItems();
+  function renderKulangNaSection(query) {
+    if (!dom.kulangNaList) return false;
+    var lowItems = getLowStockItems();
+
+    // If searching, filter low items to only those matching the query
+    if (query) {
+      lowItems = lowItems.filter(function(p) {
+        return p.name.toLowerCase().includes(query);
+      });
+    }
 
     if (lowItems.length === 0) {
       dom.kulangNaSection.style.display = 'none';
-      return;
+      return false;
     }
 
     dom.kulangNaSection.style.display = 'block';
-    dom.kulangNaList.innerHTML = lowItems.map(p => {
+    dom.kulangNaList.innerHTML = lowItems.map(function(p) {
       const status = state.stockStatuses[p.id] || 'low';
       return '<div class="stock-card status-' + (status === 'out' ? 'out' : 'low') + '" data-pid="' + p.id + '">' +
         '<div class="stock-card-icon ' + (status === 'out' ? 'out' : 'low') + '">⚠</div>' +

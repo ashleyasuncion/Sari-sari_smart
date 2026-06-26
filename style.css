@@ -1571,6 +1571,22 @@ select.form-input {
 }
 
 /* ============================================
+   AUTO AMOUNT DISPLAY (Specific Sale)
+   ============================================ */
+.auto-amount-display {
+  width: 100%;
+  padding: 16px 14px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--primary-bg);
+  font-family: var(--font);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+}
+
+/* ============================================
    RESTOCK PREVIEW
    ============================================ */
 .restock-info {

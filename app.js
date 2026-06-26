@@ -49,8 +49,8 @@
       todayAlreadyRecorded: 'Today\'s sales are already recorded',
       addSpecificSale: 'Add a Specific Sale',
       specificSaleDesc: 'For notable items (e.g. large utang purchase)',
-      itemDesc: 'Item Description',
-      saleAmount: 'Amount (₱)',
+      itemDesc: 'Product Name',
+      saleAmount: 'Total Amount',
       customerOptional: 'Customer (optional)',
       saveSpecificSale: 'Save Sale',
       specificSaleSaved: 'Sale saved.',
@@ -220,8 +220,8 @@
       todayAlreadyRecorded: 'Ang benta ngayong araw ay naitala na',
       addSpecificSale: 'Magdagdag ng Specific na Benta',
       specificSaleDesc: 'Para sa mga notable na item (hal. malaking utang)',
-      itemDesc: 'Paglalarawan ng Item',
-      saleAmount: 'Halaga (₱)',
+      itemDesc: 'Pangalan ng Produkto',
+      saleAmount: 'Kabuuang Halaga',
       customerOptional: 'Kostumer (opsyonal)',
       saveSpecificSale: 'I-save ang Benta',
       specificSaleSaved: 'Na-save ang benta.',
@@ -448,6 +448,10 @@
     dom.specificCustomer = $('specificCustomer');
     dom.btnSaveSpecific = $('btnSaveSpecific');
     dom.btnBackSales = $('btnBackSales');
+    dom.specificQty = $('specificQty');
+    dom.specificAmountDisplay = $('specificAmountDisplay');
+    dom.productPriceInfo = $('productPriceInfo');
+    dom.productSuggestions = $('productSuggestions');
 
     // Stocks page
     dom.kulangNaSection = $('kulangNaSection');
@@ -1029,52 +1033,64 @@
   }
 
   function saveSpecificSale() {
-    const desc = dom.specificItemDesc ? dom.specificItemDesc.value.trim() : '';
-    const amount = parseFloat(dom.specificAmount ? dom.specificAmount.value : 0) || 0;
-    const customer = dom.specificCustomer ? dom.specificCustomer.value.trim() : '';
+    var name = dom.specificItemDesc ? dom.specificItemDesc.value.trim() : '';
+    var qty = parseInt(dom.specificQty ? dom.specificQty.value : 0) || 0;
+    var customer = dom.specificCustomer ? dom.specificCustomer.value.trim() : '';
+    var product = getMatchedProduct(name);
 
-    if (!desc || amount <= 0) {
-      showToast('Please enter description and amount.', 'error');
+    if (!name) {
+      showToast('Please enter a product name.', 'error');
       return;
     }
 
-    const sale = {
+    if (!product) {
+      showToast('Product not found in inventory. Add it in Stocks first.', 'error');
+      return;
+    }
+
+    if (qty <= 0) {
+      showToast('Please enter a valid quantity.', 'error');
+      return;
+    }
+
+    if (qty > product.quantity) {
+      showToast('Not enough stock. Only ' + product.quantity + ' available.', 'error');
+      return;
+    }
+
+    var amount = product.sellingPrice * qty;
+
+    var sale = {
       id: generateId(),
       date: todayStr(),
       createdAt: new Date().toISOString(),
-      description: desc,
+      description: name,
       amount: amount,
       customerName: customer || null
     };
 
     state.specificSales.push(sale);
 
-    // Deduct from inventory if description matches a product name
-    const matchedProduct = state.products.find(function(p) {
-      return p.name.toLowerCase() === desc.toLowerCase();
-    });
-    if (matchedProduct && matchedProduct.sellingPrice > 0) {
-      var qtySold = Math.round(amount / matchedProduct.sellingPrice);
-      if (qtySold > 0 && qtySold <= matchedProduct.quantity) {
-        matchedProduct.quantity -= qtySold;
-        if (matchedProduct.quantity <= 0) {
-          state.stockStatuses[matchedProduct.id] = 'out';
-        } else if (matchedProduct.quantity <= (matchedProduct.lowStockThreshold || 5)) {
-          state.stockStatuses[matchedProduct.id] = 'low';
-        }
-      }
+    // Deduct from inventory
+    product.quantity -= qty;
+    if (product.quantity <= 0) {
+      state.stockStatuses[product.id] = 'out';
+    } else if (product.quantity <= (product.lowStockThreshold || 5)) {
+      state.stockStatuses[product.id] = 'low';
     }
 
     // If customer, also record as debt
     if (customer) {
-      let cust = state.customers.find(c => c.name.toLowerCase() === customer.toLowerCase());
+      var cust = state.customers.find(function(c) { return c.name.toLowerCase() === customer.toLowerCase(); });
       if (!cust) {
         cust = { id: generateId(), name: customer };
         state.customers.push(cust);
       }
-      if (!state.usedCustomerNames.includes(customer)) state.usedCustomerNames.push(customer);
+      if (state.usedCustomerNames.indexOf(customer) === -1) state.usedCustomerNames.push(customer);
 
-      let debt = state.debts.find(d => d.customerName.toLowerCase() === customer.toLowerCase() && d.remainingBalance > 0);
+      var debt = state.debts.find(function(d) {
+        return d.customerName.toLowerCase() === customer.toLowerCase() && d.remainingBalance > 0;
+      });
       if (debt) {
         debt.amount += amount;
         debt.remainingBalance += amount;
@@ -1090,9 +1106,13 @@
 
     saveState();
     showToast(t('specificSaleSaved'));
+
+    // Reset form
     dom.specificItemDesc.value = '';
-    dom.specificAmount.value = '';
+    if (dom.specificQty) dom.specificQty.value = '1';
     if (dom.specificCustomer) dom.specificCustomer.value = '';
+    updateSpecificSaleTotal();
+
     renderSpecificSalesList();
     renderDebtsList();
     updateDebtSummary();
@@ -1647,12 +1667,72 @@
   }
 
   // --- NEW SALE (Add Specific Sale) ---
+  function populateProductSuggestions() {
+    if (!dom.productSuggestions) return;
+    dom.productSuggestions.innerHTML = state.products
+      .filter(function(p) { return p.sellingPrice > 0; })
+      .map(function(p) { return '<option value="' + p.name + '">'; })
+      .join('');
+  }
+
+  function getMatchedProduct(name) {
+    if (!name) return null;
+    var lower = name.toLowerCase();
+    // Try exact match first
+    var exact = state.products.find(function(p) {
+      return p.name.toLowerCase() === lower;
+    });
+    if (exact) return exact;
+    // Fall back to partial/contains match
+    return state.products.find(function(p) {
+      return p.name.toLowerCase().indexOf(lower) !== -1 || lower.indexOf(p.name.toLowerCase()) !== -1;
+    }) || null;
+  }
+
+  function updateSpecificSaleTotal() {
+    if (!dom.specificItemDesc || !dom.specificQty || !dom.specificAmountDisplay || !dom.productPriceInfo) return;
+    var name = dom.specificItemDesc.value.trim();
+    var product = getMatchedProduct(name);
+    var qty = parseInt(dom.specificQty.value) || 0;
+
+    // Reset color
+    dom.productPriceInfo.style.color = 'var(--primary)';
+
+    if (product && product.sellingPrice > 0 && qty > 0) {
+      var total = product.sellingPrice * qty;
+      dom.specificAmountDisplay.textContent = formatCurrency(total);
+      dom.productPriceInfo.style.display = 'block';
+      dom.productPriceInfo.textContent = '₱' + product.sellingPrice + ' per ' + (product.unit || 'piece') + ' × ' + qty;
+    } else if (product && product.sellingPrice > 0) {
+      dom.specificAmountDisplay.textContent = formatCurrency(product.sellingPrice);
+      dom.productPriceInfo.style.display = 'block';
+      dom.productPriceInfo.textContent = '₱' + product.sellingPrice + ' per ' + (product.unit || 'piece');
+    } else if (name && !product) {
+      dom.specificAmountDisplay.textContent = '₱0.00';
+      dom.productPriceInfo.style.display = 'block';
+      dom.productPriceInfo.style.color = 'var(--danger)';
+      dom.productPriceInfo.textContent = 'Product not found in inventory';
+    } else {
+      dom.specificAmountDisplay.textContent = '₱0.00';
+      dom.productPriceInfo.style.display = 'none';
+    }
+  }
+
   function initSpecificSalePage() {
+    populateProductSuggestions();
+    updateSpecificSaleTotal();
+
+    if (dom.specificItemDesc) {
+      dom.specificItemDesc.addEventListener('input', updateSpecificSaleTotal);
+    }
+    if (dom.specificQty) {
+      dom.specificQty.addEventListener('input', updateSpecificSaleTotal);
+    }
     if (dom.btnSaveSpecific) {
       dom.btnSaveSpecific.addEventListener('click', saveSpecificSale);
     }
     if (dom.btnBackSales) {
-      dom.btnBackSales.addEventListener('click', () => window.location.href = 'sales.html');
+      dom.btnBackSales.addEventListener('click', function() { window.location.href = 'sales.html'; });
     }
   }
 

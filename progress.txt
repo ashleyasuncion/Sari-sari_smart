@@ -1,9 +1,9 @@
 ================================================================================
 SARI-SARI SMART - PROGRESS REPORT
 ================================================================================
-Date: June 25, 2026
+Date: June 26, 2026
 Project: HTML Prototype for Sari-Sari Store Management App
-Version: v2.1 (post-fix: specific sale inventory deduction + earnings sync)
+Version: v2.2 (specific sale: product name lookup + quantity + auto-total)
 ================================================================================
 
 PROJECT OVERVIEW
@@ -25,7 +25,7 @@ HTML Pages (11):
   3. index.html        - Intro screen: splash + setup overlay → redirects to home or tutorial
   4. home.html         - Dashboard with 4 summary cards (Earnings, Stock, Debts, EOD) + business tips
   5. sales.html        - Daily Cash Summary: Gastos + Kita → auto-calculates profit & revolving fund
-  6. new_sale.html     - Repurposed: Add a Specific Sale (notable items/utang purchases)
+  6. new_sale.html     - Add Specific Sale with product name lookup, quantity input, auto-calculated total
   7. inventory.html    - Stocks with visual status (Marami Pa/Medyo Kulang/Wala Na)
   8. add_product.html  - Add Stock form with markup pricing helper (cost × markup% → suggested price)
   9. debts.html        - Utang tracking: customer list, detail overlay, payment recording
@@ -129,6 +129,7 @@ Core (post-interview):
   [✓] Utang tracking and payment recording
   [✓] Settings with language switch (EN/FIL) and text size
   [✓] Markup pricing helper (cost × markup% → suggested selling price)
+  [✓] Specific sale with product name autocomplete, quantity field, auto-total from sellingPrice × qty
   [✓] localStorage persistence (products, stock statuses, daily entries, debts, EOD data)
 
 Should-have:
@@ -138,6 +139,7 @@ Should-have:
   [✓] Text size settings (3 levels)
   [✓] Toast notification system (success/error, bottom-anchored)
   [✓] Suggested customer names on debt entry
+  [✓] Product name autocomplete with partial matching for specific sale form
   [✓] Search on Stocks page
   [✓] Quick "Sold" button for stock deduction
   [✓] Splash screen separated from dashboard (home.html vs index.html)
@@ -190,11 +192,12 @@ Localization:
   - applyLanguage() updates all text dynamically + refreshes all views
   - Translation dictionary with 100+ keys per language
 
-Data Flow (v2.1):
+Data Flow (v2.2):
   1. User visits home → cards show real-time summaries of all data
   2. Sales page → enter gastos + kita → dailyEntry saved → home card updates
   3. Stocks page → tap to cycle status, Sold button to deduct → stockStatuses updated
-  4. Specific sale → auto-deducts inventory if description matches product name
+  4. Specific sale → enter product name (autocomplete from inventory) + quantity
+     → total auto-calculates as sellingPrice × qty → inventory directly deducted
   5. Specific sale → amount reflected in Today's Earnings on home (fallback if no daily entry)
   6. Specific sale → auto-creates debt if customer named
   7. End-of-Day → 3 steps → eodData saved → home card shows completion
@@ -294,13 +297,34 @@ FIXES & CHANGES LOG
      - If Daily Cash Summary is recorded, it takes priority (authoritative total)
      - Home dashboard and Sales form auto-refresh after saving a specific sale
 
+=== v2.2 specific sale overhaul (June 26, 2026) ===
+[✓] Replaced: "Item Description" free-text field → "Product Name" with datalist autocomplete
+     - Added populateProductSuggestions() — fills suggestions from inventory products
+     - Added getMatchedProduct() — exact match first, then partial/contains fallback
+     - Added updateSpecificSaleTotal() — live auto-calculation as user types
+
+[✓] Added: Quantity input field (defaults to 1)
+     - User enters explicit quantity instead of system inferring from amount
+     - Stock validation: errors if qty exceeds available inventory
+     - Prevents selling more than in stock (previously used Math.round approximation)
+
+[✓] Replaced: Manual "Amount" input → auto-calculated read-only total display
+     - Total = product.sellingPrice × quantity, computed live
+     - Shows price breakdown: "₱25 per can × 3"
+     - Styled prominently with green background (new .auto-amount-display CSS class)
+
+[✓] Rewritten: saveSpecificSale() logic
+     - Uses explicit quantity for inventory deduction (no more Math.round approximation)
+     - Validates product exists in inventory before saving
+     - Validates sufficient stock available
+     - Resets quantity to 1 after saving
+
 ================================================================================
 NEXT STEPS / POTENTIAL ENHANCEMENTS (HTML Prototype)
 ================================================================================
 
-1. Make inventory matching smarter — support partial name matching (e.g. "Bread"
-   matches "Bread Loaf") and add a quantity field to the specific sale form
-2. Add undo functionality for stock deductions (5-second undo toast)
+1. Add undo functionality for stock deductions (5-second undo toast)
+2. Add support for entering partial payments in specific sale (e.g. half cash, half utang)
 3. Implement export/import data features (currently console.log placeholder)
 4. Show business tips in Filipino when language is set to FIL
 5. Make business tip area tappable — expand to full list of insights

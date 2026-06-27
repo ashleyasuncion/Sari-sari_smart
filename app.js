@@ -162,7 +162,8 @@
       contactContent: 'For questions or feedback: support@sarisarismart.com',
       settingsSaved: 'Settings saved.',
       dataReset: 'Sample data has been reset.',
-      dataExported: 'Data exported to console.',
+      dataExportPlaceholder: 'Export will be available in the full app version.',
+      dataImportPlaceholder: 'Import will be available in the full app version.',
       confirmReset: 'Reset all sample data? This cannot be undone.',
       areYouSure: 'Are you sure?',
       confirm: 'Confirm', cancel: 'Cancel',
@@ -333,7 +334,8 @@
       contactContent: 'Para sa mga tanong o feedback: support@sarisarismart.com',
       settingsSaved: 'Na-save ang settings.',
       dataReset: 'Na-reset ang sample datos.',
-      dataExported: 'Na-export ang datos sa console.',
+      dataExportPlaceholder: 'Ang Export ay magagamit sa buong bersyon ng app.',
+      dataImportPlaceholder: 'Ang Import ay magagamit sa buong bersyon ng app.',
       confirmReset: 'I-reset ang lahat ng sample datos? Hindi ito maaaring i-undo.',
       areYouSure: 'Sigurado ka ba?',
       confirm: 'Kumpirmahin', cancel: 'Kanselahin',
@@ -684,12 +686,7 @@
       if (state.products.length === 0) state.products = getSampleProducts();
       if (state.customers.length === 0) state.customers = getSampleCustomers();
 
-      // Initialize stock statuses for products that don't have one
-      state.products.forEach(p => {
-        if (!state.stockStatuses[p.id]) {
-          state.stockStatuses[p.id] = p.quantity > 10 ? 'plenty' : (p.quantity > 0 ? 'low' : 'out');
-        }
-      });
+
     } catch(e) {
       state.products = getSampleProducts();
       state.customers = getSampleCustomers();
@@ -699,6 +696,14 @@
   // ============================================
   // UTILITY
   // ============================================
+  function getStockStatus(product) {
+    if (!product) return 'plenty';
+    if (product.quantity <= 0) return 'out';
+    var threshold = product.lowStockThreshold || 5;
+    if (product.quantity <= threshold) return 'low';
+    return 'plenty';
+  }
+
   function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
   }
@@ -877,7 +882,7 @@
     const today = todayStr();
     const todayEntry = state.dailyEntries.find(function(e) { return e.date === today; });
     const totalDebt = state.debts.reduce(function(sum, d) { return sum + d.remainingBalance; }, 0);
-    const outOfStock = state.products.filter(function(p) { return state.stockStatuses[p.id] === 'out' || p.quantity <= 0; });
+    const outOfStock = state.products.filter(function(p) { return getStockStatus(p) === 'out' || p.quantity <= 0; });
     const lowItems = getLowStockItems();
     const anyLowStock = lowItems.length > 0;
     const anyOutOfStock = outOfStock.length > 0;
@@ -892,7 +897,7 @@
     }
 
     // Priority 2: Low stock items (excludes out-of-stock, which is handled above)
-    var trulyLowOnly = lowItems.filter(function(p) { return state.stockStatuses[p.id] !== 'out' && p.quantity > 0; });
+    var trulyLowOnly = lowItems.filter(function(p) { return getStockStatus(p) !== 'out' && p.quantity > 0; });
     if (trulyLowOnly.length > 0) {
       var lowItem = trulyLowOnly[0];
       var moreLow = trulyLowOnly.length > 1 ? ' (' + (trulyLowOnly.length - 1) + ' more items low)' : '';
@@ -934,9 +939,9 @@
   }
 
   function getLowStockItems() {
-    return state.products.filter(p => {
-      const status = state.stockStatuses[p.id];
-      return status === 'low' || status === 'out' || p.quantity <= (p.lowStockThreshold || 5);
+    return state.products.filter(function(p) {
+      var status = getStockStatus(p);
+      return status === 'low' || status === 'out';
     });
   }
 
@@ -1071,13 +1076,8 @@
 
     state.specificSales.push(sale);
 
-    // Deduct from inventory
+    // Deduct from inventory (status is auto-computed from quantity)
     product.quantity -= qty;
-    if (product.quantity <= 0) {
-      state.stockStatuses[product.id] = 'out';
-    } else if (product.quantity <= (product.lowStockThreshold || 5)) {
-      state.stockStatuses[product.id] = 'low';
-    }
 
     // If customer, also record as debt
     if (customer) {
@@ -1148,7 +1148,7 @@
     }
 
     dom.allStocksList.innerHTML = products.map(p => {
-      const status = state.stockStatuses[p.id] || 'plenty';
+      const status = getStockStatus(p);
       const statusClass = status === 'plenty' ? 'plenty' : (status === 'low' ? 'low' : 'out');
       const iconPath = status === 'plenty'
         ? '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>'
@@ -1209,7 +1209,7 @@
 
     dom.kulangNaSection.style.display = 'block';
     dom.kulangNaList.innerHTML = lowItems.map(function(p) {
-      const status = state.stockStatuses[p.id] || 'low';
+      const status = getStockStatus(p);
       return '<div class="stock-card status-' + (status === 'out' ? 'out' : 'low') + '" data-pid="' + p.id + '">' +
         '<div class="stock-card-icon ' + (status === 'out' ? 'out' : 'low') + '">⚠</div>' +
         '<div class="stock-card-info">' +
@@ -1250,8 +1250,8 @@
       const editLink = document.getElementById('stockDetailEditLink');
       if (editLink) editLink.href = 'add_product.html?edit=' + productId;
 
-      // Highlight current status chip
-      const currentStatus = state.stockStatuses[productId] || 'plenty';
+      // Highlight current status chip (computed from quantity)
+      const currentStatus = getStockStatus(product);
       const statusChips = document.querySelectorAll('.status-chip');
       statusChips.forEach(function(chip) {
         chip.classList.toggle('active', chip.dataset.status === currentStatus);
@@ -1263,18 +1263,6 @@
 
   function closeStockDetail() {
     if (dom.stockDetailOverlay) dom.stockDetailOverlay.classList.remove('open');
-  }
-
-  function setStockStatus(productId, status) {
-    state.stockStatuses[productId] = status;
-    saveState();
-    renderStocksList();
-
-    // Update chips highlight
-    var statusChips = document.querySelectorAll('.status-chip');
-    statusChips.forEach(function(chip) {
-      chip.classList.toggle('active', chip.dataset.status === status);
-    });
   }
 
   function openDeductStock(productId) {
@@ -1292,8 +1280,8 @@
         const editLink = document.getElementById('stockDetailEditLink');
         if (editLink) editLink.href = 'add_product.html?edit=' + productId;
 
-        // Highlight current status chip
-        const currentStatus = state.stockStatuses[productId] || 'plenty';
+        // Highlight current status chip (computed from quantity)
+        const currentStatus = getStockStatus(product);
         const statusChips = document.querySelectorAll('.status-chip');
         statusChips.forEach(function(chip) {
           chip.classList.toggle('active', chip.dataset.status === currentStatus);
@@ -1316,13 +1304,7 @@
     }
 
     product.quantity -= qty;
-
-    // Auto-update stock status
-    if (product.quantity <= 0) {
-      state.stockStatuses[pid] = 'out';
-    } else if (product.quantity <= (product.lowStockThreshold || 5)) {
-      state.stockStatuses[pid] = 'low';
-    }
+    // Status is now auto-computed from quantity via getStockStatus()
 
     saveState();
     closeStockDetail();
@@ -1752,18 +1734,8 @@
     if (dom.btnStockDetailBack) {
       dom.btnStockDetailBack.addEventListener('click', closeStockDetail);
     }
-    // Status chip click handler (event delegation)
-    var statusOptions = document.getElementById('stockStatusOptions');
-    if (statusOptions) {
-      statusOptions.addEventListener('click', function(e) {
-        var chip = e.target.closest('.status-chip');
-        if (!chip) return;
-        var pid = dom.stockDetailOverlay ? dom.stockDetailOverlay.dataset.productId : null;
-        if (pid) {
-          setStockStatus(pid, chip.dataset.status);
-        }
-      });
-    }
+    // Status chips are now display-only; computed from quantity
+    // Removed manual status setting via chip clicks
     if (dom.btnConfirmDeduct) {
       dom.btnConfirmDeduct.addEventListener('click', confirmDeductStock);
     }
@@ -2004,18 +1976,14 @@
 
     if (dom.btnExportData) {
       dom.btnExportData.addEventListener('click', function() {
-        console.log('Sari-Sari Smart Data Export:', {
-          settings: state.settings, products: state.products,
-          sales: state.sales, customers: state.customers,
-          debts: state.debts, dailyEntries: state.dailyEntries,
-          stockStatuses: state.stockStatuses
-        });
-        showToast(t('dataExported'));
+        showToast(t('dataExportPlaceholder'), 'info');
       });
     }
 
     if (dom.btnImportData) {
-      dom.btnImportData.addEventListener('click', () => showToast('Import feature coming soon.', 'error'));
+      dom.btnImportData.addEventListener('click', function() {
+        showToast(t('dataImportPlaceholder'), 'info');
+      });
     }
 
     if (dom.btnResetData) {
@@ -2057,6 +2025,8 @@
   // ============================================
   // TUTORIAL
   // ============================================
+  var _tutorialRAF = null;
+
   const tutorialSteps = [
     { textKey: 'tutorial1', highlight: null, page: 'sales', align: 'auto' },
     { textKey: 'tutorial2', highlight: '#btnSaveDailySales', page: 'sales', align: 'auto' },
@@ -2077,6 +2047,47 @@
     var targetCenter = rect.top + rect.height / 2;
     if (targetCenter < viewportH * 0.4) return 'flex-end';
     return 'flex-start';
+  }
+
+  function stopHighlightTracking() {
+    if (_tutorialRAF) {
+      cancelAnimationFrame(_tutorialRAF);
+      _tutorialRAF = null;
+    }
+  }
+
+  function startHighlightTracking() {
+    stopHighlightTracking();
+
+    function track() {
+      if (!dom.tutorialOverlay || !dom.tutorialOverlay.classList.contains('active')) {
+        stopHighlightTracking();
+        return;
+      }
+      if (!dom.tutorialHighlight || dom.tutorialHighlight.style.display === 'none') {
+        _tutorialRAF = requestAnimationFrame(track);
+        return;
+      }
+
+      var step = tutorialSteps[state._tutorialStep];
+      if (!step || !step.highlight) {
+        _tutorialRAF = requestAnimationFrame(track);
+        return;
+      }
+
+      var target = document.querySelector(step.highlight);
+      if (target) {
+        var rect = target.getBoundingClientRect();
+        dom.tutorialHighlight.style.left = (rect.left - 4) + 'px';
+        dom.tutorialHighlight.style.top = (rect.top - 4) + 'px';
+        dom.tutorialHighlight.style.width = (rect.width + 8) + 'px';
+        dom.tutorialHighlight.style.height = (rect.height + 8) + 'px';
+      }
+
+      _tutorialRAF = requestAnimationFrame(track);
+    }
+
+    _tutorialRAF = requestAnimationFrame(track);
   }
 
   function startTutorial(isReplay) {
@@ -2122,14 +2133,23 @@
         var target = document.querySelector(step.highlight);
         if (target) {
           var rect = target.getBoundingClientRect();
-          var overlayRect = dom.tutorialOverlay.getBoundingClientRect();
+          dom.tutorialHighlight.style.position = 'fixed';
+          dom.tutorialHighlight.style.zIndex = '151';
           dom.tutorialHighlight.style.display = 'block';
-          dom.tutorialHighlight.style.left = (rect.left - overlayRect.left - 4) + 'px';
-          dom.tutorialHighlight.style.top = (rect.top - overlayRect.top - 4) + 'px';
+          dom.tutorialHighlight.style.left = (rect.left - 4) + 'px';
+          dom.tutorialHighlight.style.top = (rect.top - 4) + 'px';
           dom.tutorialHighlight.style.width = (rect.width + 8) + 'px';
           dom.tutorialHighlight.style.height = (rect.height + 8) + 'px';
-        } else dom.tutorialHighlight.style.display = 'none';
-      } else dom.tutorialHighlight.style.display = 'none';
+          // Start continuous tracking so highlight follows the target on any layout change
+          startHighlightTracking();
+        } else {
+          dom.tutorialHighlight.style.display = 'none';
+          stopHighlightTracking();
+        }
+      } else {
+        dom.tutorialHighlight.style.display = 'none';
+        stopHighlightTracking();
+      }
     }
 
     if (dom.tutorialBox) {
@@ -2157,6 +2177,7 @@
   }
 
   function endTutorial() {
+    stopHighlightTracking();
     if (!dom.tutorialOverlay) return;
     state._tutorialActive = false;
     dom.tutorialOverlay.style.display = 'none';

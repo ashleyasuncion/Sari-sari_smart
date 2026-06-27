@@ -1786,15 +1786,39 @@ select.form-input {
 }
 
 /* ============================================
-   TUTORIAL OVERLAY
+   TUTORIAL ROOT (outside phone-frame for position:fixed correctness)
    ============================================ */
-.tutorial-overlay {
-  position: absolute;
-  top: 30px;
+#tutorialRoot {
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Let clicks pass through to the phone frame below when tutorial is hidden.
+     When tutorial is active (.tutorial-overlay.active), pointer-events: auto
+     on the overlay overrides this for the interactive elements. */
+  pointer-events: none;
+}
+
+/* On larger screens, position:fixed elements are removed from flexbox flow,
+   so centering them to match the phone-frame requires JS positioning.
+   For now, #tutorialRoot stays full-viewport — the backdrop extending into
+   the dark area on desktop is cosmetic and can be refined later. */
+/* Desktop refinement of #tutorialRoot centering can go here if needed. */
+
+/* ============================================
+   TUTORIAL OVERLAY
+   ============================================ */
+.tutorial-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1817,8 +1841,8 @@ select.form-input {
   position: absolute;
   border-radius: var(--radius);
   box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary);
-  transition: all 0.4s ease;
   pointer-events: none;
+  z-index: 151;
 }
 .tutorial-box {
   position: relative;
@@ -1907,6 +1931,9 @@ select.form-input {
 }
 .toast.error {
   background: var(--danger);
+}
+.toast.info {
+  background: #1e40af;
 }
 @keyframes toastIn {
   from { transform: translateY(12px); opacity: 0; }

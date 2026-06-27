@@ -6,6 +6,16 @@ Project: HTML Prototype for Sari-Sari Store Management App
 Version: v2.2 (specific sale: product name lookup + quantity + auto-total)
 ================================================================================
 
+📋 FORMAT NOTE (June 27, 2026):
+From this point forward, all progress updates MUST follow this format:
+- Each development session appends a NEW timestamped entry at the bottom
+- Previous entries are NEVER modified or rewritten
+- Each entry must clearly document: what was changed, added, removed,
+  which functionalities were affected, and any important implementation
+  decisions or observations
+- This keeps the log chronological, organized, and reviewable as a
+  complete development history
+
 PROJECT OVERVIEW
 --------------------------------------------------------------------------------
 Sari-Sari Smart is a mobile-first daily business companion for traditional sari-sari
@@ -297,6 +307,19 @@ FIXES & CHANGES LOG
      - If Daily Cash Summary is recorded, it takes priority (authoritative total)
      - Home dashboard and Sales form auto-refresh after saving a specific sale
 
+=== v2.3 placeholder updates (June 27, 2026) ===
+[✓] Updated: Export Data button now shows informational toast placeholder
+     - Message: "Export will be available in the full app version."
+     - Previous behavior: logged data to console
+     - Supports both English and Filipino localization
+
+[✓] Updated: Import Data button now shows informational toast placeholder
+     - Message: "Import will be available in the full app version."
+     - Previous behavior: showed "Import feature coming soon." toast
+     - Supports both English and Filipino localization
+
+[✓] Added: .toast.info CSS class — blue background for informational messages
+
 === v2.2 specific sale overhaul (June 26, 2026) ===
 [✓] Replaced: "Item Description" free-text field → "Product Name" with datalist autocomplete
      - Added populateProductSuggestions() — fills suggestions from inventory products
@@ -387,6 +410,62 @@ VERIFICATION LOG
 [✓] No changes were made to any files during this review session
 
 Status: All modules [✓] remain fully implemented with no changes needed.
+
+=== v2.4 tutorial system overhaul (June 27, 2026) ===
+
+[✓] Added: Dynamic tutorial highlight tracking via requestAnimationFrame
+     - New _tutorialRAF variable and startHighlightTracking() function
+     - Continuously reads target's getBoundingClientRect() on every frame
+     - Highlight self-corrects on any layout change (resize, text scaling, scroll)
+     - RAF loop self-terminates when overlay is closed or tutorial ends
+     - Solves misalignment on desktop (text scaling, window resize)
+
+[✓] Added: #tutorialRoot wrapper (Solution A — move overlay outside phone-frame)
+     - New <div id="tutorialRoot"> placed as sibling of .phone-frame (direct child of <body>)
+     - Position: fixed; inset: 0; z-index: 150; pointer-events: none
+     - Tutorial overlay markup moved from inside .app-container to #tutorialRoot
+     - On desktop: full-viewport coverage (backdrop extends into dark area — cosmetic only)
+     - On mobile: covers full viewport (identical to phone-frame area)
+
+[✓] Removed: Tutorial overlay from inside .app-container
+     - Removed from 6 HTML files: sales.html, inventory.html, home.html, debts.html,
+       help.html, reports.html
+     - No longer a descendant of .phone-frame (which has transform: scale())
+     - Fixes containing block conflict: position:fixed on highlight now correctly
+       references the viewport instead of the transformed .phone-frame
+
+[✓] Changed: .tutorial-overlay default top from 30px to 0
+     - No longer needs to skip past phone notch (now outside phone-frame)
+     - Mobile media query override still applies (top: 0) — now redundant but harmless
+
+[✓] Fixed: App non-interactivity after Solution A
+     - Added pointer-events: none to #tutorialRoot
+     - Without this, the full-viewport fixed layer at z-index 150 intercepted all clicks
+     - When tutorial is hidden: clicks pass through #tutorialRoot to phone frame
+     - When tutorial is active: .tutorial-overlay.active overrides with pointer-events: auto
+
+[✓] Affected files:
+     - app.js: Added startHighlightTracking(), stopHighlightTracking(), _tutorialRAF
+     - style.css: Added #tutorialRoot section, pointer-events, changed overlay top
+     - sales.html, inventory.html, home.html, debts.html, help.html, reports.html:
+       Moved tutorial overlay to #tutorialRoot outside phone-frame
+
+[✓] Implementation notes:
+     - app.js needed no changes for DOM lookup (getElementById works globally)
+     - Step 1 has no highlight (just text) but overlay still works
+     - Buttons (Next/Skip) remain clickable during active tutorial
+     - Backdrop correctly blocks clicks to underlying page during tutorial
+     - Desktop cosmetic: backdrop extends into dark background outside frame
+     - Desktop #tutorialRoot centering refinement deferred (position:fixed can't
+       be centered via body flexbox)
+
+[✓] Browser test results (Samsung Galaxy S21 360x800 mobile viewport):
+     - Sales page step 2 (#btnSaveDailySales): 4/4 alignment checks PASSED
+     - Tutorial buttons (Next/Skip) functional
+     - Backdrop correctly blocks clicks
+     - Post-tutorial: full app interactivity restored
+     - Inventory page: alignment requires additional investigation
+       (potential issue with tutorial state persistence across page navigation)
 
 ================================================================================
 END OF PROGRESS REPORT

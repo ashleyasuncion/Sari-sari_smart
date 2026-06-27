@@ -2644,8 +2644,14 @@
     // Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        if (dom.confirmOverlay && dom.confirmOverlay.classList.contains('open')) closeConfirm();
+        if (dom.devPanel && dom.devPanel.classList.contains('open')) toggleDevPanel();
+        else if (dom.confirmOverlay && dom.confirmOverlay.classList.contains('open')) closeConfirm();
         else if (dom.tutorialOverlay && dom.tutorialOverlay.classList.contains('active')) endTutorial();
+      }
+      // Shift+N: Developer Panel
+      if (e.key === 'N' && e.shiftKey && !e.repeat) {
+        e.preventDefault();
+        toggleDevPanel();
       }
     });
 
@@ -2721,6 +2727,268 @@
     if (summaryOverlay) summaryOverlay.style.display = 'block';
     saveState();
   };
+
+  // ============================================
+  // DEVELOPER PANEL (Shift+N)
+  // ============================================
+  function buildDevPanel() {
+    if (dom.devPanel) return;
+    var el = document.createElement('div');
+    el.id = 'sssDevPanel';
+    el.className = 'dev-panel-overlay';
+    el.innerHTML = [
+      '<div class="dev-panel">',
+        '<div class="dev-panel-header">',
+          '<span class="dev-panel-title">\uD83D\uDD27 Developer Panel</span>',
+          '<button class="dev-panel-close" id="devPanelClose">&times;</button>',
+        '</div>',
+        '<div class="dev-panel-body">',
+          '<div class="dev-panel-section">',
+            '<div class="dev-panel-section-title">Sales \u0026 Data</div>',
+            '<button class="dev-panel-btn" data-action="reset-today-sales">Reset Today\u2019s Sales</button>',
+            '<button class="dev-panel-btn" data-action="generate-test-sale">Generate Test Sale Entry</button>',
+            '<button class="dev-panel-btn" data-action="generate-test-debts">Add Sample Debts</button>',
+          '</div>',
+          '<div class="dev-panel-section">',
+            '<div class="dev-panel-section-title">Inventory</div>',
+            '<button class="dev-panel-btn" data-action="clear-inventory">Clear All Inventory</button>',
+            '<button class="dev-panel-btn" data-action="seed-sample-data">Seed Sample Products</button>',
+            '<button class="dev-panel-btn" data-action="bulk-add-items">Bulk Add Items</button>',
+          '</div>',
+          '<div class="dev-panel-section">',
+            '<div class="dev-panel-section-title">Advanced</div>',
+            '<button class="dev-panel-btn" data-action="view-raw-state">View Raw State (JSON)</button>',
+            '<button class="dev-panel-btn" data-action="export-data">Export All Data</button>',
+            '<button class="dev-panel-btn" data-action="import-data">Import Data</button>',
+            '<button class="dev-panel-btn dev-panel-btn--danger" data-action="reset-all">Reset All Application Data</button>',
+          '</div>',
+          '<div class="dev-panel-section">',
+            '<div class="dev-panel-section-title">Clear Specific Data</div>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="products" checked> Products</label>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="dailyEntries" checked> Daily Entries</label>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="specificSales" checked> Specific Sales</label>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="debts" checked> Debts</label>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="customers" checked> Customers</label>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="endOfDayData" checked> End-of-Day Data</label>',
+            '<label class="dev-panel-checkbox"><input type="checkbox" data-clear="settings"> Settings (reset to defaults)</label>',
+            '<button class="dev-panel-btn dev-panel-btn--danger" data-action="clear-selected">Clear Selected Datasets</button>',
+          '</div>',
+        '</div>',
+      '</div>'
+    ].join('\n');
+    document.body.appendChild(el);
+    dom.devPanel = el;
+    document.getElementById('devPanelClose').addEventListener('click', toggleDevPanel);
+    dom.devPanel.addEventListener('click', function(e) { if (e.target === this) toggleDevPanel(); });
+    dom.devPanel.querySelectorAll('[data-action]').forEach(function(btn) {
+      btn.addEventListener('click', function() { handleDevAction(this.dataset.action); });
+    });
+  }
+
+  function toggleDevPanel() {
+    if (!dom.devPanel) buildDevPanel();
+    dom.devPanel.classList.toggle('open');
+  }
+
+  function handleDevAction(action) {
+    switch (action) {
+      case 'reset-today-sales': resetTodaySales(); break;
+      case 'generate-test-sale': generateTestSale(); break;
+      case 'generate-test-debts': generateTestDebts(); break;
+      case 'clear-inventory': clearAllInventory(); break;
+      case 'seed-sample-data': seedSampleData(); break;
+      case 'bulk-add-items': bulkAddItems(); break;
+      case 'view-raw-state': viewRawState(); break;
+      case 'export-data': exportAllData(); break;
+      case 'import-data': showImportDialog(); break;
+      case 'reset-all': resetAllData(); break;
+      case 'clear-selected': clearSelectedData(); break;
+    }
+  }
+
+  function resetTodaySales() {
+    showConfirm('Reset Today\u2019s Sales?', 'This will remove today\u2019s daily entry and all specific sales recorded today.', function() {
+      var today = todayStr();
+      var idx = state.dailyEntries.findIndex(function(e) { return e.date === today; });
+      if (idx !== -1) state.dailyEntries.splice(idx, 1);
+      state.specificSales = state.specificSales.filter(function(s) { return !isSameDay(s.createdAt || s.date, today); });
+      delete state.endOfDayData[today];
+      saveState();
+      showToast('Today\u2019s sales data has been reset.', 'info');
+      refreshAll(); toggleDevPanel();
+    }, 'warning');
+  }
+
+  function generateTestSale() {
+    var today = todayStr();
+    if (state.dailyEntries.find(function(e) { return e.date === today; })) {
+      showToast('Today already has a recorded sale. Reset it first.', 'error'); return;
+    }
+    var expenses = Math.floor(Math.random() * 500) + 100;
+    var earnings = expenses + Math.floor(Math.random() * 800) + 50;
+    var gross = earnings - expenses;
+    var mp = state.settings.defaultMarkup || 10;
+    state.dailyEntries.push({
+      date: today, stockExpenses: expenses, earnings: earnings,
+      grossProfit: Math.max(0, gross), netProfit: Math.max(0, gross * (1 - mp / 100)),
+      revolvingFund: Math.max(0, earnings - (earnings * (mp / 100))),
+      markupPercentage: mp, createdAt: new Date().toISOString()
+    });
+    saveState();
+    showToast('Test sale entry created: ' + formatCurrency(earnings) + ' earnings.', 'success');
+    refreshAll(); toggleDevPanel();
+  }
+
+  function generateTestDebts() {
+    var names = ['Ana', 'Pedro', 'Liza', 'Ramon', 'Nena', 'Mario', 'Linda'];
+    var count = 0;
+    names.forEach(function(name) {
+      if (state.debts.find(function(d) { return d.customerName === name && d.remainingBalance > 0; })) return;
+      var customer = state.customers.find(function(c) { return c.name === name; });
+      if (!customer) { customer = { id: generateId(), name: name }; state.customers.push(customer); }
+      if (state.usedCustomerNames.indexOf(name) === -1) state.usedCustomerNames.push(name);
+      state.debts.push({
+        id: generateId(), customerId: customer.id, customerName: name,
+        amount: (Math.floor(Math.random() * 15) + 3) * 10,
+        remainingBalance: (Math.floor(Math.random() * 15) + 3) * 10,
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), payments: []
+      });
+      count++;
+    });
+    saveState();
+    showToast('Added ' + count + ' sample debt entries.', 'success');
+    refreshAll(); toggleDevPanel();
+  }
+
+  function clearAllInventory() {
+    showConfirm('Clear All Inventory?', 'This will remove all products from your inventory.', function() {
+      state.products = []; state.stockStatuses = {}; saveState();
+      showToast('Inventory cleared.', 'info'); refreshAll(); toggleDevPanel();
+    }, 'warning');
+  }
+
+  function seedSampleData() {
+    showConfirm('Seed Sample Data?', 'This will replace your inventory with sample products.', function() {
+      state.products = getSampleProducts(); state.stockStatuses = {}; saveState();
+      showToast('Sample products loaded (' + state.products.length + ' items).', 'success');
+      refreshAll(); toggleDevPanel();
+    }, 'warning');
+  }
+
+  function bulkAddItems() {
+    var count = parseInt(prompt('How many sample items to add?', '5')) || 0;
+    if (count <= 0 || count > 50) { showToast('Enter a number between 1 and 50.', 'error'); return; }
+    var names = ['Sardines', 'Coffee', 'Milk', 'Soap', 'Shampoo', 'Candy', 'Biscuit', 'Juice', 'Ice Cream', 'Chips'];
+    for (var i = 0; i < count; i++) {
+      var baseName = names[i % names.length];
+      var suffix = i >= names.length ? ' ' + (Math.floor(i / names.length) + 1) : '';
+      state.products.push({
+        id: generateId(), name: baseName + suffix,
+        costPrice: Math.floor(Math.random() * 30) + 5,
+        sellingPrice: Math.floor(Math.random() * 45) + 10,
+        quantity: Math.floor(Math.random() * 30) + 1, unit: 'piece', lowStockThreshold: 5
+      });
+    }
+    saveState();
+    showToast('Added ' + count + ' items to inventory.', 'success');
+    refreshAll(); toggleDevPanel();
+  }
+
+  function viewRawState() {
+    var data = {
+      settings: state.settings, products: state.products.length,
+      dailyEntries: state.dailyEntries.length, specificSales: state.specificSales.length,
+      debts: state.debts.length, customers: state.customers.length,
+      eodDays: Object.keys(state.endOfDayData).length
+    };
+    alert('RAW STATE\n' + JSON.stringify(data, null, 2));
+    toggleDevPanel();
+  }
+
+  function exportAllData() {
+    var data = {
+      exportedAt: new Date().toISOString(), app: 'Sari-Sari Smart', version: '2.7',
+      settings: state.settings, products: state.products,
+      dailyEntries: state.dailyEntries, specificSales: state.specificSales,
+      debts: state.debts, customers: state.customers, endOfDayData: state.endOfDayData
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'sari-sari-smart-backup-' + todayStr() + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Data exported!', 'success');
+    toggleDevPanel();
+  }
+
+  function showImportDialog() {
+    var input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json';
+    input.addEventListener('change', function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        try { importData(JSON.parse(ev.target.result)); }
+        catch(err) { showToast('Invalid JSON file.', 'error'); }
+      };
+      reader.readAsText(file);
+    });
+    input.click();
+  }
+
+  function importData(data) {
+    if (!data || !data.settings) { showToast('Invalid backup file format.', 'error'); return; }
+    showConfirm('Import Data?', 'This will replace all current data.', function() {
+      if (data.settings) state.settings = data.settings;
+      if (data.products) state.products = data.products;
+      if (data.dailyEntries) state.dailyEntries = data.dailyEntries;
+      if (data.specificSales) state.specificSales = data.specificSales;
+      if (data.debts) state.debts = data.debts;
+      if (data.customers) state.customers = data.customers;
+      if (data.endOfDayData) state.endOfDayData = data.endOfDayData;
+      saveState(); applyLanguage(); applyTextSize();
+      showToast('Data imported!', 'success');
+      refreshAll(); toggleDevPanel();
+    }, 'warning');
+  }
+
+  function resetAllData() {
+    showConfirm('Reset All Data?', 'This will permanently delete all data and reload with sample data.', function() {
+      try {
+        localStorage.removeItem('sss_settings'); localStorage.removeItem('sss_products');
+        localStorage.removeItem('sss_sales'); localStorage.removeItem('sss_customers');
+        localStorage.removeItem('sss_debts'); localStorage.removeItem('sss_usedNames');
+        localStorage.removeItem('sss_stockStatuses'); localStorage.removeItem('sss_dailyEntries');
+        localStorage.removeItem('sss_specificSales'); localStorage.removeItem('sss_eodData');
+      } catch(e) {}
+      window.location.href = 'index.html';
+    }, 'warning');
+  }
+
+  function clearSelectedData() {
+    if (!dom.devPanel) return;
+    var checkboxes = dom.devPanel.querySelectorAll('[data-clear]:checked');
+    if (checkboxes.length === 0) { showToast('Select at least one dataset.', 'error'); return; }
+    var labels = [];
+    checkboxes.forEach(function(cb) { labels.push(cb.parentNode.textContent.trim()); });
+    showConfirm('Clear Selected Data?', 'This will clear: ' + labels.join(', '), function() {
+      checkboxes.forEach(function(cb) {
+        switch (cb.dataset.clear) {
+          case 'products': state.products = []; state.stockStatuses = {}; break;
+          case 'dailyEntries': state.dailyEntries = []; break;
+          case 'specificSales': state.specificSales = []; break;
+          case 'debts': state.debts = []; break;
+          case 'customers': state.customers = []; state.usedCustomerNames = []; break;
+          case 'endOfDayData': state.endOfDayData = {}; break;
+          case 'settings': state.settings = { language: 'en', textSize: 'standard', storeName: 'My Store', ownerName: 'Owner', hasCompletedTutorial: false, defaultMarkup: 20 }; break;
+        }
+      });
+      saveState(); showToast('Selected data cleared.', 'info');
+      refreshAll(); applyLanguage(); applyTextSize(); toggleDevPanel();
+    }, 'warning');
+  }
 
   // Start
   if (document.readyState === 'loading') {

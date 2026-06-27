@@ -582,6 +582,58 @@ Status: All modules [✓] remain fully implemented with no changes needed.
        updated getBusinessTip(), wired into input handler + render/form/save
      - style.css: .daily-insight with loss/info/success variants
 
+=== v2.8 developer panel (Shift+N) (June 27, 2026) ===
+
+[✓] Added: Hidden Developer Panel accessible via Shift+N keyboard shortcut
+     - Only accessible via keyboard (Shift+N) — never exposed through normal UI
+     - No new HTML files needed — panel is dynamically generated in JavaScript
+     - Dark themed overlay (position:fixed, z-index:1000) with backdrop blur
+     - Organized into 4 sections with categorized dev tools
+
+[✓] Added: Keyboard shortcut handler in init()
+     - Shift+N: toggles dev panel, with !e.repeat guard and preventDefault
+     - Escape handler updated to close dev panel first (before confirm/tutorial)
+
+[✓] Dev tools implemented (11 actions across 4 sections):
+     → Sales & Data:
+        - Reset Today's Sales: removes daily entry, specific sales, and EOD data for today
+        - Generate Test Sale Entry: creates a randomized daily sale
+        - Add Sample Debts: creates 7 test debtors with random amounts
+     → Inventory:
+        - Clear All Inventory: empties products array
+        - Seed Sample Products: reloads the 10 default sample items
+        - Bulk Add Items: prompts for count (1-50), generates items with randomized data
+     → Advanced:
+        - View Raw State (JSON): alert with counts and first 3 products
+        - Export All Data: downloads full state as JSON file
+        - Import Data: file picker to upload and restore a backup
+        - Reset All Application Data: clears all localStorage and reloads to index.html
+     → Clear Specific Data:
+        - 7 checkboxes (Products, Daily Entries, Specific Sales, Debts, Customers,
+          End-of-Day Data, Settings) to selectively clear datasets
+        - "Clear Selected Datasets" button with confirmation
+
+[✓] All dev actions use existing app infrastructure:
+     - showConfirm() for dangerous operations (same modal used throughout app)
+     - showToast() for feedback
+     - saveState()/refreshAll() for persistence and UI updates
+     - showImportDialog() uses file input for JSON upload
+     - exportAllData() uses Blob + URL.createObjectURL for download
+
+[✓] CSS: Full dark theme for dev panel (.dev-panel-overlay, .dev-panel, .dev-panel-btn)
+     - Dark background (#0f172a/#1e293b) with muted text and hover effects
+     - Danger buttons in red tones
+     - Responsive for mobile (max-width: 420px)
+     - Animated entry (scale + translate + fade)
+
+[✓] Affected files:
+     - app.js: Shift+N shortcut in init(), ~250 lines of dev panel functions,
+       buildDevPanel(), toggleDevPanel(), handleDevAction(), resetTodaySales(),
+       generateTestSale(), generateTestDebts(), clearAllInventory(), seedSampleData(),
+       bulkAddItems(), viewRawState(), exportAllData(), showImportDialog(),
+       importData(), resetAllData(), clearSelectedData()
+     - style.css: Full dev panel dark theme stylesheet section
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================

@@ -44,6 +44,10 @@
       grossProfit: 'Gross Profit',
       netProfit: 'Estimated Net Profit',
       revolvingFund: 'Revolving Fund',
+      insightLoss: '⚠ Your expenses exceed your earnings. You are operating at a loss. Consider raising prices or finding cheaper suppliers to protect your business.',
+      insightLowMargin: '📊 Your profit margin is very thin. You are covering costs but leaving little room. Try increasing your selling prices or reducing expenses for a healthier margin.',
+      insightHealthy: '✅ Healthy profit margin! Your sales are performing well. Keep up the great work, and consider setting aside your profit for future growth.',
+      insightGreat: '🌟 Excellent sales performance! You have a strong profit margin today. Save a portion for reinvestment and celebrate your success!',
       saveSales: 'Save Today\'s Sales',
       todayRecorded: 'Today\'s sales recorded!',
       todayAlreadyRecorded: 'Today\'s sales are already recorded',
@@ -183,14 +187,56 @@
       productSaved: 'Item saved.',
       all: 'All',
       backToSales: 'Back to Sales',
-      tutorial1: 'Welcome to Sari-Sari Smart! This quick tour will show you around.',
-      tutorial2: 'This is the Sales screen. Tap "Record Today\'s Sales" and enter your stock expenses and earnings for the day.',
-      tutorial3: 'The Stocks page shows all your items with color-coded status: green = plenty, orange = getting low, red = out of stock.',
-      tutorial4: 'Tap any item to update its status or deduct stock when something sells.',
-      tutorial5: 'The Utang page tracks customer debts. Tap "New Debt" to add a manual entry, or tap a customer to record payments.',
-      tutorial6: 'The Home screen gives you a snapshot of your store: today\'s earnings, stock alerts, debts, and business tips.',
-      tutorial7: 'From the Help screen you can replay this tutorial, read the guide, or contact support.',
-      tutorial8: 'You\'re all set! Start using Sari-Sari Smart to manage your store.',
+      tutorial1: 'Welcome to Sari-Sari Smart! This quick tour will show you how to manage your store every day.',
+      tutorial2: 'This is the Sales screen. Tap "Record Today\'s Sales" to enter your stock expenses (gastos) and earnings (kita) for the day. The app will automatically calculate your profit and revolving fund.',
+      tutorial3: 'The Stocks page shows all your inventory items with color-coded status: green = plenty, orange = getting low, red = out of stock. Use the search bar to find items and check the "Running Low" section for items that need restocking.',
+      tutorial4: 'Tap any item to view its details, deduct stock when something sells, or check its cost and selling price. Tap "Add Stock" to add new items to your inventory.',
+      tutorial5: 'The Utang page tracks customer debts. The total outstanding balance is shown at the top. Tap a customer card to view their debt history and record payments. Tap "New Debt" to add a manual entry.',
+      tutorial6: 'The Home screen gives you a complete snapshot of your store: today\'s earnings, stock alerts, outstanding debts, and the End-of-Day closing routine. Business tips help you make smarter decisions.',
+      tutorial7: 'From the Help screen you can replay this tutorial, read the detailed "How to Use" guide with step-by-step instructions for sales, products, debts, and reports, or contact support.',
+      tutorial8: 'You\'re all set! Start using Sari-Sari Smart to manage your store, track inventory, record sales, and monitor customer utang. Good luck sa iyong tindahan!',
+      tutorial9: 'Need more detailed guidance? You can access step-by-step tutorials for each page from the Help section — just go to Help and pick the tutorial you want. Or look for the (?) Help button at the top of any page — tap it to launch a page-specific tutorial whenever you need extra guidance!',
+      // Tutorial Labels
+      tutMain: 'Main Tutorial',
+      tutHome: 'Home Tutorial',
+      tutStock: 'Stock Tutorial',
+      tutSales: 'Sales Tutorial',
+      tutDebt: 'Debt Tutorial',
+      tutLaunch: 'Launch',
+      tutSelector: 'Select a tutorial...',
+      tutSelectToast: 'Please select a tutorial from the dropdown before launching.',
+      // Home Tutorial
+      homeTutorial1: 'This is your Home dashboard — your store\'s command center. Get a complete snapshot of your business at a glance.',
+      homeTutorial2: 'Today\'s Earnings shows your total sales and profit for today. Tap it to go to the Sales page.',
+      homeTutorial3: 'Stock Alert tells you how many items are running low. Tap it to go to the Stocks page.',
+      homeTutorial4: 'Outstanding Debts shows the total amount customers owe you. Tap it to go to the Utang page.',
+      homeTutorial5: 'End-of-Day Closing helps you complete your daily store routine: count cash, check stock, and record payments.',
+      homeTutorial6: 'Business Tips give you personalized suggestions based on your store\'s current activity.',
+      // Stock Tutorial
+      stockTutorial1: 'This is the Stocks page where you manage all your inventory items.',
+      stockTutorial2: 'Use the Search bar to quickly find any item by typing its name.',
+      stockTutorial3: 'Tap "Add Stock" to add new products or restock existing ones with details like name, quantity, cost, and selling price.',
+      stockTutorial4: 'Items running low appear in the "Running Low" section at the top, showing remaining quantity and a quick "Add Stock" button.',
+      stockTutorial5: 'All your inventory is listed below with color-coded borders: green = plenty, orange = getting low, red = out of stock.',
+      stockTutorial6: 'Each item card shows the name, status indicator, quantity on hand, and a "Sold" button to quickly deduct stock.',
+      stockTutorial7: 'Tap any item card to open its detail view. You can see cost price, selling price, update the status, or deduct stock.',
+      stockTutorial8: 'In the detail overlay you can update the status to Plenty, Getting Low, or Out of Stock, or tap "Edit" to modify the item.',
+      // Sales Tutorial
+      salesTutorial1: 'This is the Sales page where you record your daily store earnings.',
+      salesTutorial2: 'Enter your Gastos sa Paninda — how much you spent buying stock today from the palengke or supplier.',
+      salesTutorial3: 'Enter your Kinikita Ngayon — the total cash you received from sales today.',
+      salesTutorial4: 'As you fill in the amounts, the app automatically calculates your Gross Profit, Estimated Net Profit, and Revolving Fund.',
+      salesTutorial5: 'Tap "Save Today\'s Sales" to record your daily entry. You can only record once per day.',
+      salesTutorial6: 'Once recorded, your daily summary stays visible showing your gross profit, net profit, and revolving fund.',
+      salesTutorial7: 'Use "Add a Specific Sale" for notable items like large purchases or sales made on utang.',
+      salesTutorial8: 'Recent specific sales appear here showing the product name, amount, and customer if recorded on utang.',
+      // Debt Tutorial
+      debtTutorial1: 'This is the Utang page where you track all customer debts.',
+      debtTutorial2: 'The Total Outstanding card shows the total amount all customers owe you. It updates automatically as payments are recorded.',
+      debtTutorial3: 'Tap "New Debt" to manually add a new debt entry for a customer who borrowed on credit.',
+      debtTutorial4: 'Customer debts are listed here. Each card shows the customer name, last activity date, and current balance.',
+      debtTutorial5: 'Tap any customer card to view their full debt history with dates and amounts, plus their current balance.',
+      debtTutorial6: 'Tap "Record Payment" to log a payment. Enter the amount and an optional note to keep track of partial payments.',
     },
     fil: {
       // Nav
@@ -216,6 +262,10 @@
       grossProfit: 'Gross Profit',
       netProfit: 'Tinantyang Net Profit',
       revolvingFund: 'Pambili ng Paninda',
+      insightLoss: '⚠ Ang iyong gastos ay mas mataas kaysa sa iyong kita. Ikaw ay nalulugi. Subukan mong taasan ang presyo o humanap ng mas murang supplier upang maprotektahan ang iyong negosyo.',
+      insightLowMargin: '📊 Napaka-liit ng iyong tubo. Sapat lang ang iyong kita para masakop ang gastos. Subukan mong taasan ang presyo ng benta o bawasan ang gastos para sa mas malaking tubo.',
+      insightHealthy: '✅ Maganda ang iyong tubo! Mahusay ang takbo ng iyong benta. Ipagpatuloy ito, at magtabi ng bahagi ng iyong kita para sa paglago ng negosyo.',
+      insightGreat: '🌟 Napakahusay na benta! Malaki ang iyong tubo ngayong araw. Mag-ipon para sa reinvestment at ipagdiwang ang iyong tagumpay!',
       saveSales: 'I-save ang Benta Ngayon',
       todayRecorded: 'Naitala na ang benta ngayong araw!',
       todayAlreadyRecorded: 'Ang benta ngayong araw ay naitala na',
@@ -355,14 +405,56 @@
       productSaved: 'Na-save ang item.',
       all: 'Lahat',
       backToSales: 'Bumalik sa Benta',
-      tutorial1: 'Maligayang pagdating sa Sari-Sari Smart! Ang maikling tour na ito ay magpapakita sa iyo.',
-      tutorial2: 'Ito ang Sales screen. I-tap ang "Record Today\'s Sales" at ilagay ang iyong gastos sa paninda at kita para sa araw na ito.',
-      tutorial3: 'Ang Stocks page ay nagpapakita ng lahat ng iyong item na may color-coded status: green = marami pa, orange = medyo kulang, red = wala na.',
-      tutorial4: 'I-tap ang kahit anong item para i-update ang status nito o bawasan ang stock kapag may naibenta.',
-      tutorial5: 'Ang Utang page ay sumusubaybay sa mga utang ng kostumer. I-tap ang "New Debt" para magdagdag ng manu-manong entry, o i-tap ang isang kostumer para magtala ng bayad.',
-      tutorial6: 'Ang Home screen ay nagbibigay sa iyo ng snapshot ng iyong tindahan: kita ngayon, stock alert, utang, at tips sa negosyo.',
-      tutorial7: 'Mula sa Help screen, maaari mong i-replay ang tutorial na ito, basahin ang gabay, o makipag-ugnayan sa support.',
-      tutorial8: 'Handa ka na! Simulan ang paggamit ng Sari-Sari Smart para pamahalaan ang iyong tindahan.',
+      tutorial1: 'Maligayang pagdating sa Sari-Sari Smart! Ang maikling tour na ito ay magtuturo sa iyo kung paano pamahalaan ang iyong tindahan araw-araw.',
+      tutorial2: 'Ito ang Sales screen. I-tap ang "Record Today\'s Sales" para ilagay ang iyong gastos sa paninda (stock expenses) at kita (earnings) para sa araw na ito. Awtomatikong kukuwentahin ng app ang iyong profit at revolving fund.',
+      tutorial3: 'Ang Stocks page ay nagpapakita ng lahat ng iyong inventory item na may color-coded status: green = marami pa, orange = medyo kulang, red = wala na. Gamitin ang search bar para maghanap ng item at tingnan ang "Kulang Na" section para sa mga item na kailangan nang i-restock.',
+      tutorial4: 'I-tap ang kahit anong item para tingnan ang detalye nito, bawasan ang stock kapag may naibenta, o tingnan ang halaga at presyo nito. I-tap ang "Add Stock" para magdagdag ng bagong item sa iyong inventory.',
+      tutorial5: 'Ang Utang page ay sumusubaybay sa mga utang ng kostumer. Makikita ang kabuuang balanse sa itaas. I-tap ang card ng isang kostumer para makita ang kasaysayan ng utang at magtala ng bayad. I-tap ang "New Debt" para magdagdag ng manu-manong utang.',
+      tutorial6: 'Ang Home screen ay nagbibigay sa iyo ng kumpletong snapshot ng iyong tindahan: kita ngayon, stock alert, natitirang utang, at ang End-of-Day closing routine. Ang mga business tips ay makakatulong sa iyong gumawa ng mas matalinong desisyon.',
+      tutorial7: 'Mula sa Help screen, maaari mong i-replay ang tutorial na ito, basahin ang detalyadong "How to Use" guide na may sunod-sunod na tagubilin para sa benta, produkto, utang, at reports, o makipag-ugnayan sa support.',
+      tutorial8: 'Handa ka na! Simulan ang paggamit ng Sari-Sari Smart para pamahalaan ang iyong tindahan, subaybayan ang inventory, itala ang benta, at bantayan ang utang ng kostumer. Good luck sa iyong tindahan!',
+      tutorial9: 'Kailangan mo ng mas detalyadong gabay? Maaari kang pumunta sa Help section para sa step-by-step na tutorial ng bawat page — pumunta lang sa Help at piliin ang tutorial na gusto mo. O hanapin ang (?) Help button sa itaas ng kahit anong page — i-tap ito para simulan ang tutorial para sa page na iyon!',
+      // Tutorial Labels
+      tutMain: 'Main na Tutorial',
+      tutHome: 'Home na Tutorial',
+      tutStock: 'Stock na Tutorial',
+      tutSales: 'Sales na Tutorial',
+      tutDebt: 'Debt na Tutorial',
+      tutLaunch: 'Simulan',
+      tutSelector: 'Pumili ng tutorial...',
+      tutSelectToast: 'Mangyaring pumili ng tutorial mula sa dropdown bago ilunsad.',
+      // Home Tutorial
+      homeTutorial1: 'Ito ang iyong Home dashboard — ang command center ng iyong tindahan. Makita ang kumpletong snapshot ng iyong negosyo.',
+      homeTutorial2: 'Ang Kita Ngayon ay nagpapakita ng iyong kabuuang benta at kita. I-tap ito para pumunta sa Sales page.',
+      homeTutorial3: 'Ang Stock Alert ay nagsasabi kung ilang item ang nauubos na. I-tap ito para pumunta sa Stocks page.',
+      homeTutorial4: 'Ang Outstanding Debts ay nagpapakita ng kabuuang halaga ng utang ng mga kostumer. I-tap ito para pumunta sa Utang page.',
+      homeTutorial5: 'Ang End-of-Day Closing ay tumutulong sa iyong kumpletuhin ang araw-araw na routine: bilangin ang cash, suriin ang stock, at itala ang mga bayad.',
+      homeTutorial6: 'Ang Business Tips ay nagbibigay ng personalized na mungkahi batay sa kasalukuyang aktibidad ng iyong tindahan.',
+      // Stock Tutorial
+      stockTutorial1: 'Ito ang Stocks page kung saan mo pinamamahalaan ang lahat ng iyong inventory item.',
+      stockTutorial2: 'Gamitin ang Search bar para mabilis na makahanap ng item sa pamamagitan ng pag-type ng pangalan nito.',
+      stockTutorial3: 'I-tap ang "Add Stock" para magdagdag ng bagong produkto o mag-restock ng existing item na may detalye tulad ng pangalan, dami, halaga, at presyo.',
+      stockTutorial4: 'Ang mga item na nauubos ay lilitaw sa "Kulang Na" section sa itaas, na may natitirang dami at mabilis na "Add Stock" button.',
+      stockTutorial5: 'Ang lahat ng iyong inventory ay nakalista sa ibaba na may color-coded na border: green = marami pa, orange = medyo kulang, red = wala na.',
+      stockTutorial6: 'Ang bawat item card ay nagpapakita ng pangalan, status indicator, dami, at "Sold" button para mabilis na bawasan ang stock.',
+      stockTutorial7: 'I-tap ang kahit anong item card para buksan ang detalye nito. Makikita mo ang halaga, presyo, at maaaring mag-update ng status.',
+      stockTutorial8: 'Sa detail overlay, maaari mong i-update ang status sa Marami Pa, Medyo Kulang, o Wala Na, o i-tap ang "Edit" para baguhin ang item.',
+      // Sales Tutorial
+      salesTutorial1: 'Ito ang Sales page kung saan mo itinatala ang iyong araw-araw na kita.',
+      salesTutorial2: 'Ilagay ang iyong Gastos sa Paninda — magkano ang ginastos mo sa pagbili ng stock ngayon mula sa palengke o supplier.',
+      salesTutorial3: 'Ilagay ang iyong Kinikita Ngayon — ang kabuuang cash na natanggap mo mula sa benta ngayong araw.',
+      salesTutorial4: 'Habang pinupunan mo ang mga halaga, awtomatikong kukuwentahin ng app ang iyong Gross Profit, Estimated Net Profit, at Revolving Fund.',
+      salesTutorial5: 'I-tap ang "Save Today\'s Sales" para itala ang iyong araw-araw na entry. Minsan ka lang makapag-record bawat araw.',
+      salesTutorial6: 'Kapag naitala na, mananatiling visible ang iyong daily summary na nagpapakita ng gross profit, net profit, at revolving fund.',
+      salesTutorial7: 'Gamitin ang "Add a Specific Sale" para sa mga notable na item tulad ng malaking benta o mga sale na ginawa sa utang.',
+      salesTutorial8: 'Lilitaw dito ang mga kamakailang specific sale na may pangalan ng produkto, halaga, at kostumer kung naitala sa utang.',
+      // Debt Tutorial
+      debtTutorial1: 'Ito ang Utang page kung saan mo sinusubaybayan ang lahat ng utang ng kostumer.',
+      debtTutorial2: 'Ang Total Outstanding card ay nagpapakita ng kabuuang halaga ng utang ng lahat ng kostumer. Awtomatiko itong nag-a-update habang nagtatala ng bayad.',
+      debtTutorial3: 'I-tap ang "New Debt" para magdagdag ng bagong utang para sa isang kostumer na umutang sa iyo.',
+      debtTutorial4: 'Nakalista dito ang mga utang ng kostumer. Ang bawat card ay nagpapakita ng pangalan, huling aktibidad, at kasalukuyang balanse.',
+      debtTutorial5: 'I-tap ang kahit anong customer card para makita ang buong kasaysayan ng utang na may petsa at halaga, kasama ang kasalukuyang balanse.',
+      debtTutorial6: 'I-tap ang "Record Payment" para magtala ng bayad. Ilagay ang halaga at isang opsyonal na tala para sa bahagyang bayad.',
     }
   };
 
@@ -439,6 +531,7 @@
     dom.dailyGrossProfit = $('dailyGrossProfit');
     dom.dailyNetProfit = $('dailyNetProfit');
     dom.dailyRevolvingFund = $('dailyRevolvingFund');
+    dom.dailyInsight = $('dailyInsight');
     dom.btnSaveDailySales = $('btnSaveDailySales');
     dom.dailyAlreadyRecorded = $('dailyAlreadyRecorded');
     dom.dailyForm = $('dailyForm');
@@ -452,8 +545,7 @@
     dom.btnBackSales = $('btnBackSales');
     dom.specificQty = $('specificQty');
     dom.specificAmountDisplay = $('specificAmountDisplay');
-    dom.productPriceInfo = $('productPriceInfo');
-    dom.productSuggestions = $('productSuggestions');
+    dom.productSuggestion = $('productSuggestion');
 
     // Stocks page
     dom.kulangNaSection = $('kulangNaSection');
@@ -511,7 +603,6 @@
     dom.btnNewDebtCancel = $('btnNewDebtCancel');
 
     // Help page
-    dom.helpReplayTutorial = $('helpReplayTutorial');
     dom.helpHowToUse = $('helpHowToUse');
     dom.helpContact = $('helpContact');
     dom.helpAbout = $('helpAbout');
@@ -538,6 +629,13 @@
     dom.tutorialTotal = $('tutorialTotal');
     dom.tutorialSkip = $('tutorialSkip');
     dom.tutorialNext = $('tutorialNext');
+
+    // Tutorial selector (Help page)
+    dom.tutorialSelector = $('tutorialSelector');
+    dom.tutorialLaunchBtn = $('tutorialLaunchBtn');
+
+    // Page header tutorial buttons
+    dom.headerTutorialBtn = $('headerTutorialBtn');
 
     // Reports (embedded in home)
     dom.reportTotalSales = $('reportTotalSales');
@@ -889,6 +987,7 @@
     const debtCustomerCount = state.debts.filter(function(d) { return d.remainingBalance > 0; }).length;
     const salesRecorded = todayEntry !== undefined;
     const eodDone = state.endOfDayData[today] && state.endOfDayData[today].completed;
+
     // Priority 1: Out of stock items — most urgent
     if (anyOutOfStock) {
       var item = outOfStock[0];
@@ -920,7 +1019,45 @@
       return '🏁 Sales are recorded! Complete your day with the End-of-Day closing routine to see your full summary.';
     }
 
-    // Priority 6: General positive feedback — all caught up
+    // Priority 6: Sales performance insights (after stock/debt checks)
+    if (salesRecorded) {
+      var insight = getSalesInsight(todayEntry.stockExpenses, todayEntry.earnings, todayEntry.grossProfit);
+      if (insight && insight.type === 'loss') {
+        return '⚠ ' + t('insightLoss');
+      }
+    }
+
+    // Calculate recent sales trend (last 7 days)
+    var recentEntries = state.dailyEntries.filter(function(e) {
+      return e.date !== today && e.date >= daysAgo(today, 7);
+    });
+    var recentAvgEarnings = recentEntries.length > 0
+      ? recentEntries.reduce(function(sum, e) { return sum + e.earnings; }, 0) / recentEntries.length
+      : 0;
+
+    if (salesRecorded && recentEntries.length >= 2) {
+      var margin = todayEntry.earnings > 0 ? (todayEntry.grossProfit / todayEntry.earnings) * 100 : 0;
+      if (todayEntry.earnings > recentAvgEarnings * 1.2) {
+        return '📈 Your sales today (' + formatCurrency(todayEntry.earnings) + ') are ' + Math.round((todayEntry.earnings / recentAvgEarnings - 1) * 100) + '% higher than your recent average! Keep up the momentum!';
+      } else if (todayEntry.earnings < recentAvgEarnings * 0.8) {
+        return '📉 Your sales today are lower than your recent average. Don\'t worry — every day is different. Check stock levels and try promoting your best-sellers tomorrow.';
+      } else if (margin >= 30) {
+        return '✅ Strong profit margin of ' + Math.round(margin) + '%! You are pricing your items well. Consider expanding your product range with this healthy margin.';
+      }
+    }
+
+    if (salesRecorded && recentEntries.length === 0) {
+      var margin = todayEntry.earnings > 0 ? (todayEntry.grossProfit / todayEntry.earnings) * 100 : 0;
+      if (margin >= 30) {
+        return '✅ Strong profit margin of ' + Math.round(margin) + '% on your first recorded day! Great start — keep tracking your sales daily to spot trends.';
+      } else if (margin >= 15) {
+        return '📊 Your profit margin is ' + Math.round(margin) + '%. To grow your business, try bundling related items or offering small discounts for bulk purchases.';
+      } else if (margin > 0 && margin < 15) {
+        return '📊 Your profit margin is ' + Math.round(margin) + '%. Consider reviewing your supplier prices or adjusting your selling prices to increase profitability.';
+      }
+    }
+
+    // Priority 7: General positive feedback — all caught up
     if (salesRecorded && eodDone && !anyLowStock && totalDebt === 0) {
       return '📈 Everything is up to date! You\'ve recorded sales, checked stock, and closed the day. Great work!';
     }
@@ -952,6 +1089,28 @@
       .reduce(function(sum, s) { return sum + s.amount; }, 0);
   }
 
+  function getSalesInsight(expenses, earnings, grossProfit) {
+    if (earnings <= 0 && expenses <= 0) return null;
+    if (earnings <= 0) return { type: 'loss', key: 'insightLoss' };
+    var margin = earnings > 0 ? (grossProfit / earnings) * 100 : 0;
+    if (grossProfit <= 0 || earnings <= expenses) return { type: 'loss', key: 'insightLoss' };
+    if (margin < 15) return { type: 'info', key: 'insightLowMargin' };
+    if (margin < 30) return { type: 'success', key: 'insightHealthy' };
+    return { type: 'success', key: 'insightGreat' };
+  }
+
+  function renderSalesInsight(expenses, earnings, grossProfit) {
+    if (!dom.dailyInsight) return;
+    var insight = getSalesInsight(expenses, earnings, grossProfit);
+    if (insight) {
+      dom.dailyInsight.textContent = t(insight.key);
+      dom.dailyInsight.className = 'daily-insight daily-insight--' + insight.type;
+      dom.dailyInsight.style.display = 'block';
+    } else {
+      dom.dailyInsight.style.display = 'none';
+    }
+  }
+
   // ============================================
   // DAILY SALES
   // ============================================
@@ -970,10 +1129,12 @@
       dom.dailyGrossProfit.textContent = formatCurrency(todayEntry.grossProfit);
       dom.dailyNetProfit.textContent = formatCurrency(todayEntry.netProfit);
       dom.dailyRevolvingFund.textContent = formatCurrency(todayEntry.revolvingFund);
+      renderSalesInsight(todayEntry.stockExpenses, todayEntry.earnings, todayEntry.grossProfit);
     } else {
       dom.dailyAlreadyRecorded.style.display = 'none';
       dom.dailyForm.style.display = 'block';
       dom.dailyResults.style.display = 'none';
+      if (dom.dailyInsight) dom.dailyInsight.style.display = 'none';
 
       // Reset inputs
       if (dom.dailyStockExpenses) dom.dailyStockExpenses.value = '';
@@ -1035,6 +1196,7 @@
     dom.dailyGrossProfit.textContent = formatCurrency(entry.grossProfit);
     dom.dailyNetProfit.textContent = formatCurrency(entry.netProfit);
     dom.dailyRevolvingFund.textContent = formatCurrency(entry.revolvingFund);
+    renderSalesInsight(entry.stockExpenses, entry.earnings, entry.grossProfit);
   }
 
   function saveSpecificSale() {
@@ -1130,6 +1292,11 @@
     var products = state.products;
     if (query) products = products.filter(function(p) { return p.name.toLowerCase().includes(query); });
 
+    // Sort all items alphabetically by name
+    products = products.slice().sort(function(a, b) {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
     // Render "Kulang Na" section — pass query so it filters low items too
     var hasMatchingLowItems = renderKulangNaSection(query);
 
@@ -1206,6 +1373,17 @@
       dom.kulangNaSection.style.display = 'none';
       return false;
     }
+
+    // Sort low items: severity first (out > low), then alphabetically within same severity
+    lowItems = lowItems.slice().sort(function(a, b) {
+      var statusA = getStockStatus(a);
+      var statusB = getStockStatus(b);
+      // 'out' (most critical) comes before 'low'
+      if (statusA === 'out' && statusB !== 'out') return -1;
+      if (statusA !== 'out' && statusB === 'out') return 1;
+      // Same severity — sort alphabetically
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
 
     dom.kulangNaSection.style.display = 'block';
     dom.kulangNaList.innerHTML = lowItems.map(function(p) {
@@ -1610,6 +1788,13 @@
   function initHomePage() {
     renderHomeDashboard();
     checkTutorialResume();
+
+    // Home tutorial button
+    if (dom.headerTutorialBtn) {
+      dom.headerTutorialBtn.addEventListener('click', function() {
+        startTutorial('home', true);
+      });
+    }
   }
 
   // --- SALES (Daily Cash Summary) ---
@@ -1634,29 +1819,34 @@
             dom.dailyGrossProfit.textContent = formatCurrency(gross);
             dom.dailyNetProfit.textContent = formatCurrency(Math.max(0, gross * (1 - markupPct / 100)));
             dom.dailyRevolvingFund.textContent = formatCurrency(Math.max(0, earnings - (earnings * (markupPct / 100))));
+            renderSalesInsight(expenses, earnings, gross);
+          } else if (expenses > 0) {
+            // Only expenses entered, no earnings yet
+            dom.dailyResults.style.display = 'block';
+            dom.dailyGrossProfit.textContent = '₱0.00';
+            dom.dailyNetProfit.textContent = '₱0.00';
+            dom.dailyRevolvingFund.textContent = '₱0.00';
+            renderSalesInsight(expenses, 0, 0);
           } else {
             dom.dailyResults.style.display = 'none';
+            if (dom.dailyInsight) dom.dailyInsight.style.display = 'none';
           }
         });
       });
     }
 
-    // Check for tutorial resume
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('tutorial') === 'true') {
-      startTutorial(false);
+    // Check for tutorial resume (multi-tutorial)
+    checkTutorialResume();
+
+    // Sales tutorial button
+    if (dom.headerTutorialBtn) {
+      dom.headerTutorialBtn.addEventListener('click', function() {
+        startTutorial('sales', true);
+      });
     }
   }
 
   // --- NEW SALE (Add Specific Sale) ---
-  function populateProductSuggestions() {
-    if (!dom.productSuggestions) return;
-    dom.productSuggestions.innerHTML = state.products
-      .filter(function(p) { return p.sellingPrice > 0; })
-      .map(function(p) { return '<option value="' + p.name + '">'; })
-      .join('');
-  }
-
   function getMatchedProduct(name) {
     if (!name) return null;
     var lower = name.toLowerCase();
@@ -1672,36 +1862,76 @@
   }
 
   function updateSpecificSaleTotal() {
-    if (!dom.specificItemDesc || !dom.specificQty || !dom.specificAmountDisplay || !dom.productPriceInfo) return;
+    if (!dom.specificItemDesc || !dom.specificQty || !dom.specificAmountDisplay) return;
     var name = dom.specificItemDesc.value.trim();
     var product = getMatchedProduct(name);
     var qty = parseInt(dom.specificQty.value) || 0;
 
-    // Reset color
-    dom.productPriceInfo.style.color = 'var(--primary)';
-
+    // Update total amount display
     if (product && product.sellingPrice > 0 && qty > 0) {
       var total = product.sellingPrice * qty;
       dom.specificAmountDisplay.textContent = formatCurrency(total);
-      dom.productPriceInfo.style.display = 'block';
-      dom.productPriceInfo.textContent = '₱' + product.sellingPrice + ' per ' + (product.unit || 'piece') + ' × ' + qty;
     } else if (product && product.sellingPrice > 0) {
       dom.specificAmountDisplay.textContent = formatCurrency(product.sellingPrice);
-      dom.productPriceInfo.style.display = 'block';
-      dom.productPriceInfo.textContent = '₱' + product.sellingPrice + ' per ' + (product.unit || 'piece');
-    } else if (name && !product) {
-      dom.specificAmountDisplay.textContent = '₱0.00';
-      dom.productPriceInfo.style.display = 'block';
-      dom.productPriceInfo.style.color = 'var(--danger)';
-      dom.productPriceInfo.textContent = 'Product not found in inventory';
     } else {
       dom.specificAmountDisplay.textContent = '₱0.00';
-      dom.productPriceInfo.style.display = 'none';
+    }
+
+    // Show inline product suggestion
+    showProductSuggestion(name, product);
+  }
+
+  function showProductSuggestion(typedName, matchedProduct) {
+    if (!dom.productSuggestion) return;
+
+    // No text typed — hide suggestion
+    if (!typedName) {
+      dom.productSuggestion.style.display = 'none';
+      return;
+    }
+
+    // Check if the typed name exactly matches a product name
+    var exactMatch = matchedProduct && matchedProduct.name.toLowerCase() === typedName.toLowerCase();
+
+    if (matchedProduct && !exactMatch) {
+      // Partial match — show "Did you mean: [Product]?" as a clickable suggestion
+      dom.productSuggestion.style.display = 'block';
+      dom.productSuggestion.className = 'product-suggestion';
+      dom.productSuggestion.innerHTML = 'Did you mean: <strong>' + matchedProduct.name + '</strong>?';
+      dom.productSuggestion.dataset.productId = matchedProduct.id;
+    } else if (matchedProduct && exactMatch) {
+      // Exact match — product is confirmed, show brief confirmation and hide suggestion
+      dom.productSuggestion.style.display = 'none';
+    } else {
+      // No match found — show "not found" message
+      dom.productSuggestion.style.display = 'block';
+      dom.productSuggestion.className = 'product-suggestion product-suggestion--not-found';
+      dom.productSuggestion.innerHTML = 'Product not found in inventory';
+      dom.productSuggestion.dataset.productId = '';
+    }
+  }
+
+  function onSuggestionClick(productId) {
+    if (!productId) return;
+    var product = state.products.find(function(p) { return p.id === productId; });
+    if (!product) return;
+    // Fill the input with the matched product name
+    if (dom.specificItemDesc) {
+      dom.specificItemDesc.value = product.name;
+    }
+    // Recalculate total and hide suggestion
+    updateSpecificSaleTotal();
+    if (dom.productSuggestion) {
+      dom.productSuggestion.style.display = 'none';
+    }
+    // Focus back on quantity for quick editing
+    if (dom.specificQty) {
+      dom.specificQty.focus();
+      dom.specificQty.select();
     }
   }
 
   function initSpecificSalePage() {
-    populateProductSuggestions();
     updateSpecificSaleTotal();
 
     if (dom.specificItemDesc) {
@@ -1715,6 +1945,13 @@
     }
     if (dom.btnBackSales) {
       dom.btnBackSales.addEventListener('click', function() { window.location.href = 'sales.html'; });
+    }
+
+    // Click handler for product suggestion
+    if (dom.productSuggestion) {
+      dom.productSuggestion.addEventListener('click', function() {
+        onSuggestionClick(this.dataset.productId);
+      });
     }
   }
 
@@ -1750,6 +1987,13 @@
     }
 
     checkTutorialResume();
+
+    // Stock tutorial button
+    if (dom.headerTutorialBtn) {
+      dom.headerTutorialBtn.addEventListener('click', function() {
+        startTutorial('stock', true);
+      });
+    }
   }
 
   // --- ADD PRODUCT (Add Stock) ---
@@ -1817,6 +2061,13 @@
     updateDebtSummary();
     renderDebtsList();
     checkTutorialResume();
+
+    // Debt tutorial button
+    if (dom.headerTutorialBtn) {
+      dom.headerTutorialBtn.addEventListener('click', function() {
+        startTutorial('debt', true);
+      });
+    }
 
     if (dom.btnNewDebt) {
       dom.btnNewDebt.addEventListener('click', () => window.location.href = 'new_debt.html');
@@ -1924,8 +2175,39 @@
   // --- HELP ---
   function initHelpPage() {
     checkTutorialResume();
-    if (dom.helpReplayTutorial) {
-      dom.helpReplayTutorial.addEventListener('click', () => window.location.href = 'sales.html?tutorial=true');
+
+    // Tutorial dropdown selector
+    if (dom.tutorialSelector) {
+      // Populate selector with available tutorials
+      var html = '<option value="">' + t('tutSelector') + '</option>';
+      var keys = ['main', 'home', 'stock', 'sales', 'debt'];
+      keys.forEach(function(key) {
+        var tut = tutorials[key];
+        if (tut) {
+          html += '<option value="' + key + '">' + t(tut.label) + '</option>';
+        }
+      });
+      dom.tutorialSelector.innerHTML = html;
+    }
+
+    if (dom.tutorialLaunchBtn) {
+      dom.tutorialLaunchBtn.addEventListener('click', function() {
+        var selectedId = dom.tutorialSelector ? dom.tutorialSelector.value : '';
+        if (!selectedId) {
+          showToast(t('tutSelectToast'), 'info');
+          return;
+        }
+        if (selectedId === 'main') {
+          saveTutorialState('main', 0, true);
+          window.location.href = 'sales.html?tutorial=true';
+        } else {
+          var tutorial = tutorials[selectedId];
+          if (tutorial && tutorial.page) {
+            saveTutorialState(selectedId, 0, true);
+            window.location.href = tutorial.page + '.html?tutorial=true';
+          }
+        }
+      });
     }
     if (dom.helpHowToUse) {
       dom.helpHowToUse.addEventListener('click', () => { if (dom.howToUseOverlay) dom.howToUseOverlay.classList.add('open'); });
@@ -2010,8 +2292,8 @@
   // ============================================
   // TUTORIAL STATE PERSISTENCE
   // ============================================
-  function saveTutorialState(step, isReplay) {
-    try { localStorage.setItem('sss_tutorial', JSON.stringify({ step: step, isReplay: isReplay })); } catch(e) {}
+  function saveTutorialState(tutorialId, step, isReplay) {
+    try { localStorage.setItem('sss_tutorial', JSON.stringify({ id: tutorialId || 'main', step: step, isReplay: isReplay })); } catch(e) {}
   }
 
   function loadTutorialState() {
@@ -2027,16 +2309,74 @@
   // ============================================
   var _tutorialRAF = null;
 
-  const tutorialSteps = [
-    { textKey: 'tutorial1', highlight: null, page: 'sales', align: 'auto' },
-    { textKey: 'tutorial2', highlight: '#btnSaveDailySales', page: 'sales', align: 'auto' },
-    { textKey: 'tutorial3', highlight: '#btnAddStock', page: 'inventory', align: 'auto' },
-    { textKey: 'tutorial4', highlight: null, page: 'inventory', align: 'auto' },
-    { textKey: 'tutorial5', highlight: '#btnNewDebt', page: 'debts', align: 'auto' },
-    { textKey: 'tutorial6', highlight: null, page: 'home', align: 'auto' },
-    { textKey: 'tutorial7', highlight: null, page: 'help', align: 'auto' },
-    { textKey: 'tutorial8', highlight: null, page: 'help', align: 'auto' }
-  ];
+  const tutorials = {
+    main: {
+      label: 'tutMain',
+      steps: [
+        { textKey: 'tutorial1', highlight: null, page: 'sales' },
+        { textKey: 'tutorial2', highlight: '#btnSaveDailySales', page: 'sales' },
+        { textKey: 'tutorial3', highlight: '#btnAddStock', page: 'inventory' },
+        { textKey: 'tutorial4', highlight: null, page: 'inventory' },
+        { textKey: 'tutorial5', highlight: '#btnNewDebt', page: 'debts' },
+        { textKey: 'tutorial6', highlight: null, page: 'home' },
+        { textKey: 'tutorial7', highlight: null, page: 'help' },
+        { textKey: 'tutorial8', highlight: null, page: 'help' },
+        { textKey: 'tutorial9', highlight: '#headerTutorialBtn', page: 'home' }
+      ]
+    },
+    home: {
+      label: 'tutHome',
+      page: 'home',
+      steps: [
+        { textKey: 'homeTutorial1', highlight: null },
+        { textKey: 'homeTutorial2', highlight: '.home-card:nth-child(1)' },
+        { textKey: 'homeTutorial3', highlight: '.home-card:nth-child(2)' },
+        { textKey: 'homeTutorial4', highlight: '.home-card:nth-child(3)' },
+        { textKey: 'homeTutorial5', highlight: '#homeEndOfDay' },
+        { textKey: 'homeTutorial6', highlight: '.home-tip-card' }
+      ]
+    },
+    stock: {
+      label: 'tutStock',
+      page: 'inventory',
+      steps: [
+        { textKey: 'stockTutorial1', highlight: null },
+        { textKey: 'stockTutorial2', highlight: '#stockSearch' },
+        { textKey: 'stockTutorial3', highlight: '#btnAddStock' },
+        { textKey: 'stockTutorial4', highlight: '#kulangNaList' },
+        { textKey: 'stockTutorial5', highlight: '#allStocksList' },
+        { textKey: 'stockTutorial6', highlight: '.stock-card:first-child' },
+        { textKey: 'stockTutorial7', highlight: null },
+        { textKey: 'stockTutorial8', highlight: null }
+      ]
+    },
+    sales: {
+      label: 'tutSales',
+      page: 'sales',
+      steps: [
+        { textKey: 'salesTutorial1', highlight: null },
+        { textKey: 'salesTutorial2', highlight: '#dailyStockExpenses' },
+        { textKey: 'salesTutorial3', highlight: '#dailyEarnings' },
+        { textKey: 'salesTutorial4', highlight: '#dailyResults' },
+        { textKey: 'salesTutorial5', highlight: '#btnSaveDailySales' },
+        { textKey: 'salesTutorial6', highlight: '#dailyAlreadyRecorded' },
+        { textKey: 'salesTutorial7', highlight: 'a[href="new_sale.html"]' },
+        { textKey: 'salesTutorial8', highlight: '#specificSalesList' }
+      ]
+    },
+    debt: {
+      label: 'tutDebt',
+      page: 'debts',
+      steps: [
+        { textKey: 'debtTutorial1', highlight: null },
+        { textKey: 'debtTutorial2', highlight: '.debt-summary-card' },
+        { textKey: 'debtTutorial3', highlight: '#btnNewDebt' },
+        { textKey: 'debtTutorial4', highlight: '#debtsList' },
+        { textKey: 'debtTutorial5', highlight: null },
+        { textKey: 'debtTutorial6', highlight: '#btnRecordPayment' }
+      ]
+    }
+  };
 
   function getTutorialBoxAlignment(highlightSelector) {
     if (!highlightSelector) return 'center';
@@ -2069,7 +2409,9 @@
         return;
       }
 
-      var step = tutorialSteps[state._tutorialStep];
+      var tutorialId = state._tutorialId || "main";
+      var steps = (tutorials[tutorialId] && tutorials[tutorialId].steps) || [];
+      var step = steps[state._tutorialStep];
       if (!step || !step.highlight) {
         _tutorialRAF = requestAnimationFrame(track);
         return;
@@ -2090,9 +2432,11 @@
     _tutorialRAF = requestAnimationFrame(track);
   }
 
-  function startTutorial(isReplay) {
+  function startTutorial(tutorialId, isReplay) {
     if (!dom.tutorialOverlay) return;
+    if (!tutorials[tutorialId]) return;
     state._tutorialActive = true;
+    state._tutorialId = tutorialId;
     state._tutorialReplay = isReplay || false;
     state._tutorialStep = 0;
 
@@ -2107,6 +2451,7 @@
   function resumeTutorial(savedState) {
     if (!dom.tutorialOverlay || !savedState) return false;
     state._tutorialActive = true;
+    state._tutorialId = savedState.id || "main";
     state._tutorialReplay = savedState.isReplay || false;
     state._tutorialStep = savedState.step || 0;
 
@@ -2120,13 +2465,15 @@
 
   function renderTutorialStep() {
     if (!dom.tutorialOverlay) return;
+    var tutorialId = state._tutorialId || "main";
+    var steps = (tutorials[tutorialId] && tutorials[tutorialId].steps) || [];
     var stepIndex = state._tutorialStep || 0;
-    var step = tutorialSteps[stepIndex];
+    var step = steps[stepIndex];
     if (!step) { endTutorial(); return; }
 
     if (dom.tutorialText) dom.tutorialText.textContent = t(step.textKey);
     if (dom.tutorialCurrent) dom.tutorialCurrent.textContent = stepIndex + 1;
-    if (dom.tutorialTotal) dom.tutorialTotal.textContent = tutorialSteps.length;
+    if (dom.tutorialTotal) dom.tutorialTotal.textContent = steps.length;
 
     if (dom.tutorialHighlight) {
       if (step.highlight) {
@@ -2159,16 +2506,18 @@
 
   function advanceTutorial() {
     if (!dom.tutorialOverlay) return;
+    var tutorialId = state._tutorialId || "main";
+    var steps = (tutorials[tutorialId] && tutorials[tutorialId].steps) || [];
     var nextStep = (state._tutorialStep || 0) + 1;
-    if (nextStep >= tutorialSteps.length) {
+    if (nextStep >= steps.length) {
       endTutorial();
       return;
     }
-    var nextStepData = tutorialSteps[nextStep];
+    var nextStepData = steps[nextStep];
     var currentPage = pageName;
 
     if (nextStepData.page && nextStepData.page !== currentPage) {
-      saveTutorialState(nextStep, state._tutorialReplay);
+      saveTutorialState(tutorialId, nextStep, state._tutorialReplay);
       window.location.href = nextStepData.page + '.html?tutorial=true';
     } else {
       state._tutorialStep = nextStep;
@@ -2193,21 +2542,39 @@
     var params = new URLSearchParams(window.location.search);
     if (params.get('tutorial') === 'true') {
       var saved = loadTutorialState();
-      if (saved && saved.step !== undefined) {
-        var stepData = tutorialSteps[saved.step];
-        if (stepData && stepData.page === pageName) {
-          resumeTutorial(saved);
-          return true;
+      // Has saved state with tutorial ID (multi-tutorial format)
+      if (saved && saved.id) {
+        var tutorial = tutorials[saved.id];
+        if (tutorial) {
+          if (saved.id === 'main') {
+            // Main tutorial - check if current step page matches
+            var stepData = tutorial.steps[saved.step || 0];
+            if (stepData && stepData.page && stepData.page !== pageName) {
+              window.location.href = stepData.page + '.html?tutorial=true';
+              return true;
+            }
+            return resumeTutorial(saved);
+          } else {
+            // Single-page tutorial - check if the tutorial page matches
+            if (tutorial.page && tutorial.page !== pageName) {
+              window.location.href = tutorial.page + '.html?tutorial=true';
+              return true;
+            }
+            return resumeTutorial(saved);
+          }
         }
-      }
-      if (dom.tutorialOverlay) {
-        if (pageName === 'sales') {
-          startTutorial(false);
-        } else {
-          window.location.href = 'sales.html?tutorial=true';
-        }
+      } else if (saved && saved.step !== undefined) {
+        // Legacy format (no tutorial ID) - redirect to start of main tutorial
+        window.location.href = 'sales.html?tutorial=true';
         return true;
       }
+      // No saved state - start main tutorial from sales page
+      if (pageName === 'sales') {
+        startTutorial('main', false);
+      } else {
+        window.location.href = 'sales.html?tutorial=true';
+      }
+      return true;
     }
     return false;
   }

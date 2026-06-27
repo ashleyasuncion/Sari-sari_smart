@@ -467,6 +467,121 @@ Status: All modules [✓] remain fully implemented with no changes needed.
      - Inventory page: alignment requires additional investigation
        (potential issue with tutorial state persistence across page navigation)
 
+=== v2.5 multi-tutorial system (Phase 3, June 27, 2026) ===
+
+[✓] Added: Multi-tutorial system — 5 selectable tutorials replacing single walkthrough
+     - tutorials object with 5 entries: main (8-step overview), home (6 steps),
+       stock (8 steps), sales (8 steps), debt (6 steps)
+     - Each page-specific tutorial has 6–8 short, focused steps with highlight overlays
+     - Main tutorial remains concise overview; page tutorials are comprehensive
+
+[✓] Added: Tutorial strings for all 5 tutorials (English + Filipino)
+     - EN homeTutorial1-6, stockTutorial1-8, salesTutorial1-8, debtTutorial1-6
+     - FIL equivalents for all page-specific tutorials
+     - Tutorial label keys: tutMain, tutHome, tutStock, tutSales, tutDebt
+     - UI strings: tutLaunch (Launch/Simulan), tutSelector (Select a tutorial...)
+
+[✓] Updated: Tutorial system functions for multi-ID support
+     - saveTutorialState() now accepts tutorialId parameter
+     - startTutorial(tutorialId, isReplay) — selects which tutorial to play
+     - resumeTutorial() reads savedState.id to restore the correct tutorial
+     - renderTutorialStep() uses tutorials[tutorialId] instead of old tutorialSteps
+     - advanceTutorial() uses tutorials[tutorialId], only navigates pages for main tutorial
+     - startHighlightTracking() updated to use tutorials object
+     - Old tutorialSteps array fully removed (replaced by tutorials object)
+
+[✓] Updated: checkTutorialResume() for multi-tutorial cross-page navigation
+     - Handles saved state with tutorial ID (multi-tutorial format)
+     - Main tutorial: redirects to correct step's page
+     - Page-specific tutorials: redirects to tutorial's registered page
+     - Legacy format migration: converts old state to multi-tutorial format
+     - Falls back to starting main tutorial from sales page when no saved state
+
+[✓] Added: Help page tutorial dropdown selector
+     - help.html: Replaced single "Replay Tutorial" button with tutorial-selector-section
+     - <select> dropdown dynamically populated from tutorials object
+     - Launch button navigates to appropriate page with ?tutorial=true
+     - initHelpPage() populates dropdown and binds Launch click handler
+
+[✓] Added: Page header tutorial buttons (?) on 4 pages
+     - home.html, inventory.html, sales.html, debts.html: header-actions div with
+       header-tutorial-btn (question-mark circle SVG icon) next to settings button
+     - Each page's init function binds its button to launch that page's tutorial:
+       initHomePage → startTutorial('home', true)
+       initStocksPage → startTutorial('stock', true)
+       initDailySalesPage → startTutorial('sales', true)
+       initDebtsPage → startTutorial('debt', true)
+
+[✓] Added: CSS styles for new UI elements
+     - .header-actions: flex container for header buttons
+     - .header-tutorial-btn: semi-transparent ? icon with hover effect
+     - .tutorial-selector-section: card-style container for dropdown + Launch button
+     - .tutorial-selector-row: horizontal layout for select + button combo
+
+[✓] Cleaned up: Dead code removed
+     - Removed dom.helpReplayTutorial from cacheDom() (replaced by selector)
+     - Old tutorialSteps array variable fully removed from file
+
+=== v2.6 main tutorial final step (June 27, 2026) ===
+
+[✓] Added: Step 9 to Main Tutorial — bridge between overview and page-specific tutorials
+     - New English string (tutorial9): explains users can find detailed tutorials in Help
+       and that each major page has a (?) Help button for page-specific tutorials
+     - New Filipino string (tutorial9): same explanation in Tagalog
+     - New step: { textKey: 'tutorial9', highlight: '#headerTutorialBtn', page: 'home' }
+     - Highlights the (?) Help button in the header on the Home page
+     - Total steps automatically updates from 8 to 9 (dynamic steps.length)
+
+[✓] Added: Toast notification when Launch Tutorial clicked without selection
+     - New string keys (tutSelectToast) in English and Filipino
+     - Changed initHelpPage() return to showToast(t('tutSelectToast'), 'info') instead of silent return
+
+[✓] Added: Skip button for Main Tutorial when launched from Help → Replay Tutorial
+     - saveTutorialState('main', 0, true) added before redirecting from Help
+     - First-time onboarding (no saved state) continues to call startTutorial('main', false)
+       so Skip button remains hidden during initial guided tour
+     - Page-specific tutorials unchanged (already showed Skip via isReplay=true)
+
+[✓] Affected files:
+     - app.js: tutorial9 strings (en/fil), main tutorial step 9, tutSelectToast strings,
+       toast + saveState in initHelpPage
+
+=== v2.7 real-time sales insights + enhanced business tips (June 27, 2026) ===
+
+[✓] Added: Real-time business insight card on Sales page
+     - sales.html: New <div class="daily-insight" id="dailyInsight"> inside dailyResults
+     - 4 string keys (insightLoss, insightLowMargin, insightHealthy, insightGreat) in en/fil
+     - getSalesInsight(expenses, earnings, grossProfit) returns {type, key} based on profit margin:
+       → loss (margin <= 0%): red warning about operating at a loss
+       → info (margin < 15%): amber message about thin margin
+       → success (margin 15-30%): positive feedback on healthy margin
+       → success (margin >= 30%): excellent performance celebration
+     - renderSalesInsight() updates DOM with appropriate CSS class
+     - Wired into three code paths:
+       → Live input handler (earnings > 0 AND expenses > 0 both trigger insight)
+       → renderDailySalesForm() for already-recorded data
+       → recordDailySales() after saving
+     - CSS: .daily-insight--loss (red/danger), .daily-insight--info (amber/warning),
+       .daily-insight--success (green/positive)
+
+[✓] Enhanced: getBusinessTip() with sales performance data
+     - Sales loss check integrated after Priority 4 (debts) to not override stock alerts
+     - Trend analysis comparing today's sales vs 7-day average (needs 2+ data points)
+       → Sales 20% above average: celebrating momentum
+       → Sales 20% below average: encouragement to promote best-sellers
+       → Near average + margin >= 30%: suggest expanding product range
+     - First-day tips when no prior data exists:
+       → margin >= 30%: celebrate strong start
+       → margin 15-30%: suggest bundling/discounts
+       → margin < 15%: suggest reviewing prices/suppliers
+     - All original priority ordering preserved (stock > debts > EOD > performance)
+
+[✓] Affected files:
+     - sales.html: Added #dailyInsight to dailyResults div
+     - app.js: 4 insight string pairs, getSalesInsight(), renderSalesInsight(),
+       updated getBusinessTip(), wired into input handler + render/form/save
+     - style.css: .daily-insight with loss/info/success variants
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================

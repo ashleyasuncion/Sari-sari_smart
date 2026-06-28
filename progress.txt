@@ -634,6 +634,193 @@ Status: All modules [✓] remain fully implemented with no changes needed.
        importData(), resetAllData(), clearSelectedData()
      - style.css: Full dev panel dark theme stylesheet section
 
+=== v2.9 profit margin display (June 27, 2026) ===
+
+[✓] Added: Per-product Profit Margin on stock cards & detail
+     - inventory.html: Added profit margin row (#stockDetailMargin) in stock detail overlay
+     - app.js: getProfitMargin(costPrice, sellingPrice) — computes markup on cost
+       (cost ₱10 → sell ₱11 = 10%), matching the user's requested formula
+     - app.js: formatPercent(value) — returns "+10%" or "--"
+     - Stock cards in renderStocksList() show .stock-card-margin: "Profit Margin: +10%"
+     - Stock detail overlay (openStockStatusUpdate + openDeductStock) both show margin
+     - style.css: .stock-card-margin styled at 11px, color changes with status
+
+[✓] Added: Overall sales Profit Margin % on Sales page
+     - sales.html: Added daily-profit-margin-row with #dailyProfitMarginValue
+     - app.js: updateProfitMarginDisplay(grossProfit, earnings) — computes margin as
+       grossProfit/earnings × 100, updates the row in real-time
+     - Wired into: input handler (earnings>0 + expenses>0), renderDailySalesForm(),
+       recordDailySales()
+     - style.css: .daily-profit-margin-row styled with green border and theme colors
+
+[✓] Added: Live Profit Margin preview on Add Stock page
+     - app.js: updateAddProductProfitMargin(cost, sellPrice) — creates/updates a live
+       preview showing Profit (₱) and Margin (%) that updates as user types
+     - Wiredup on sell price input listener (stockSellPrice), so both markup slider
+       and manual sell price entry update the preview in real-time
+     - Also fires when markup slider changes (via existing updateMarkupPreview + new call)
+
+[✓] Added: String key profitMargin in English and Filipino
+     - EN: "Profit Margin"
+     - FIL: "Profit Margin" (same term commonly used in Tagalog retail context)
+
+[✓] Affected files:
+     - app.js: 80 insertions — utility functions, DOM updates, live preview, string keys
+     - inventory.html: 5 insertions — stockDetailMargin row in detail overlay
+     - sales.html: 4 insertions — dailyProfitMarginRow with profit margin value
+     - style.css: 28 insertions — .stock-card-margin and .daily-profit-margin-row
+
+=== v2.10 outstanding debts in daily profit (June 27, 2026) ===
+
+[✓] Added: Utang breakdown section on Sales page results
+     - sales.html: New #dailyUtangBreakdown div inside dailyResults with 3 rows:
+       → Utang Sales Today — total amount of today's specific sales on credit
+       → Pending Profit (📌 amber) — estimated profit tied up in unpaid debts
+       → Cash Profit (💵 green) — net profit minus pending utang profit
+     - Shows only when today has utang-specific sales (auto-hides otherwise)
+     - Updates live as user types in the input handler
+
+[✓] Updated: saveSpecificSale() stores cost/quantity/profit data
+     - Each specific sale now stores: quantity, costPrice, and computed profit
+     - profit = (sellingPrice - costPrice) × quantity — accurate per-sale tracking
+     - Allows accurate pending profit calculation even if product data changes later
+
+[✓] Added: 5 helper functions for utang tracking
+     - getTodayUtangSales() — filters today's credit-specific sales
+     - getTodayUtangTotal() — sum of today's utang sale amounts
+     - getTodayPendingProfit() — sum of profit on today's utang sales
+     - getTodayCashProfit(netProfit, pendingProfit) — cash-only profit
+     - updateUtangBreakdown(netProfit) — updates DOM with breakdown or hides it
+
+[✓] Added: UI strings (English + Filipino)
+     - EN: Utang Sales Today, Pending Profit, Cash Profit
+     - FIL: Utang Ngayong Araw, Kita na Nakautang, Cash na Kita
+
+[✓] Updated: getBusinessTip() for pending profit awareness
+     - When >=50% of profit is in utang: "📌 ₱X of your profit is tied up in utang."
+     - When >=20% of profit is in utang: "📌 ₱X of today's profit is still in utang."
+     - Still lower priority than stock alerts and unrecorded sales
+
+[✓] Affected files:
+     - app.js: 143 insertions — saveSpecificSale extended, helpers, strings, wiring, tips
+     - sales.html: 18 insertions — #dailyUtangBreakdown with 3 rows
+     - style.css: 41 insertions — .daily-utang-breakdown, .pending (amber), .cash (green)
+
+=== v2.11 daily list of sold items (June 27, 2026) ===
+
+[✓] Added: Daily Sold Items section on Sales page
+     - sales.html: New #dailySoldItemsSection div with:
+       → Headline "Today's Sold Items"
+       → #dailySoldItemsList — dynamic list of sold items grouped by product name
+       → #dailySoldItemsSummary — 3 summary rows (total items, revenue, profit)
+     - Shows when today has specific sales; shows empty state message when none
+     - Uses existing specificSales[] data (no new data model changes)
+
+[✓] Added: renderDailySoldItems() function
+     - Groups today's specific sales by product name
+     - For each product: displays quantity, selling price per unit, profit per unit,
+       and total profit for that product
+     - Summary at bottom: total items sold, total revenue, total profit
+     - Empty state: displays "No items sold today" message via noSoldToday i18n key
+     - Sorts products alphabetically
+
+[✓] Added: i18n strings (English + Filipino)
+     - EN: Today's Sold Items, No items sold today..., Qty, Sell Price,
+       Profit/item, Total Profit, Total Items Sold, Revenue from Sold Items
+     - FIL: Mga Item na Naibenta Ngayon, Walang naibentang item ngayon...,
+       Dami, Presyo, Kita bawat isa, Kabuuang Kita, Kabuuang Naibenta,
+       Kita mula sa mga Naibenta
+
+[✓] Wiring:
+     - renderDailySalesForm() now calls renderDailySoldItems() after renderSpecificSalesList()
+     - initDailySalesPage() calls renderDailySoldItems() on page load
+     - saveSpecificSale() → renderDailySalesForm() → renderDailySoldItems() (auto-updates)
+
+[✓] CSS:
+     - .daily-sold-items: section container
+     - .daily-sold-item: card-based list item with hover effect
+     - .daily-sold-item-name: product name in bold
+     - .daily-sold-item-details: flex row with qty, sell price, profit details
+     - .daily-sold-items-summary: flex-column summary section
+     - .daily-sold-summary-row: individual summary rows with label/value
+     - .daily-sold-summary-row.profit-row: green accent for profit row
+
+[✓] Affected files:
+     - app.js: 75 insertions — renderDailySoldItems(), 9 i18n string pairs,
+       wiring in renderDailySalesForm() and initDailySalesPage()
+     - sales.html: 18 insertions — #dailySoldItemsSection with list and summary
+     - style.css: 35 insertions — daily sold items card and summary styles
+
+=== v2.12 critical stock banner wired + i18n fix (June 28, 2026) ===
+
+[✓] Added: renderCriticalStockBanner() function in app.js
+     - Shows the Critical Stock Alert banner (🚨) when items have quantity <= 0
+     - Each item is a clickable <a> linking to add_product.html?restock=ID for quick restock
+     - Banner auto-hides when no critical items exist
+     - Called from renderStocksList() so it updates on search, stock deduct, and page load
+
+[✓] Added: Missing i18n string keys for critical stock banner
+     - English: "Critical Stock Alert", "These items need immediate attention"
+     - Filipino: "Critical Stock Alert", "Ang mga item na ito ay nangangailangan ng agarang pansin"
+     - Previously only existed as data-i18n in HTML but not in strings object,
+       causing raw key names like "[criticalStockAlert" to display as text
+
+[✓] Added: EOD page routing fix for endofday.html
+     - pageToNav: Added 'endofday': 'home' so home nav highlights on EOD page
+     - setPageTitle(): Added endofday: t('eodTitle') for correct page title
+     - Switch statement: Added case 'endofday': falling through to initEndOfDayPage()
+       (fixes bug where initEndOfDayPage() never ran because pageName was 'endofday' not 'eod')
+     - window.finishEndOfDay(): Updated pageName check to also handle 'endofday'
+       (ensures auto-redirect to home.html after completing EOD)
+
+[✓] Fixed: Developer Panel confirmation dialog bugs
+     - confirmYes handler: Added closeConfirm() after confirmCallback() runs
+       (fixes sticky confirmation overlay that remained on screen after confirming)
+     - resetTodaySales(): Removed showConfirm wrapper — executes immediately
+     - clearAllInventory(): Removed showConfirm wrapper — executes immediately
+     - Dangerous actions (reset-all, clear-selected) still use showConfirm() as intended
+
+[✓] Affected files:
+     - app.js: renderCriticalStockBanner(), 2 i18n string pairs, 4 routing fixes,
+       confirmYes handler fix, 2 dev action rewired for immediate execution
+     - progress.txt: This entry
+
+=== v2.13 resilience & stability improvements (June 28, 2026) ===
+
+[✓] Fixed: 3 syntax errors causing app to crash at startup
+     - Line 301: Double comma `',,'` in salesTutorial8 translation string
+     - Line 542: Unterminated string in Filipino newDebtTutorial4 (missing closing `',`)
+     - Line 2962: Missing comma after debt tutorial closing brace in tutorials object
+     - Syntax now passes `node -c` clean (no errors)
+
+[✓] Added: Startup error isolation for init() function
+     - Each init step (cacheDom, loadState, applyLanguage, applyTextSize) wrapped
+       in individual try/catch with console.error logging
+     - loadState failure now provides a fallback state object instead of crashing
+     - One failed step no longer prevents remaining steps from executing
+     - Startup diagnostics log page name and state status to console
+
+[✓] Added: Page-level init error isolation
+     - The page initialization switch statement is now wrapped in try/catch
+     - If a page init function throws, the error is logged and initHomePage()
+       is called as fallback instead of the entire app crashing
+     - Error includes page name for easy debugging (console.error)
+
+[✓] Added: Safe t() translation helper
+     - t() function now wrapped in try/catch with null/undefined guards
+     - Safely handles missing state, missing translations, and undefined keys
+     - Returns the key itself as fallback (transparent to users)
+
+[✓] Added: Fatal error recovery via safeInit()
+     - Entire init() call wrapped in safeInit() try/catch
+     - On fatal error: attempts recovery (cacheDom + applyLanguage + initHomePage)
+     - Last resort: shows user-friendly error message instead of blank white page
+     - Error details logged to console for debugging
+
+[✓] Affected files:
+     - app.js: safeInit() wrapper, try/catch in init() steps, try/catch around
+       switch statement, safe t() function, safeInit recovery UI
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================

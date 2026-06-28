@@ -32,6 +32,17 @@
             <div class="tutorial-selector-row">
               <select class="form-input" id="tutorialSelector">
                 <option value="" data-i18n="tutSelector">Select a tutorial...</option>
+                <option value="main" data-i18n="tutMain">Main Tutorial</option>
+                <option value="home" data-i18n="tutHome">Home Tutorial</option>
+                <option value="stock" data-i18n="tutStock">Stock Tutorial</option>
+                <option value="sales" data-i18n="tutSales">Sales Tutorial</option>
+                <option value="debt" data-i18n="tutDebt">Debt Tutorial</option>
+                <option value="eod" data-i18n="tutEOD">End of Day Tutorial</option>
+                <option value="report" data-i18n="tutReport">Reports Tutorial</option>
+                <option value="settings" data-i18n="tutSettings">Settings Tutorial</option>
+                <option value="addproduct" data-i18n="tutAddProduct">Add Product Tutorial</option>
+                <option value="newsale" data-i18n="tutNewSale">New Sale Tutorial</option>
+                <option value="newdebt" data-i18n="tutNewDebt">New Debt Tutorial</option>
               </select>
               <button class="btn btn-primary" id="tutorialLaunchBtn" data-i18n="tutLaunch">Launch</button>
             </div>
@@ -59,6 +70,7 @@
         </a>
         <a class="nav-item" data-page="inventory" data-i18n-label="stocks" href="inventory.html">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span class="nav-badge" style="display:none;">0</span>
           <span class="nav-label" data-i18n="stocks">Stocks</span>
         </a>
         <a class="nav-item" data-page="sales" data-i18n-label="sales" href="sales.html">
@@ -101,6 +113,18 @@
               <details class="help-topic">
                 <summary class="help-topic-summary" data-i18n="viewingReports">Daily Summary</summary>
                 <div class="help-topic-content" data-i18n="viewingReportsContent">Your daily summary is shown on the Home screen with 4 cards: Today's Earnings, Stock Alert, Outstanding Debts, and End-of-Day Closing. You can also use the End-of-Day Closing routine to wrap up your store each day.</div>
+              </details>
+              <details class="help-topic">
+                <summary class="help-topic-summary" data-i18n="endOfDayClosing">End-of-Day Closing</summary>
+                <div class="help-topic-content" data-i18n="endOfDayClosingContent">Go to End-of-Day from the Home screen to finalize your daily operations. Review the summary showing revenue, expenses, profit, and utang breakdown. Use the checklist to confirm cash counting, stock checks, and payment recordings. Tap "Complete Day" to save and close.</div>
+              </details>
+              <details class="help-topic">
+                <summary class="help-topic-summary" data-i18n="usingReports">Using Reports</summary>
+                <div class="help-topic-content" data-i18n="usingReportsContent">Open Reports from the Help menu to view your store's sales performance. Toggle between Daily, Weekly, and Monthly views. Review total sales, profit, recent transactions, best-selling products, and low-stock items to make informed business decisions.</div>
+              </details>
+              <details class="help-topic">
+                <summary class="help-topic-summary" data-i18n="appSettings">App Settings</summary>
+                <div class="help-topic-content" data-i18n="appSettingsContent">Customize your app from the Settings page. Change the language between English and Filipino, adjust text size for readability, set your store and owner name, and configure the low-stock alert threshold.</div>
               </details>
             </div>
           </div>

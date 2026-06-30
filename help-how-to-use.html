@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sari-Sari Smart - How to Use</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="app-container" id="app">
+
+      <!-- HEADER -->
+      <header class="app-header">
+        <a class="header-btn" href="help.html" aria-label="Back">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </a>
+        <h1 class="header-title" id="headerTitle" data-i18n="howToUse">How to Use</h1>
+        <span style="width:36px;"></span>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="app-content" id="appContent">
+        <div class="help-accordion">
+          <details class="help-topic" open>
+            <summary class="help-topic-summary" data-i18n="recordingSale">Recording Sales</summary>
+            <div class="help-topic-content" data-i18n="recordingSaleContent">Go to Sales and tap "Record Today's Sales". Enter your stock expenses (Gastos sa Paninda) and today's cash earnings (Kinikita Ngayon). The app automatically shows gross profit, net profit, revolving fund, and utang breakdown. Use "Add a Specific Sale" for notable items or credit sales - entering a customer name creates a debt record. Today's Sold Items and Recent Transactions are in collapsible sections below.</div>
+          </details>
+          <details class="help-topic">
+            <summary class="help-topic-summary" data-i18n="addingProducts">Adding Stock</summary>
+            <div class="help-topic-content" data-i18n="addingProductsContent">Go to Stocks and tap "Add Stock". Fill in the item name, quantity, cost per unit, and selling price. You can set a markup percentage to auto-calculate the selling price. Each stock card shows the profit margin. Tap any item to view details, deduct stock, update status, or edit. Low stock items appear in "Running Low" with quick restock buttons.</div>
+          </details>
+          <details class="help-topic">
+            <summary class="help-topic-summary" data-i18n="trackingDebts">Tracking Utang</summary>
+            <div class="help-topic-content" data-i18n="trackingDebtsContent">When completing a specific sale on the New Sale page, entering a customer name automatically records it as both a sale and a debt. You can also manually add debts from Utang screen. Tap a customer to view their full ledger showing debt events and payments. Tap "Record Payment" to log payments with notes.</div>
+          </details>
+          <details class="help-topic">
+            <summary class="help-topic-summary" data-i18n="viewingReports">Daily Summary</summary>
+            <div class="help-topic-content" data-i18n="viewingReportsContent">Your daily summary is shown on the Home screen with 4 cards: Today's Cash Earnings (credit excluded), Stock Alert, Outstanding Debts, and End-of-Day Closing. The End-of-Day screen has a full closing routine with revenue, profit, expenses, credit sales, cash profit, and a checklist. Use Reports for daily, weekly, or monthly trends.</div>
+          </details>
+          <details class="help-topic">
+            <summary class="help-topic-summary" data-i18n="endOfDayClosing">End-of-Day Closing</summary>
+            <div class="help-topic-content" data-i18n="endOfDayClosingContent">Go to End-of-Day from the Home screen to finalize your daily operations. Review the summary showing revenue, expenses, profit, and utang breakdown. Use the checklist to confirm cash counting, stock checks, and payment recordings. Tap "Complete Day" to save and close.</div>
+          </details>
+          <details class="help-topic">
+            <summary class="help-topic-summary" data-i18n="usingReports">Using Reports</summary>
+            <div class="help-topic-content" data-i18n="usingReportsContent">Open Reports from the Help menu to view your store's sales performance. Toggle between Daily, Weekly, and Monthly views. Review total sales, profit, recent transactions, best-selling products, and low-stock items to make informed business decisions.</div>
+          </details>
+          <details class="help-topic">
+            <summary class="help-topic-summary" data-i18n="appSettings">App Settings</summary>
+            <div class="help-topic-content" data-i18n="appSettingsContent">Customize your app from the Settings page. Change the language between English and Filipino, adjust text size for readability, set your store and owner name, and configure the low-stock alert threshold.</div>
+          </details>
+        </div>
+      </main>
+
+
+
+      <!-- TOAST -->
+      <div class="toast-container" id="toastContainer"></div>
+
+    </div>
+    <div class="phone-home-bar"></div>
+  </div>
+
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -734,12 +734,9 @@
     dom.btnNewDebtCancel = $('btnNewDebtCancel');
 
     // Help page
-    dom.helpHowToUse = $('helpHowToUse');
-    dom.helpContact = $('helpContact');
+        dom.helpContact = $('helpContact');
     dom.helpAbout = $('helpAbout');
-    dom.howToUseOverlay = $('howToUseOverlay');
-    dom.btnHowToUseBack = $('btnHowToUseBack');
-
+        
     // Settings page
     dom.btnSettingsBack = $('btnSettingsBack');
     dom.settingsLanguage = $('settingsLanguage');
@@ -833,7 +830,7 @@
         home: t('home'), eod: t('eodTitle'), endofday: t('eodTitle'),
         debts: t('utang'), new_debt: t('newDebtManual'),
         customer_debt: t('customerDebt'), payment: t('recordPayment'),
-        reports: t('reports'), help: t('help'), setting: t('settings'),
+        reports: t('reports'), help: t('help'), help_how_to_use: t('howToUse'), setting: t('settings'),
         product: 'Product'
       };
       dom.headerTitle.textContent = titles[pageName] || 'Sari-Sari Smart';
@@ -2817,12 +2814,6 @@
           }
         }
       });
-    }
-    if (dom.helpHowToUse) {
-      dom.helpHowToUse.addEventListener('click', () => { if (dom.howToUseOverlay) dom.howToUseOverlay.classList.add('open'); });
-    }
-    if (dom.btnHowToUseBack) {
-      dom.btnHowToUseBack.addEventListener('click', () => { if (dom.howToUseOverlay) dom.howToUseOverlay.classList.remove('open'); });
     }
     if (dom.helpContact) {
       dom.helpContact.addEventListener('click', () => showToast(t('contactContent')));

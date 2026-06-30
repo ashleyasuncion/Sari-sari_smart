@@ -140,6 +140,7 @@
       qtyLabel: 'Qty',
       sellPriceLabel: 'Sell Price',
       profitPerItem: 'Profit/item',
+      eachLabel: 'each',
       totalProfitLabel: 'Total Profit',
       totalItemsSold: 'Total Items Sold',
       revenueFromSold: 'Revenue from Sold Items',
@@ -427,6 +428,7 @@
       qtyLabel: 'Dami',
       sellPriceLabel: 'Presyo',
       profitPerItem: 'Kita bawat isa',
+      eachLabel: 'bawat',
       totalProfitLabel: 'Kabuuang Kita',
       totalItemsSold: 'Kabuuang Naibenta',
       revenueFromSold: 'Kita mula sa mga Naibenta',
@@ -686,18 +688,13 @@
     dom.btnAddStock = $('btnAddStock');
     dom.allItemsLabel = $('allItemsLabel');
 
-    // Stock detail / deduct overlay
-    dom.stockDetailOverlay = $('stockDetailOverlay');
-    dom.stockDetailName = $('stockDetailName');
+    // Stock detail / deduct (product page)
     dom.stockDetailQty = $('stockDetailQty');
     dom.stockDetailCost = $('stockDetailCost');
     dom.stockDetailPrice = $('stockDetailPrice');
     dom.stockDetailMargin = $('stockDetailMargin');
     dom.stockDeductQty = $('stockDeductQty');
     dom.btnConfirmDeduct = $('btnConfirmDeduct');
-    dom.btnStockDetailBack = $('btnStockDetailBack');
-    dom.btnUpdateStockStatus = $('btnUpdateStockStatus');
-    dom.stockStatusCurrent = $('stockStatusCurrent');
 
     // Add Stock page
     dom.stockItemName = $('stockItemName');
@@ -834,7 +831,7 @@
         home: t('home'), eod: t('eodTitle'), endofday: t('eodTitle'),
         debts: t('utang'), new_debt: t('newDebtManual'),
         reports: t('reports'), help: t('help'), setting: t('settings'),
-        eod: t('eodTitle')
+        product: 'Product'
       };
       dom.headerTitle.textContent = titles[pageName] || 'Sari-Sari Smart';
     }
@@ -1822,72 +1819,19 @@
   }
 
   function openStockStatusUpdate(productId) {
-    const product = state.products.find(p => p.id === productId);
-    if (!product) return;
-
-    if (dom.stockDetailOverlay) {
-      dom.stockDetailOverlay.dataset.productId = productId;
-      dom.stockDetailName.textContent = product.name;
-      dom.stockDetailQty.textContent = product.quantity + ' ' + (product.unit || 'pcs');
-      dom.stockDetailCost.textContent = formatCurrency(product.costPrice || 0);
-      dom.stockDetailPrice.textContent = formatCurrency(product.sellingPrice || 0);
-      if (dom.stockDetailMargin) {
-        var margin = getProfitMargin(product.costPrice, product.sellingPrice);
-        dom.stockDetailMargin.textContent = margin !== null ? formatPercent(margin) : '--';
-      }
-
-      // Update edit link with product ID
-      const editLink = document.getElementById('stockDetailEditLink');
-      if (editLink) editLink.href = 'add_product.html?edit=' + productId;
-
-      // Highlight current status chip (computed from quantity)
-      const currentStatus = getStockStatus(product);
-      const statusChips = document.querySelectorAll('.status-chip');
-      statusChips.forEach(function(chip) {
-        chip.classList.toggle('active', chip.dataset.status === currentStatus);
-      });
-
-      dom.stockDetailOverlay.classList.add('open');
-    }
+    window.location.href = 'product.html?id=' + productId;
   }
 
   function closeStockDetail() {
-    if (dom.stockDetailOverlay) dom.stockDetailOverlay.classList.remove('open');
+    // Overlay removed - replaced by dedicated product page
   }
 
   function openDeductStock(productId) {
-    if (dom.stockDetailOverlay) {
-      dom.stockDetailOverlay.dataset.productId = productId;
-      const product = state.products.find(p => p.id === productId);
-      if (product) {
-        dom.stockDetailName.textContent = product.name;
-        dom.stockDetailQty.textContent = product.quantity + ' ' + (product.unit || 'pcs');
-        dom.stockDetailCost.textContent = formatCurrency(product.costPrice || 0);
-        dom.stockDetailPrice.textContent = formatCurrency(product.sellingPrice || 0);
-        if (dom.stockDetailMargin) {
-          var margin = getProfitMargin(product.costPrice, product.sellingPrice);
-          dom.stockDetailMargin.textContent = margin !== null ? formatPercent(margin) : '--';
-        }
-        dom.stockDeductQty.value = 1;
-
-        // Update edit link with product ID
-        const editLink = document.getElementById('stockDetailEditLink');
-        if (editLink) editLink.href = 'add_product.html?edit=' + productId;
-
-        // Highlight current status chip (computed from quantity)
-        const currentStatus = getStockStatus(product);
-        const statusChips = document.querySelectorAll('.status-chip');
-        statusChips.forEach(function(chip) {
-          chip.classList.toggle('active', chip.dataset.status === currentStatus);
-        });
-
-        dom.stockDetailOverlay.classList.add('open');
-      }
-    }
+    window.location.href = 'product.html?id=' + productId;
   }
 
   function confirmDeductStock() {
-    const pid = dom.stockDetailOverlay ? dom.stockDetailOverlay.dataset.productId : null;
+    const pid = document.getElementById('productIdHolder') ? document.getElementById('productIdHolder').value : null;
     if (!pid) return;
 
     const qty = parseInt(dom.stockDeductQty ? dom.stockDeductQty.value : 0) || 0;
@@ -1901,9 +1845,14 @@
     // Status is now auto-computed from quantity via getStockStatus()
 
     saveState();
-    closeStockDetail();
-    showToast(t('stockDeducted'));
-    renderStocksList();
+    if (pageName === 'product') {
+      showToast(t('stockDeducted'));
+      initProductPage();
+    } else {
+      closeStockDetail();
+      showToast(t('stockDeducted'));
+      renderStocksList();
+    }
   }
 
   function saveStockFromPage() {
@@ -2531,23 +2480,14 @@
     }
 
     // Stock detail overlay
-    if (dom.btnStockDetailBack) {
-      dom.btnStockDetailBack.addEventListener('click', closeStockDetail);
-    }
+
     // Status chips are now display-only; computed from quantity
     // Removed manual status setting via chip clicks
     if (dom.btnConfirmDeduct) {
       dom.btnConfirmDeduct.addEventListener('click', confirmDeductStock);
     }
 
-    // Close overlay on outside click
-    if (dom.stockDetailOverlay) {
-      dom.stockDetailOverlay.addEventListener('click', function(e) {
-        if (e.target === this || e.target.classList.contains('overlay-scroll')) {
-          closeStockDetail();
-        }
-      });
-    }
+
 
     checkTutorialResume();
 
@@ -3278,7 +3218,8 @@
       'eod': 'home',
     'endofday': 'home',
       'new_debt': 'debts',
-      'add_product': 'inventory'
+      'add_product': 'inventory',
+      'product': 'inventory'
     };
     if (dom.navItems) {
       dom.navItems.forEach(item => {
@@ -3343,6 +3284,7 @@
       }
     });
 
+    setPageTitle();
     // Run page-specific init
     try {
       switch (pageName) {
@@ -3359,6 +3301,7 @@
         case 'setting': initSettingPage(); break;
         case 'endofday':
         case 'eod': initEndOfDayPage(); break;
+        case 'product': initProductPage(); break;
         default: initHomePage(); break;
       }
     } catch (e) {
@@ -3366,7 +3309,6 @@
       try { initHomePage(); } catch(e2) { console.error('[Sari-Sari Smart] Fallback init failed:', e2); }
     }
 
-    setPageTitle();
     refreshAll();
   }
 
@@ -3713,6 +3655,87 @@
     document.addEventListener('DOMContentLoaded', safeInit);
   } else {
     safeInit();
+  }
+
+
+  function initProductPage() {
+    if (pageName !== 'product') return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    if (!productId) return;
+
+    const product = state.products.find(p => p.id === productId);
+    if (!product) {
+      document.getElementById('appContent').innerHTML = '<div class="empty-state">Product not found.</div>';
+      return;
+    }
+
+    // Set product ID in hidden input
+    const holder = document.getElementById('productIdHolder');
+    if (holder) holder.value = productId;
+
+    // Update header title
+    const headerTitle = document.getElementById('headerTitle');
+    if (headerTitle) headerTitle.textContent = product.name;
+
+    // Update detail fields
+    const qtyEl = document.getElementById('stockDetailQty');
+    const costEl = document.getElementById('stockDetailCost');
+    const priceEl = document.getElementById('stockDetailPrice');
+    const marginEl = document.getElementById('stockDetailMargin');
+    const deductQtyEl = document.getElementById('stockDeductQty');
+
+    if (qtyEl) qtyEl.textContent = product.quantity + ' ' + (product.unit || 'pcs');
+    if (costEl) costEl.textContent = formatCurrency(product.costPrice || 0);
+    if (priceEl) priceEl.textContent = formatCurrency(product.sellingPrice || 0);
+    if (marginEl) {
+      var margin = getProfitMargin(product.costPrice, product.sellingPrice);
+      marginEl.textContent = margin !== null ? formatPercent(margin) : '--';
+    }
+    if (deductQtyEl) deductQtyEl.value = 1;
+
+    // Update edit/restock links
+    const editLink = document.getElementById('stockDetailEditLink');
+    const restockLink = document.getElementById('stockDetailRestockLink');
+    if (editLink) editLink.href = 'add_product.html?edit=' + productId;
+    if (restockLink) restockLink.href = 'add_product.html?restock=' + productId;
+
+    // Highlight current status chip
+    const currentStatus = getStockStatus(product);
+    const statusChips = document.querySelectorAll('.status-chip');
+    statusChips.forEach(function(chip) {
+      chip.classList.toggle('active', chip.dataset.status === currentStatus);
+    });
+
+    // Wire up status chips (only once to avoid duplicate listeners)
+    if (!window._productStatusListenersAttached) {
+      window._productStatusListenersAttached = true;
+      statusChips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          const status = this.dataset.status;
+          const p = state.products.find(pp => pp.id === productId);
+          if (!p) return;
+          // Set quantity to simulate status
+          if (status === 'plenty') {
+            p.quantity = Math.max(p.quantity, 10);
+          } else if (status === 'low') {
+            p.quantity = Math.min(p.quantity, 5);
+            if (p.quantity <= 0) p.quantity = 1;
+          } else if (status === 'out') {
+            p.quantity = 0;
+          }
+          saveState();
+          initProductPage();
+          showToast(t('stockDeducted'));
+        });
+      });
+    }
+
+    // Show out of stock banner if needed
+    const banner = document.getElementById('productOutOfStockBanner');
+    if (banner) {
+      banner.style.display = getStockStatus(product) === 'out' ? 'block' : 'none';
+    }
   }
 
 })();

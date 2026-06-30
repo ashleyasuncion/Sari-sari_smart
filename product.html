@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sari-Sari Smart - Stocks</title>
+  <title>Sari-Sari Smart - Product</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,50 +16,83 @@
 
       <!-- HEADER -->
       <header class="app-header">
-        <h1 class="header-title" id="headerTitle">Stocks</h1>
-        <div class="header-actions">
-          <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" aria-label="Tutorial">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </button>
-          <a class="header-btn" id="settingsBtn" href="setting.html" aria-label="Settings">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
+        <a class="header-btn" href="inventory.html" aria-label="Back">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         </a>
+        <h1 class="header-title" id="headerTitle">Product</h1>
+        <span style="width:36px;"></span>
       </header>
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <!-- Critical Stock Alert Banner -->
-        <div class="critical-stock-banner" id="criticalStockBanner" style="display:none;">
+        <input type="hidden" id="productIdHolder" value="">
+
+        <!-- Product Detail Section -->
+        <div class="product-detail-section">
+          <div class="product-detail-row">
+            <span class="product-detail-label" data-i18n="stockLabel">Current Stock</span>
+            <span class="product-detail-value" id="stockDetailQty">0</span>
+          </div>
+          <div class="product-detail-row">
+            <span class="product-detail-label" data-i18n="costPerUnit">Cost Price</span>
+            <span class="product-detail-value" id="stockDetailCost">₱0.00</span>
+          </div>
+          <div class="product-detail-row">
+            <span class="product-detail-label" data-i18n="sellPrice">Selling Price</span>
+            <span class="product-detail-value" id="stockDetailPrice">₱0.00</span>
+          </div>
+          <div class="product-detail-row">
+            <span class="product-detail-label" data-i18n="profitMargin">Profit Margin</span>
+            <span class="product-detail-value" id="stockDetailMargin">0%</span>
+          </div>
+        </div>
+
+        <!-- Update Status Section -->
+        <div class="section-label" data-i18n="updateStatus">Status</div>
+        <div class="status-options" id="stockStatusOptions">
+          <button class="status-chip" data-status="plenty">
+            <span class="dot green"></span>
+            <span data-i18n="maramiPa">Marami Pa</span>
+          </button>
+          <button class="status-chip" data-status="low">
+            <span class="dot orange"></span>
+            <span data-i18n="medyoKulang">Medyo Kulang</span>
+          </button>
+          <button class="status-chip" data-status="out">
+            <span class="dot red"></span>
+            <span data-i18n="walaNa">Wala Na</span>
+          </button>
+        </div>
+
+        <!-- Deduct Stock Section -->
+        <div class="section-label" data-i18n="deductStock">Sold</div>
+        <div class="form-group">
+          <label for="stockDeductQty" data-i18n="deductQty">Quantity sold</label>
+          <input type="number" id="stockDeductQty" class="form-input" value="1" min="1" step="1">
+        </div>
+        <button class="btn btn-primary btn-full" id="btnConfirmDeduct">
+          <span data-i18n="deductStock">Confirm Sold</span>
+        </button>
+
+        <!-- Actions -->
+        <div class="product-detail-actions">
+          <a class="btn btn-secondary btn-full" id="stockDetailEditLink" href="add_product.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span data-i18n="edit">Edit</span>
+          </a>
+          <a class="btn btn-secondary btn-full" id="stockDetailRestockLink" href="add_product.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span data-i18n="addStock">Restock</span>
+          </a>
+        </div>
+
+        <!-- Hidden stock of out warning -->
+        <div class="critical-stock-banner" id="productOutOfStockBanner" style="display:none;">
           <div class="critical-stock-banner-header">
             <span class="critical-stock-banner-icon">🚨</span>
-            <span class="critical-stock-banner-title" data-i18n="criticalStockAlert">Critical Stock Alert</span>
+            <span class="critical-stock-banner-title" data-i18n="noStock">Out of Stock</span>
           </div>
-          <div class="critical-stock-banner-desc" data-i18n="criticalAlertDesc">These items need immediate attention</div>
-          <div class="critical-stock-list" id="criticalStockList"></div>
-        </div>
-
-        <div class="search-bar">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="stockSearch" placeholder="Search items..." data-i18n-placeholder="searchProducts">
-        </div>
-
-        <a class="btn btn-primary btn-large" id="btnAddStock" href="add_product.html">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span data-i18n="addStock">Add Stock</span>
-        </a>
-
-        <!-- Kulang Na Section -->
-        <div id="kulangNaSection" style="display:none;">
-          <div class="section-label" data-i18n="kulangNa">Running Low</div>
-          <div class="list-container" id="kulangNaList"></div>
-        </div>
-
-        <!-- All Items -->
-        <div class="section-label" id="allItemsLabel" data-i18n="allItems">All Items</div>
-        <div class="list-container" id="allStocksList">
-          <div class="empty-state" data-i18n="noStockItems">No stock items yet. Add your first item!</div>
+          <div class="critical-stock-banner-desc">This item is out of stock. Tap "Restock" above to add more.</div>
         </div>
       </main>
 
@@ -108,24 +141,6 @@
 
     </div>
     <div class="phone-home-bar"></div>
-  </div>
-
-  <!-- TUTORIAL OVERLAY (outside phone-frame for correct position:fixed behavior) -->
-  <div id="tutorialRoot">
-    <div class="tutorial-overlay" id="tutorialOverlay" style="display:none;">
-      <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
-      <div class="tutorial-highlight" id="tutorialHighlight"></div>
-      <div class="tutorial-box" id="tutorialBox">
-        <div class="tutorial-step-indicator">
-          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
-        </div>
-        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
-        <div class="tutorial-actions">
-          <button class="btn btn-secondary btn-sm" id="tutorialSkip" data-i18n="skip" style="display:none;">Skip</button>
-          <button class="btn btn-primary btn-sm" id="tutorialNext" data-i18n="next">Next</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script src="app.js"></script>

@@ -821,6 +821,99 @@ Status: All modules [✓] remain fully implemented with no changes needed.
      - app.js: safeInit() wrapper, try/catch in init() steps, try/catch around
        switch statement, safe t() function, safeInit recovery UI
 
+=== v2.14 product page overhaul (June 30, 2026) ===
+
+[✓] Created: Dedicated product detail page (product.html)
+     - Replaced stockDetailOverlay with standalone product.html page
+     - Accessed via product.html?id=<product_id> with URL-based product loading
+     - Header shows actual product name (not hardcoded "Product")
+     - Displays: stock quantity, cost price, selling price, profit margin
+     - Status chip selector: Plenty / Getting Low / Out of Stock
+     - Deduct stock section with quantity input and Confirm Sold button
+     - Edit and Restock action buttons linking to add_product.html
+     - Bottom navigation, toast, and confirmation modal included
+     - Back button navigates to inventory.html
+
+[✓] Updated: inventory.html — removed stockDetailOverlay markup
+     - Product detail overlay (stockDetailOverlay div) fully removed
+     - Stock cards now navigate to product.html on click/Sold button
+
+[✓] Updated: app.js — 5 key functions modified
+     - openStockStatusUpdate(productId): navigates to product.html?id=X
+     - openDeductStock(productId): navigates to product.html?id=X
+     - confirmDeductStock(): reads product ID from hidden #productIdHolder input
+     - Added initProductPage(): renders product details on page load, wires
+       edit/restock links, highlights status chips, shows out-of-stock banner
+       Uses window._productStatusListenersAttached guard to prevent duplicate
+       status chip event listeners on re-render (e.g. after stock deduction)
+     - Added case 'product': initProductPage(); break; to init switch
+     - Moved setPageTitle() call to BEFORE the init switch so initProductPage()
+       can override the header with the actual product name
+     - Removed hardcoded product: 'Product' from title mapping
+
+[✓] Fixed: 5 bugs from initial implementation
+     - CRITICAL: Removed stray }} braces after openDeductStock body that broke
+       the entire JavaScript IIFE (app was completely non-functional)
+     - Removed duplicate eod: t('eodTitle') key from title mapping
+     - Cleaned up cacheDom(): removed 6 dead DOM refs (stockDetailOverlay,
+       stockDetailName, btnStockDetailBack, btnUpdateStockStatus,
+       stockStatusCurrent). Kept stockDetailQty, stockDetailCost, stockDetailPrice,
+       stockDetailMargin, stockDeductQty, btnConfirmDeduct for product page use
+     - Removed dead event listeners for btnStockDetailBack and stockDetailOverlay
+     - Simplified confirmDeductStock(): removed dead dom.stockDetailOverlay
+       fallback for product ID retrieval
+
+[✓] Syntax validation: PASSED (node -e "require('fs').readFileSync('app.js','utf8')")
+
+[✓] Affected files:
+     - product.html: New file created (143 lines)
+     - inventory.html: Removed stockDetailOverlay markup
+     - app.js: ~120 insertions/deletions across cacheDom, title mapping,
+       openStockStatusUpdate, openDeductStock, confirmDeductStock,
+       init switch, and new initProductPage() function
+     - progress.txt: This entry
+
+=== v2.15 bug fixes — product page nav, i18n, scope (June 30, 2026) ===
+
+[✓] Fixed: 4 post-launch bugs after v2.14 product page overhaul
+
+[✓] Bug 1 — Bottom nav highlighting broken on product page
+     - Added 'product': 'inventory' to pageToNav mapping in app.js
+     - Previously missing entry caused fallback to pageName='product', which
+       matched no nav data-page attribute → all nav tabs lost active state
+     - Now correctly highlights the Stocks tab when on product.html
+
+[✓] Bug 2 — Missing eachLabel i18n string caused raw key to display
+     - Added eachLabel: 'each' to English strings (app.js)
+     - Added eachLabel: 'bawat' to Filipino strings (app.js)
+     - renderDailySoldItems() was using t('eachLabel') but key didn't exist,
+       causing inline text like "₱25.00 eachLabel" instead of "₱25.00 each"
+
+[✓] Bug 3 — Header title flash before dynamic product name
+     - Added product: 'Product' to setPageTitle() titles map in app.js
+     - Previously falling back to "Sari-Sari Smart" before initProductPage()
+       overrode it with the actual product name
+     - Now briefly shows "Product" (sensible placeholder) before dynamic name
+
+[✓] Bug 4 (ROOT CAUSE) — initProductPage() was outside IIFE scope
+     - initProductPage() was defined AFTER the main })(); closure, making it
+       a global function outside the IIFE
+     - It referenced state, pageName, t(), formatCurrency(), getStockStatus(),
+       saveState(), getProfitMargin() — all variables trapped inside the IIFE
+     - This caused a silent ReferenceError caught by the try/catch fallback,
+       preventing the header from ever updating to the actual product name
+     - Fix: Moved initProductPage() INSIDE the IIFE by removing the premature
+       })(); and appending it at the very end of the file after the function
+     - Now initProductPage() correctly accesses closure variables and sets
+       headerTitle.textContent = product.name on page load
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: 4 edits across pageToNav, i18n strings, setPageTitle titles map,
+       and IIFE closure structure (initProductPage moved inside)
+     - progress.txt: This entry
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================

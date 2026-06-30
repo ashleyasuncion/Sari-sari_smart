@@ -24,14 +24,14 @@ based on interview findings. Three pillars: Stock Tracker | Daily Cash Summary |
 Utang Notebook.
 
 ================================================================================
-FILES (14 total)
+FILES (15 total)
 ================================================================================
 
 Core Files:
   1. style.css         - Complete stylesheet with phone frame, theme, all screen styles
   2. app.js            - Page-aware JavaScript with state management, localization, logic
 
-HTML Pages (11):
+HTML Pages (12):
   3. index.html        - Intro screen: splash + setup overlay → redirects to home or tutorial
   4. home.html         - Dashboard with 4 summary cards (Earnings, Stock, Debts, EOD) + business tips
   5. sales.html        - Daily Cash Summary: Gastos + Kita → auto-calculates profit & revolving fund
@@ -41,11 +41,12 @@ HTML Pages (11):
   9. debts.html        - Utang tracking: customer list, detail overlay, payment recording
   10. new_debt.html    - Manual debt entry form
   11. reports.html     - Day/Week/Month toggles, sales/profit, transactions, best-sellers (not in nav)
-  12. help.html        - Help menu, replay tutorial, how-to-use accordion overlay
-  13. setting.html     - Language, text size, store info, data management (no bottom nav)
+  12. help.html        - Help menu, replay tutorial, how-to-use link, about/contact
+  13. help-how-to-use.html - How to Use guide with 7 accordion topics (subpage of help)
+  14. setting.html     - Language, text size, store info, data management (no bottom nav)
 
 Documentation:
-  14. instructions.txt  - Original product specification
+  15. instructions.txt  - Original product specification
 
 ================================================================================
 ALL MODULES IMPLEMENTED
@@ -109,11 +110,9 @@ ALL MODULES IMPLEMENTED
      - Total Sales and Profit summary cards
      - Recent transactions list
      - Best-selling products ranking
-     - Low-stock items summary
-
-[✓] 8. Help
+     - Low-stock items summary  [✓] 8. Help
      - Menu: Replay Tutorial, How to Use, Contact/Info, About
-     - How to Use accordion (4 topics: Sales, Products, Debts, Reports)
+     - How to Use dedicated page with 7 accordion topics (subpage, no bottom nav)
      - Toast-based quick info for Contact and About
 
 [✓] 9. Settings
@@ -912,6 +911,43 @@ Status: All modules [✓] remain fully implemented with no changes needed.
 [✓] Affected files:
      - app.js: 4 edits across pageToNav, i18n strings, setPageTitle titles map,
        and IIFE closure structure (initProductPage moved inside)
+     - progress.txt: This entry
+
+=== v2.16 help How to Use as dedicated page + bottom nav label fix (June 30, 2026) ===
+
+[✓] Created: Dedicated "How to Use" page (help-how-to-use.html)
+     - Replaced accordion overlay with standalone subpage
+     - Contains all 7 accordion topics (Recording Sales, Adding Stock, Tracking Utang,
+       Daily Summary, End-of-Day Closing, Using Reports, App Settings)
+     - Follows subpage pattern: header with back button to help.html, no bottom nav,
+       no tutorial overlay, spacer instead of settings button
+     - data-i18n attributes on all text for language support
+
+[✓] Updated: help.html — How to Use button links to new page
+     - "How to Use" button changed from <button> with overlay toggle to <a> direct link
+     - Removed entire HOW TO USE OVERLAY div (accordion HTML + overlay structure)
+
+[✓] Updated: app.js — cleaned up overlay references
+     - Removed 3 DOM refs from cacheDom(): dom.helpHowToUse, dom.howToUseOverlay,
+       dom.btnHowToUseBack
+     - Removed 2 event listener blocks for opening/closing the overlay
+     - Added help_how_to_use: t('howToUse') to setPageTitle() titles mapping
+     - Syntax validation: PASSED (node -c app.js)
+
+[✓] Fixed: Bottom navigation "Utang" label now consistently shows "Debt"
+     - utang: 'Utang' → utang: 'Debt' in both English and Filipino strings
+     - Language switch no longer changes this label (same in both languages)
+     - Affects all 6 bottom nav bars across the app
+
+[✓] Updated: FILES count from 14 to 15
+     - Added help-how-to-use.html to HTML Pages list
+     - Help module description updated: "How to Use" now a dedicated page link
+
+[✓] Affected files:
+     - help-how-to-use.html: New file (subpage with accordion content)
+     - help.html: How to Use button changed to <a>, overlay HTML removed
+     - app.js: 5 lines removed (DOM refs + event listeners), 1 line added (page title)
+       + 2 edits (utang label in both languages)
      - progress.txt: This entry
 
 ================================================================================

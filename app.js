@@ -22,7 +22,7 @@
   const strings = {
     en: {
       // Nav
-      home: 'Home', stocks: 'Stocks', sales: 'Sales', utang: 'Utang', help: 'Help',
+      home: 'Home', stocks: 'Stocks', sales: 'Sales', utang: 'Debt', help: 'Help',
       settings: 'Settings',
       // Home
       homeGreeting: 'Kamusta ang Tindahan Ngayon?',
@@ -311,7 +311,7 @@
     },
     fil: {
       // Nav
-      home: 'Home', stocks: 'Stocks', sales: 'Benta', utang: 'Utang', help: 'Tulong',
+      home: 'Home', stocks: 'Stocks', sales: 'Benta', utang: 'Debt', help: 'Tulong',
       settings: 'Settings',
       // Home
       homeGreeting: 'Kamusta ang Tindahan Ngayon?',

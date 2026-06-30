@@ -82,6 +82,7 @@
       deductQty: 'Quantity sold',
       stockDeducted: 'Stock updated.',
       stockAdded: 'Stock added.',
+      statusUpdated: 'Status updated.',
       searchProducts: 'Search items...',
       edit: 'Edit',
       restock: 'Restock',
@@ -391,6 +392,7 @@
       deductQty: 'Dami ng nabenta',
       stockDeducted: 'Na-update ang stock.',
       stockAdded: 'Naidagdag ang stock.',
+      statusUpdated: 'Na-update ang status.',
       searchProducts: 'Maghanap ng item...',
       edit: 'Baguhin',
       restock: 'Mag-restock',
@@ -3461,7 +3463,13 @@
         case 'setting': initSettingPage(); break;
         case 'endofday':
         case 'eod': initEndOfDayPage(); break;
-        case 'product': initProductPage(); break;
+        case 'product':
+          // Bind confirmDeduct before initProductPage so it's reliable
+          if (dom.btnConfirmDeduct) {
+            dom.btnConfirmDeduct.addEventListener('click', confirmDeductStock);
+          }
+          initProductPage();
+          break;
         case 'customer_debt': initCustomerDebtPage(); break;
         case 'payment': initPaymentPage(); break;
         default: initHomePage(); break;
@@ -3889,7 +3897,7 @@
           }
           saveState();
           initProductPage();
-          showToast(t('stockDeducted'));
+          showToast(t('statusUpdated'));
         });
       });
     }
@@ -3899,7 +3907,8 @@
     if (banner) {
       banner.style.display = getStockStatus(product) === 'out' ? 'block' : 'none';
     }
+n    // btnConfirmDeduct is now bound in page routing (no guard needed here)
   }
 
 })();
-
+

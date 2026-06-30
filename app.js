@@ -115,6 +115,7 @@
       newDebt: 'New Debt',
       newDebtManual: 'New Debt',
       totalOutstanding: 'Total Outstanding',
+      customerDebt: 'Customer Debt',
       customerDebts: 'Customer Debts',
       noDebts: 'No debts recorded yet.',
       recordPayment: 'Record Payment',
@@ -403,6 +404,7 @@
       newDebt: 'Bagong Utang',
       newDebtManual: 'Bagong Utang',
       totalOutstanding: 'Kabuuang Utang',
+      customerDebt: 'Utang ng Kostumer',
       customerDebts: 'Utang ng mga Kostumer',
       noDebts: 'Wala pang naitalang utang.',
       recordPayment: 'Magtala ng Bayad',
@@ -830,6 +832,7 @@
         inventory: t('stocks'), add_product: t('addStockTitle'),
         home: t('home'), eod: t('eodTitle'), endofday: t('eodTitle'),
         debts: t('utang'), new_debt: t('newDebtManual'),
+        customer_debt: t('customerDebt'), payment: t('recordPayment'),
         reports: t('reports'), help: t('help'), setting: t('settings'),
         product: 'Product'
       };
@@ -2065,7 +2068,7 @@
         }
         if (card) {
           const cid = card.dataset.cid;
-          if (cid) openCustomerDebt(cid);
+          if (cid) window.location.href = 'customer_debt.html?id=' + cid;
         }
       });
       dom.debtsList._listenerAttached = true;
@@ -2073,53 +2076,176 @@
   }
 
   function openCustomerDebt(customerId) {
-    const customer = state.customers.find(c => c.id === customerId);
-    const debt = state.debts.find(d => d.customerId === customerId);
-    if (!customer || !debt || !dom.customerDebtOverlay) return;
+    window.location.href = 'customer_debt.html?id=' + customerId;
+  }
 
-    dom.customerDebtOverlay.dataset.customerId = customerId;
-    dom.customerDebtName.textContent = customer.name;
-    dom.customerDebtBalance.textContent = formatCurrency(debt.remainingBalance);
+  function openRecordPayment(customerId) {
+    window.location.href = 'payment.html?id=' + customerId;
+  }
 
-    const history = [];
-    // Add all debt transactions (individual debt events)
+  // ============================================
+  // CUSTOMER DEBT PAGE
+  // ============================================
+  function initCustomerDebtPage() {
+    var params = new URLSearchParams(window.location.search);
+    var cid = params.get('id');
+    if (!cid) {
+      window.location.href = 'debts.html';
+      return;
+    }
+    var holder = document.getElementById('customerDebtIdHolder');
+    if (holder) holder.value = cid;
+
+    var customer = state.customers.find(function(c) { return c.id === cid; });
+    var debt = state.debts.find(function(d) { return d.customerId === cid; });
+
+    if (!customer) {
+      var balEl = document.querySelector('.debt-detail-balance');
+      if (balEl) balEl.innerHTML = '<div class="empty-state">Customer not found.</div>';
+      return;
+    }
+
+    // Update page title
+    var titleEl = document.getElementById('headerTitle');
+    if (titleEl) titleEl.textContent = customer.name;
+
+    // Update balance
+    var balanceEl = document.getElementById('customerDebtBalance');
+    if (balanceEl && debt) {
+      balanceEl.textContent = formatCurrency(debt.remainingBalance);
+    } else if (balanceEl) {
+      balanceEl.textContent = formatCurrency(0);
+    }
+
+    // Wire Record Payment button
+    var payBtn = document.getElementById('btnRecordPayment');
+    if (payBtn) {
+      payBtn.href = 'payment.html?id=' + cid;
+    }
+
+    // Render debt history
+    var historyEl = document.getElementById('customerDebtHistory');
+    if (!historyEl) return;
+
+    if (!debt) {
+      historyEl.innerHTML = '<div class="empty-state">' + t('noData') + '</div>';
+      return;
+    }
+
+    var history = [];
     (debt.transactions || []).forEach(function(t) {
       history.push({ date: t.date, desc: t.type === 'debt' ? (t.description || 'Debt added') : t.description, amount: t.amount, type: 'debit' });
     });
-    // Also add the initial amount as a transaction if no transactions array exists (backward compat)
     if (!debt.transactions || debt.transactions.length === 0) {
       history.push({ date: debt.createdAt, desc: 'Initial debt', amount: debt.amount, type: 'debit' });
     }
-    // Add payment records
-    (debt.payments || []).forEach(p => {
+    (debt.payments || []).forEach(function(p) {
       history.push({ date: p.date, desc: t('payment') + (p.note ? ': ' + p.note : ''), amount: p.amount, type: 'credit' });
     });
-    // Sort most recent first
     history.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
 
     if (history.length === 0) {
-      dom.customerDebtHistory.innerHTML = '<div class="empty-state">' + t('noData') + '</div>';
+      historyEl.innerHTML = '<div class="empty-state">' + t('noData') + '</div>';
     } else {
-      dom.customerDebtHistory.innerHTML = history.map(function(h) {
+      historyEl.innerHTML = history.map(function(h) {
         return '<div class="debt-history-item">' +
           '<div><div style="font-weight:500;">' + h.desc + '</div><div class="debt-history-desc">' + formatDate(h.date) + '</div></div>' +
           '<div class="debt-history-amount ' + (h.type === 'credit' ? 'negative' : 'positive') + '">' +
           (h.type === 'credit' ? '- ' : '+ ') + formatCurrency(h.amount) + '</div></div>';
       }).join('');
     }
-
-    dom.customerDebtOverlay.classList.add('open');
   }
 
-  function openRecordPayment(customerId) {
-    const debt = state.debts.find(d => d.customerId === customerId);
-    if (!debt || !dom.paymentOverlay) return;
-    dom.paymentOverlay.dataset.customerId = customerId;
-    dom.paymentCustomerName.textContent = debt.customerName;
-    dom.paymentAmount.value = '';
-    dom.paymentNote.value = '';
-    dom.paymentRemainingPreview.textContent = formatCurrency(debt.remainingBalance);
-    dom.paymentOverlay.classList.add('open');
+  // ============================================
+  // PAYMENT PAGE
+  // ============================================
+  function initPaymentPage() {
+    var params = new URLSearchParams(window.location.search);
+    var cid = params.get('id');
+    if (!cid) {
+      window.location.href = 'debts.html';
+      return;
+    }
+
+    var holder = document.getElementById('paymentCustomerIdHolder');
+    if (holder) holder.value = cid;
+
+    var debt = state.debts.find(function(d) { return d.customerId === cid; });
+
+    if (!debt) {
+      showToast('Customer has no debt record.');
+      window.location.href = 'debts.html';
+      return;
+    }
+
+    // Set customer name
+    var nameEl = document.getElementById('paymentCustomerName');
+    if (nameEl) nameEl.textContent = debt.customerName;
+
+    // Set remaining preview
+    var previewEl = document.getElementById('paymentRemainingPreview');
+    if (previewEl) previewEl.textContent = formatCurrency(debt.remainingBalance);
+
+    // Update back button href
+    var backBtn = document.getElementById('btnPaymentBack');
+    if (backBtn) backBtn.href = 'customer_debt.html?id=' + cid;
+
+    // Wire amount input to update preview
+    var amountInput = document.getElementById('paymentAmount');
+    if (amountInput && previewEl) {
+      amountInput.addEventListener('input', function() {
+        var val = parseFloat(this.value) || 0;
+        var remaining = Math.max(0, (debt.remainingBalance || 0) - val);
+        previewEl.textContent = formatCurrency(remaining);
+      });
+    }
+
+    // Wire save button
+    var saveBtn = document.getElementById('btnSavePayment');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        var amt = parseFloat(document.getElementById('paymentAmount') ? document.getElementById('paymentAmount').value : 0) || 0;
+        var note = document.getElementById('paymentNote') ? document.getElementById('paymentNote').value.trim() : '';
+
+        if (amt <= 0) {
+          showToast('Please enter a valid payment amount.', 'error');
+          return;
+        }
+
+        if (amt > (debt.remainingBalance || 0)) {
+          showToast('Payment exceeds remaining balance.', 'error');
+          return;
+        }
+
+        // Record payment
+        var payment = {
+          id: generateId(),
+          date: new Date().toISOString(),
+          amount: amt,
+          note: note
+        };
+        if (!debt.payments) debt.payments = [];
+        debt.payments.push(payment);
+        debt.remainingBalance = Math.max(0, (debt.remainingBalance || 0) - amt);
+        debt.updatedAt = new Date().toISOString();
+
+        // Add transaction record
+        if (!debt.transactions) debt.transactions = [];
+        debt.transactions.push({
+          id: generateId(),
+          date: new Date().toISOString(),
+          type: 'payment',
+          description: t('payment') + (note ? ': ' + note : ''),
+          amount: amt
+        });
+
+        saveState();
+        showToast(t('paymentSaved'));
+
+        // Navigate back to customer debt page
+        window.location.href = 'customer_debt.html?id=' + cid;
+      });
+    }
   }
 
   // ============================================
@@ -2594,56 +2720,11 @@
       dom.btnNewDebt.addEventListener('click', () => window.location.href = 'new_debt.html');
     }
 
-    if (dom.btnCustomerDebtBack) {
-      dom.btnCustomerDebtBack.addEventListener('click', () => {
-        if (dom.customerDebtOverlay) dom.customerDebtOverlay.classList.remove('open');
-      });
-    }
-    if (dom.btnRecordPayment) {
-      dom.btnRecordPayment.addEventListener('click', function() {
-        if (dom.customerDebtOverlay && dom.customerDebtOverlay.dataset.customerId) {
-          openRecordPayment(dom.customerDebtOverlay.dataset.customerId);
-        }
-      });
-    }
-    if (dom.btnPaymentBack) {
-      dom.btnPaymentBack.addEventListener('click', () => {
-        if (dom.paymentOverlay) dom.paymentOverlay.classList.remove('open');
-      });
-    }
-    if (dom.btnSavePayment) {
-      dom.btnSavePayment.addEventListener('click', function() {
-        const cid = dom.paymentOverlay ? dom.paymentOverlay.dataset.customerId : null;
-        const debt = cid ? state.debts.find(d => d.customerId === cid) : null;
-        if (debt) {
-          const amount = parseFloat(dom.paymentAmount ? dom.paymentAmount.value : 0) || 0;
-          const note = dom.paymentNote ? dom.paymentNote.value.trim() : '';
-          if (amount <= 0) { showToast('Please enter a valid payment amount.', 'error'); return; }
-          if (amount > debt.remainingBalance) { showToast('Payment exceeds remaining balance.', 'error'); return; }
-          debt.remainingBalance -= amount;
-          debt.updatedAt = new Date().toISOString();
-          debt.payments = debt.payments || [];
-          debt.payments.push({ id: generateId(), amount, note, date: new Date().toISOString() });
-          saveState();
-          if (dom.paymentOverlay) dom.paymentOverlay.classList.remove('open');
-          if (dom.customerDebtOverlay) dom.customerDebtOverlay.classList.remove('open');
-          showToast(t('paymentSaved'));
-          updateDebtSummary();
-          renderDebtsList();
-        }
-      });
-    }
+    // Overlay event listeners removed - using dedicated pages instead
+    // Customer cards now navigate to customer_debt.html?id=X
+    // Record Payment is handled in payment.html page
 
-    if (dom.paymentAmount) {
-      dom.paymentAmount.addEventListener('input', function() {
-        const amount = parseFloat(this.value) || 0;
-        const cid = dom.paymentOverlay ? dom.paymentOverlay.dataset.customerId : null;
-        const debt = cid ? state.debts.find(d => d.customerId === cid) : null;
-        if (debt && dom.paymentRemainingPreview) {
-          dom.paymentRemainingPreview.textContent = formatCurrency(Math.max(0, debt.remainingBalance - amount));
-        }
-      });
-    }
+
   }
 
   // --- NEW DEBT ---
@@ -3218,6 +3299,8 @@
       'eod': 'home',
     'endofday': 'home',
       'new_debt': 'debts',
+      'customer_debt': 'debts',
+      'payment': 'customer_debt',
       'add_product': 'inventory',
       'product': 'inventory'
     };
@@ -3302,6 +3385,8 @@
         case 'endofday':
         case 'eod': initEndOfDayPage(); break;
         case 'product': initProductPage(); break;
+        case 'customer_debt': initCustomerDebtPage(); break;
+        case 'payment': initPaymentPage(); break;
         default: initHomePage(); break;
       }
     } catch (e) {

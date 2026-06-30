@@ -950,6 +950,134 @@ Status: All modules [✓] remain fully implemented with no changes needed.
        + 2 edits (utang label in both languages)
      - progress.txt: This entry
 
+=== v2.17 tutorial system expansion — subpage navigation + help tutorial (June 30, 2026) ===
+
+[✓] Added: 28 new tutorial string keys (English + Filipino)
+     - helpTutorial1-6: Help page guided tour (Tutorial Selector, How to Use,
+       Contacts, About, header button) — 12 strings total
+     - tutHelp label (2 strings)
+     - stockTutorial9: Add Stock page description (2 strings)
+     - stockTutorial10: Product page description (2 strings)
+     - salesTutorial9: New Sale page description (2 strings)
+     - debtTutorial7: New Debt page description (2 strings)
+     - debtTutorial8: Customer Debt page description (2 strings)
+     - debtTutorial9: Record Payment page description (2 strings)
+     - homeTutorial6 reworded to describe End-of-Day page (was Business Tips)
+     - homeTutorial7 added for Business Tips (shifted from homeTutorial6)
+     - All strings available in both English and Filipino
+
+[✓] Added: Help tutorial entry to tutorials object (6 steps)
+     - Steps: page overview, tutorial selector (#tutorialSelector), how to use
+       (#helpHowToUse), contacts (#helpContact), about (#helpAbout), header
+       tutorial button (#headerTutorialBtn)
+
+[✓] Updated: Home tutorial from 6 to 7 steps
+     - Step 6 now navigates to endofday.html with EOD page explanation
+     - Step 7 covers Business Tips card (shifted from old step 6)
+
+[✓] Updated: Stock tutorial from 8 to 10 steps
+     - Step 9 navigates to add_product.html (explains add/restock form)
+     - Step 10 navigates to product.html (explains item detail view)
+
+[✓] Updated: Sales tutorial from 8 to 9 steps
+     - Step 9 navigates to new_sale.html (explains specific sale form)
+
+[✓] Updated: Debt tutorial from 6 to 9 steps
+     - Step 7 navigates to new_debt.html (manual debt entry)
+     - Step 8 navigates to customer_debt.html (customer ledger view)
+     - Step 9 navigates to payment.html (recording payments)
+
+[✓] Added: help.html — Help Tutorial option in tutorial selector dropdown
+
+[✓] Fixed: checkTutorialResume() bug preventing subpage navigation
+     - Bug: For non-main tutorials, resume logic checked tutorial-level page
+       (e.g., 'home') against current page (e.g., 'endofday'), causing redirect
+       back to base page and killing the tutorial
+     - Fix: Now checks current step's page property first (stepData.page).
+       Falls back to tutorial-level page only if step has no page property.
+     - Mirrors the same logic already used by the Main Tutorial
+     - This enables page-specific tutorials to navigate to subpages as a
+       continuous guided experience
+
+[✓] Fixed: helpTutorial3 highlight selector — #btnHowToUse → #helpHowToUse
+     - The How to Use element on help.html uses id="helpHowToUse", not btnHowToUse
+
+[✓] Created: tutorial_implementation_plan.txt
+     - Full implementation plan for completing the tutorial system
+     - Covers: adding overlay HTML to 8 subpages, adding header button to help page,
+       adding checkTutorialResume() calls to 11 init functions
+     - Checkbox-style progress tracking per task
+     - Temporary file — to be deleted once plan is complete
+
+[✓] Affected files:
+     - app.js: ~200 lines changed — new tutorial strings, tutorials object update,
+       checkTutorialResume() fix, corrected highlight selector
+     - help.html: 1 line added — Help Tutorial option in selector
+     - tutorial_implementation_plan.txt: New file (implementation roadmap)
+     - progress.txt: This entry
+
+=== v2.18 tutorial bug fixes — subpage navigation, highlights, param handling (July 1, 2026) ===
+
+[✓] Fixed: Missing checkTutorialResume() in initProductPage()
+     - Bug: initProductPage() never called checkTutorialResume(), so when the Stock
+       tutorial redirected to product.html?tutorial=true, the tutorial state was
+       never resumed — the tutorial appeared to "stop" on product page
+     - Fix: Added checkTutorialResume() as the first call in initProductPage(),
+       matching the pattern used by all other page init functions
+     - The function then correctly: detects the ?tutorial=true param, loads saved
+       state from localStorage, and resumes the tutorial overlay on product.html
+
+[✓] Fixed: Tutorial redirect loop when subpages require URL params
+     - Bug: initCustomerDebtPage() and initPaymentPage() both check for ?id= param.
+       When the Debt tutorial navigates to customer_debt.html?tutorial=true or
+       payment.html?tutorial=true with no ?id=, these functions redirected to
+       debts.html — abandoning the tutorial or creating an infinite redirect loop
+     - Fix: Added tutorial guard before each redirect:
+       if (params.get('tutorial') === 'true') return;
+       When tutorial mode is active, the page stays in place with static HTML
+       elements visible (even if data is empty). The tutorial overlay + text
+       continues normally.
+
+[✓] Fixed: Home tutorial EOD highlights referenced non-existent element IDs
+     - Bug: Steps 7-10 referenced #eodSummarySection, #eodUtangBreakdown,
+       #eodChecklist, #btnCompleteDay — none of these exist on endofday.html
+       (were copied from the standalone EOD tutorial which itself had wrong IDs)
+       This caused the highlight box to hide (display:none) on every EOD step,
+       making the tutorial appear as text-only with no overlay highlights
+     - Fix: Changed highlights to actual endofday.html elements:
+       → Step 7: .eod-step:first-child (Cash in drawer section)
+       → Step 8: .eod-step:nth-child(2) (Stock check section)
+       → Step 9: .eod-step:nth-child(3) (Debt payments section)
+       → Step 10: #finishEndOfDayBtn (Complete Closing button)
+
+[✓] Rewrote: homeTutorial6-10 strings to describe actual EOD layout
+     - Old strings described a "Summary section", "Utang Breakdown", and "Checklist"
+       that don't exist on the actual endofday.html page
+     - New strings describe the real 3-step workflow:
+       → Step 6: Overview of the 3-step closing process
+       → Step 7: Step 1 — Cash in drawer (entering cash amount)
+       → Step 8: Step 2 — Stock check (reviewing inventory)
+       → Step 9: Step 3 — Record customer payments
+       → Step 10: Complete Closing button
+     - Updated both EN and FIL strings with accurate descriptions
+
+[✓] Analysis phase:
+     - Performed complete architectural review of tutorial system before fixing
+     - Traced tutorial lifecycle: startTutorial → advanceTutorial → page redirect
+       → checkTutorialResume → resumeTutorial → renderTutorialStep
+     - Identified 4 root causes across all page-specific tutorials
+     - Documented: element ID mismatches, missing checkTutorialResume() calls,
+       param-dependent redirects, and insufficient subpage step coverage
+
+[✓] Syntax validation: PASSED
+
+[✓] Affected files:
+     - app.js: 6 edits — initProductPage() checkTutorialResume(), 2 tutorial
+       guards (initCustomerDebtPage, initPaymentPage), home tutorial step
+       highlights (4 selectors), homeTutorial6-10 EN strings (5 texts),
+       homeTutorial6-10 FIL strings (5 texts)
+     - progress.txt: This entry
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================

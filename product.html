@@ -118,6 +118,24 @@
     <div class="phone-home-bar"></div>
   </div>
 
+  <!-- TUTORIAL OVERLAY (outside phone-frame for correct position:fixed behavior) -->
+  <div id="tutorialRoot">
+    <div class="tutorial-overlay" id="tutorialOverlay" style="display:none;">
+      <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
+      <div class="tutorial-highlight" id="tutorialHighlight"></div>
+      <div class="tutorial-box" id="tutorialBox">
+        <div class="tutorial-step-indicator">
+          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
+        </div>
+        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
+        <div class="tutorial-actions">
+          <button class="btn btn-secondary btn-sm" id="tutorialSkip" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-primary btn-sm" id="tutorialNext" data-i18n="next">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

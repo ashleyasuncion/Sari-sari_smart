@@ -261,6 +261,13 @@
       newDebtTutorial2: 'Enter the customer\'s name. If they\'re a new customer, they\'ll be added automatically.',
       newDebtTutorial3: 'Enter the debt amount. This will be added to the customer\'s existing balance.',
       newDebtTutorial4: 'Tap "Save Debt" to record it. You can view all debts on the Utang page.',
+      // Help Tutorial
+      helpTutorial1: 'This is the Help page — your guide to using Sari-Sari Smart effectively.',
+      helpTutorial2: 'The Tutorial Selector lets you choose from different tutorials. Select a tutorial from the dropdown and tap "Launch" to start a guided tour of any page.',
+      helpTutorial3: 'The "How to Use" button opens a detailed guide with step-by-step instructions for recording sales, adding stock, tracking debts, viewing reports, and customizing settings.',
+      helpTutorial4: 'The Contact section shows how to reach support for questions or feedback about the app.',
+      helpTutorial5: 'The About section tells you about the app version and its purpose.',
+      helpTutorial6: 'You can also access page-specific tutorials from any page by tapping the (?) Help button in the top-right corner of the header.',
       // Tutorial Labels
       tutMain: 'Main Tutorial',
       tutHome: 'Home Tutorial',
@@ -273,6 +280,7 @@
     tutAddProduct: 'Add Product Tutorial',
     tutNewSale: 'New Sale Tutorial',
     tutNewDebt: 'New Debt Tutorial',
+    tutHelp: 'Help Tutorial',
       tutLaunch: 'Launch',
       tutSelector: 'Select a tutorial...',
       tutSelectToast: 'Please select a tutorial from the dropdown before launching.',
@@ -282,7 +290,11 @@
       homeTutorial3: 'Stock Alert tells you how many items are running low. Tap it to go to the Stocks page.',
       homeTutorial4: 'Outstanding Debts shows the total amount customers owe you. Tap it to go to the Utang page.',
       homeTutorial5: 'End-of-Day Closing helps you complete your daily store routine: count cash, check stock, record customer payments, and finalize the day\'s summary with revenue, profit, expenses, and cash profit breakdown.',
-      homeTutorial6: 'Business Tips give you personalized suggestions based on your store\'s current activity.',
+      homeTutorial6: 'This is the End-of-Day Closing page where you finalize your daily store operations. Complete three steps: count your cash drawer, check your stock levels, and record any customer payments received today.',
+      homeTutorial7: 'Step 1: Enter how much cash is in your drawer right now. This helps you verify that your actual cash-on-hand matches what the system recorded from today\'s sales.',
+      homeTutorial8: 'Step 2: Check your stock levels. Review items in inventory to identify any items running low that need restocking before the next business day.',
+      homeTutorial9: 'Step 3: Record any customer payments received today. This ensures your debt records stay accurate and up-to-date for each customer.',
+      homeTutorial10: 'When all steps are complete, tap "Complete Closing" to finalize your day. This saves your end-of-day summary and prepares your store for tomorrow.',
       // Stock Tutorial
       stockTutorial1: 'This is the Stocks page where you manage all your inventory items.',
       stockTutorial2: 'Use the Search bar to quickly find any item by typing its name.',
@@ -290,8 +302,10 @@
       stockTutorial4: 'Items running low appear in the "Running Low" section at the top, showing remaining quantity and a quick "Add Stock" button.',
       stockTutorial5: 'All your inventory is listed below with color-coded borders: green = plenty, orange = getting low, red = out of stock.',
       stockTutorial6: 'Each item card shows the name, status indicator, quantity on hand, profit margin percentage, and a "Sold" button to quickly deduct stock when you make a sale.',
-      stockTutorial7: 'Tap any item card to open its detail view showing cost price, selling price, profit margin, and stock status. Update the status or use quick actions to add or deduct stock.',
-      stockTutorial8: 'In the detail overlay you can update the status to Plenty, Getting Low, or Out of Stock, or tap "Edit" to modify the item.',
+      stockTutorial7: 'Tap any item card to open its dedicated Product page showing cost price, selling price, profit margin, and stock status. This is where you manage individual item details.',
+      stockTutorial8: 'On the Product page, you can deduct stock when items are sold, update the stock status (Plenty, Getting Low, or Out of Stock), or tap "Edit" to modify item details. Stock updates are reflected immediately.',
+      stockTutorial9: 'The Add Stock page lets you add new products or restock existing ones. Enter the item name, quantity, cost per unit, and selling price. The markup helper suggests the right selling price automatically.',
+      stockTutorial10: 'Fill in all the fields and tap "Save" to add the product to inventory. The markup percentage helps you maintain consistent pricing across similar products.',
       // Sales Tutorial
       salesTutorial1: 'This is the Sales page where you record your daily store earnings and track specific sales transactions.',
       salesTutorial2: 'Enter your Gastos sa Paninda — how much you spent buying stock today from the palengke or supplier.',
@@ -301,6 +315,8 @@
       salesTutorial6: 'Once recorded, your daily summary stays visible showing gross profit, net profit, revolving fund, and utang breakdown. Below, you will find today\'s sold items and recent transactions in collapsible sections.',
       salesTutorial7: 'Use "Add a Specific Sale" for notable items like large purchases or sales made on utang (credit). Enter a customer name to automatically record it as both a sale and a debt.',
       salesTutorial8: 'Recent specific sales appear in the "Recent Transactions" collapsible section, showing the item name, amount, customer tag (if on utang), and time. The "Today\'s Sold Items" section groups items with quantities and profit totals.',
+      salesTutorial9: 'The New Sale page lets you record a specific item sale. Start typing a product name — the app suggests matching items from your inventory for quick selection.',
+      salesTutorial10: 'Enter the quantity sold — the total is calculated automatically. If the sale is on credit (utang), enter a customer name to create a debt record. Tap "Save Sale" to finish.',
       // Debt Tutorial
       debtTutorial1: 'This is the Utang page where you track all customer debts.',
       debtTutorial2: 'The Total Outstanding card shows the total amount all customers owe you. It updates automatically as payments are recorded.',
@@ -308,6 +324,10 @@
       debtTutorial4: 'Customer debts are listed here. Each card shows the customer name, last activity date, and current balance.',
       debtTutorial5: 'Tap any customer card to view their full debt history - a complete ledger showing individual debt transactions and payments with dates and running balance.',
       debtTutorial6: 'Tap "Record Payment" to log a payment. Enter the amount and an optional note to keep track of partial payments.',
+      debtTutorial7: 'The New Debt page lets you manually record a debt. Enter the customer name — new customers are added automatically. Then enter the debt amount to add to their balance.',
+      debtTutorial8: 'The Customer Debt page shows a customer\'s full ledger — individual debt entries, payments made, and their current balance. Each transaction shows the date and amount clearly.',
+      debtTutorial9: 'The Record Payment page lets you log a payment from a customer. Enter the payment amount and an optional note (e.g. "Partial payment" or "Fully settled").',
+      debtTutorial10: 'The remaining balance preview updates as you type the payment amount. Tap "Save Payment" to record it — the customer\'s balance updates automatically.',
     },
     fil: {
       // Nav
@@ -544,6 +564,13 @@
       newDebtTutorial2: 'Ilagay ang pangalan ng kostumer. Kung sila ay bagong kostumer, awtomatiko silang idadagdag.',
       newDebtTutorial3: 'Ilagay ang halaga ng utang. Ito ay idadagdag sa existing balance ng kostumer.',
       newDebtTutorial4: 'I-tap "Save Debt" para itala ito. Maaari mong tingnan ang lahat ng utang sa Utang page.',
+      // Help Tutorial
+      helpTutorial1: 'Ito ang Help page — ang iyong gabay sa paggamit ng Sari-Sari Smart nang epektibo.',
+      helpTutorial2: 'Ang Tutorial Selector ay nagbibigay-daan sa iyo na pumili ng iba\'t ibang tutorial. Pumili ng tutorial mula sa dropdown at i-tap ang "Launch" para magsimula ng guided tour.',
+      helpTutorial3: 'Ang "How to Use" button ay nagbubukas ng detalyadong gabay na may step-by-step na tagubilin para sa pag-record ng benta, pagdagdag ng stock, pagsubaybay ng utang, at iba pa.',
+      helpTutorial4: 'Ang Contact section ay nagpapakita kung paano makipag-ugnayan sa support para sa mga tanong o feedback.',
+      helpTutorial5: 'Ang About section ay nagsasabi tungkol sa bersyon ng app at layunin nito.',
+      helpTutorial6: 'Maaari ka ring mag-access ng page-specific tutorial mula sa kahit anong page sa pamamagitan ng pag-tap sa (?) Help button sa kanang bahagi ng header.',
       // Tutorial Labels
       tutMain: 'Main na Tutorial',
       tutHome: 'Home na Tutorial',
@@ -556,6 +583,7 @@
     tutAddProduct: 'Add Product na Tutorial',
     tutNewSale: 'New Sale na Tutorial',
     tutNewDebt: 'New Debt na Tutorial',
+    tutHelp: 'Help na Tutorial',
       tutLaunch: 'Simulan',
       tutSelector: 'Pumili ng tutorial...',
       tutSelectToast: 'Mangyaring pumili ng tutorial mula sa dropdown bago ilunsad.',
@@ -565,7 +593,11 @@
       homeTutorial3: 'Ang Stock Alert ay nagsasabi kung ilang item ang nauubos na. I-tap ito para pumunta sa Stocks page.',
       homeTutorial4: 'Ang Outstanding Debts ay nagpapakita ng kabuuang halaga ng utang ng mga kostumer. I-tap ito para pumunta sa Utang page.',
       homeTutorial5: 'Ang End-of-Day Closing ay tumutulong sa iyong kumpletuhin ang araw-araw na routine: bilangin ang cash, suriin ang stock, at itala ang mga bayad.',
-      homeTutorial6: 'Ang Business Tips ay nagbibigay ng personalized na mungkahi batay sa kasalukuyang aktibidad ng iyong tindahan.',
+      homeTutorial6: 'Ito ang End-of-Day Closing page kung saan mo tatapusin ang iyong araw-araw na operasyon. Kumpletuhin ang tatlong hakbang: bilangin ang cash sa drawer, suriin ang stock, at itala ang mga bayad ng kostumer ngayong araw.',
+      homeTutorial7: 'Hakbang 1: Ilagay ang halaga ng cash sa iyong drawer ngayon. Makakatulong ito upang matiyak na ang iyong aktwal na cash ay tugma sa naitala ng system.',
+      homeTutorial8: 'Hakbang 2: Suriin ang iyong stock levels. Tingnan ang inventory para sa mga item na nauubos na at kailangang i-restock bago ang susunod na araw.',
+      homeTutorial9: 'Hakbang 3: Itala ang mga bayad ng kostumer na natanggap ngayong araw. Tinitiyak nito na ang iyong debt records ay mananatiling tama at napapanahon.',
+      homeTutorial10: 'Kapag kumpleto na ang lahat ng hakbang, i-tap ang "Complete Closing" para tapusin ang araw. Ine-save nito ang iyong end-of-day summary at inihahanda ang tindahan para sa bukas.',
       // Stock Tutorial
       stockTutorial1: 'Ito ang Stocks page kung saan mo pinamamahalaan ang lahat ng iyong inventory item.',
       stockTutorial2: 'Gamitin ang Search bar para mabilis na makahanap ng item sa pamamagitan ng pag-type ng pangalan nito.',
@@ -573,8 +605,10 @@
       stockTutorial4: 'Ang mga item na nauubos ay lilitaw sa "Kulang Na" section sa itaas, na may natitirang dami at mabilis na "Add Stock" button.',
       stockTutorial5: 'Ang lahat ng iyong inventory ay nakalista sa ibaba na may color-coded na border: green = marami pa, orange = medyo kulang, red = wala na.',
       stockTutorial6: 'Ang bawat item card ay nagpapakita ng pangalan, status indicator, dami, at "Sold" button para mabilis na bawasan ang stock.',
-      stockTutorial7: 'I-tap ang kahit anong item card para buksan ang detalye nito. Makikita mo ang halaga, presyo, at maaaring mag-update ng status.',
-      stockTutorial8: 'Sa detail overlay, maaari mong i-update ang status sa Marami Pa, Medyo Kulang, o Wala Na, o i-tap ang "Edit" para baguhin ang item.',
+      stockTutorial7: 'I-tap ang kahit anong item card para buksan ang Product page nito. Makikita mo ang halaga, presyo ng benta, profit margin, at stock status. Dito mo pinamamahalaan ang detalye ng bawat item.',
+      stockTutorial8: 'Sa Product page, maaari mong bawasan ang stock kapag may naibenta, i-update ang stock status (Marami Pa, Medyo Kulang, Wala Na), o i-tap ang "Edit" para baguhin ang item details.',
+      stockTutorial9: 'Ang Add Stock page ay kung saan mo pinupunan ang pangalan ng produkto, dami, halaga, at presyo ng benta. Ang markup helper ay awtomatikong nagbibigay ng tamang selling price.',
+      stockTutorial10: 'Punan ang lahat ng field at i-tap ang "Save" para idagdag ang produkto sa inventory. Ang markup percentage ay tumutulong sa iyo na mapanatili ang consistent na pricing.',
       // Sales Tutorial
       salesTutorial1: 'Ito ang Sales page kung saan mo itinatala ang iyong araw-araw na kita.',
       salesTutorial2: 'Ilagay ang iyong Gastos sa Paninda — magkano ang ginastos mo sa pagbili ng stock ngayon mula sa palengke o supplier.',
@@ -584,6 +618,8 @@
       salesTutorial6: 'Kapag naitala na, mananatiling visible ang iyong daily summary na nagpapakita ng gross profit, net profit, at revolving fund.',
       salesTutorial7: 'Gamitin ang "Add a Specific Sale" para sa mga notable na item tulad ng malaking benta o mga sale na ginawa sa utang.',
       salesTutorial8: 'Lilitaw dito ang mga kamakailang specific sale na may pangalan ng produkto, halaga, at kostumer kung naitala sa utang.',
+      salesTutorial9: 'Ang New Sale page ay para magtala ng specific item sale. Simulan ang pag-type ng pangalan ng produkto — ang app ay magmumungkahi ng mga item mula sa iyong inventory.',
+      salesTutorial10: 'Ilagay ang quantity na naibenta — awtomatikong kakalkulahin ang total. Kung ang benta ay on credit (utang), ilagay ang pangalan ng customer para awtomatikong lumikha ng debt record. I-tap ang "Save Sale" para matapos.',
       // Debt Tutorial
       debtTutorial1: 'Ito ang Utang page kung saan mo sinusubaybayan ang lahat ng utang ng kostumer.',
       debtTutorial2: 'Ang Total Outstanding card ay nagpapakita ng kabuuang halaga ng utang ng lahat ng kostumer. Awtomatiko itong nag-a-update habang nagtatala ng bayad.',
@@ -591,6 +627,10 @@
       debtTutorial4: 'Nakalista dito ang mga utang ng kostumer. Ang bawat card ay nagpapakita ng pangalan, huling aktibidad, at kasalukuyang balanse.',
       debtTutorial5: 'I-tap ang kahit anong customer card para makita ang buong kasaysayan ng utang na may petsa at halaga, kasama ang kasalukuyang balanse.',
       debtTutorial6: 'I-tap ang "Record Payment" para magtala ng bayad. Ilagay ang halaga at isang opsyonal na tala para sa bahagyang bayad.',
+      debtTutorial7: 'Ang New Debt page ay para manu-manong magtala ng utang. Ilagay ang pangalan ng customer — awtomatikong idadagdag ang bagong customer. Pagkatapos ilagay ang halaga ng utang.',
+      debtTutorial8: 'Ang Customer Debt page ay nagpapakita ng buong ledger ng isang customer — mga utang, bayad, at kasalukuyang balance. Ang bawat transaksyon ay may petsa at halaga.',
+      debtTutorial9: 'Ang Record Payment page ay nagbibigay-daan sa iyo na magtala ng bayad mula sa isang customer. Ilagay ang halaga at isang opsyonal na tala (hal. "Partial na bayad").',
+      debtTutorial10: 'Ang preview ng natitirang balance ay nag-a-update habang nagta-type ka ng halaga. I-tap ang "Save Payment" para itala — awtomatikong mag-a-update ang balance ng customer.',
     }
   };
 
@@ -2084,9 +2124,11 @@
   // CUSTOMER DEBT PAGE
   // ============================================
   function initCustomerDebtPage() {
+    checkTutorialResume();
     var params = new URLSearchParams(window.location.search);
     var cid = params.get('id');
     if (!cid) {
+      if (params.get('tutorial') === 'true') return;
       window.location.href = 'debts.html';
       return;
     }
@@ -2157,9 +2199,11 @@
   // PAYMENT PAGE
   // ============================================
   function initPaymentPage() {
+    checkTutorialResume();
     var params = new URLSearchParams(window.location.search);
     var cid = params.get('id');
     if (!cid) {
+      if (params.get('tutorial') === 'true') return;
       window.location.href = 'debts.html';
       return;
     }
@@ -2349,6 +2393,7 @@
 
   // --- END-OF-DAY (Dedicated page) ---
   function initEndOfDayPage() {
+    checkTutorialResume();
     var saved = loadEodProgress();
     if (saved) {
       if (saved.step1Done) {
@@ -2563,6 +2608,7 @@
   }
 
   function initSpecificSalePage() {
+    checkTutorialResume();
     updateSpecificSaleTotal();
 
     if (dom.specificItemDesc) {
@@ -2624,6 +2670,7 @@
 
   // --- ADD PRODUCT (Add Stock) ---
   function initAddStockPage() {
+    checkTutorialResume();
     const params = new URLSearchParams(window.location.search);
     const editId = params.get('edit');
     const restockId = params.get('restock');
@@ -2726,6 +2773,7 @@
 
   // --- NEW DEBT ---
   function initNewDebtPage() {
+    checkTutorialResume();
     if (dom.btnSaveDebt) {
       dom.btnSaveDebt.addEventListener('click', function() {
         const nameInput = document.getElementById('newDebtCustomerName');
@@ -2781,6 +2829,11 @@
   // --- HELP ---
   function initHelpPage() {
     checkTutorialResume();
+    if (dom.headerTutorialBtn) {
+      dom.headerTutorialBtn.addEventListener("click", function() {
+        startTutorial("help", true);
+      });
+    }
 
     // Tutorial dropdown selector
     if (dom.tutorialSelector) {
@@ -2825,6 +2878,7 @@
 
   // --- SETTING ---
   function initSettingPage() {
+    checkTutorialResume();
     if (dom.btnSettingsBack) {
       const params = new URLSearchParams(window.location.search);
       const fromPage = params.get('from');
@@ -2933,7 +2987,11 @@
         { textKey: 'homeTutorial3', highlight: '.home-card:nth-child(2)' },
         { textKey: 'homeTutorial4', highlight: '.home-card:nth-child(3)' },
         { textKey: 'homeTutorial5', highlight: '#homeEndOfDay' },
-        { textKey: 'homeTutorial6', highlight: '.home-tip-card' }
+        { textKey: 'homeTutorial6', page: 'endofday' },
+        { textKey: 'homeTutorial7', highlight: '.eod-step:first-child', page: 'endofday' },
+        { textKey: 'homeTutorial8', highlight: '.eod-step:nth-child(2)', page: 'endofday' },
+        { textKey: 'homeTutorial9', highlight: '.eod-step:nth-child(3)', page: 'endofday' },
+        { textKey: 'homeTutorial10', highlight: '#finishEndOfDayBtn', page: 'endofday' }
       ]
     },
     stock: {
@@ -2946,8 +3004,10 @@
         { textKey: 'stockTutorial4', highlight: '#kulangNaList' },
         { textKey: 'stockTutorial5', highlight: '#allStocksList' },
         { textKey: 'stockTutorial6', highlight: '.stock-card:first-child' },
-        { textKey: 'stockTutorial7', highlight: null },
-        { textKey: 'stockTutorial8', highlight: null }
+        { textKey: 'stockTutorial7', page: 'product' },
+        { textKey: 'stockTutorial8', highlight: '#stockDetailQty', page: 'product' },
+        { textKey: 'stockTutorial9', page: 'add_product' },
+        { textKey: 'stockTutorial10', highlight: '#btnSaveStock', page: 'add_product' }
       ]
     },
     sales: {
@@ -2961,7 +3021,9 @@
         { textKey: 'salesTutorial5', highlight: '#btnSaveDailySales' },
         { textKey: 'salesTutorial6', highlight: '#dailyAlreadyRecorded' },
         { textKey: 'salesTutorial7', highlight: 'a[href="new_sale.html"]' },
-        { textKey: 'salesTutorial8', highlight: '#specificSalesList' }
+        { textKey: 'salesTutorial8', highlight: '#specificSalesList' },
+        { textKey: 'salesTutorial9', page: 'new_sale' },
+        { textKey: 'salesTutorial10', highlight: '#specificItemDesc', page: 'new_sale' }
       ]
     },
     debt: {
@@ -2973,7 +3035,23 @@
         { textKey: 'debtTutorial3', highlight: '#btnNewDebt' },
         { textKey: 'debtTutorial4', highlight: '#debtsList' },
         { textKey: 'debtTutorial5', highlight: null },
-        { textKey: 'debtTutorial6', highlight: '#btnRecordPayment' }
+        { textKey: 'debtTutorial6', highlight: '#btnRecordPayment' },
+        { textKey: 'debtTutorial7', highlight: '#newDebtCustomerName', page: 'new_debt' },
+        { textKey: 'debtTutorial8', page: 'customer_debt' },
+        { textKey: 'debtTutorial9', highlight: '#paymentAmount', page: 'payment' },
+        { textKey: 'debtTutorial10', highlight: '#btnSavePayment', page: 'payment' }
+      ]
+    },
+    help: {
+      label: 'tutHelp',
+      page: 'help',
+      steps: [
+        { textKey: 'helpTutorial1', highlight: null },
+        { textKey: 'helpTutorial2', highlight: '#tutorialSelector' },
+        { textKey: 'helpTutorial3', highlight: '#helpHowToUse' },
+        { textKey: 'helpTutorial4', highlight: '#helpContact' },
+        { textKey: 'helpTutorial5', highlight: '#helpAbout' },
+        { textKey: 'helpTutorial6', highlight: '#headerTutorialBtn' }
       ]
     },
     eod: {
@@ -2981,23 +3059,23 @@
       page: 'endofday',
       steps: [
         { textKey: 'eodTutorial1', highlight: null },
-        { textKey: 'eodTutorial2', highlight: '.eod-summary' },
-        { textKey: 'eodTutorial3', highlight: null },
-        { textKey: 'eodTutorial4', highlight: '.eod-step' },
-        { textKey: 'eodTutorial5', highlight: '.eod-step:first-child' },
-        { textKey: 'eodTutorial6', highlight: '#finishEndOfDayBtn' }
+        { textKey: 'eodTutorial2', highlight: '#eodSummarySection' },
+        { textKey: 'eodTutorial3', highlight: '#eodUtangBreakdown' },
+        { textKey: 'eodTutorial4', highlight: '#eodChecklist' },
+        { textKey: 'eodTutorial5', highlight: null },
+        { textKey: 'eodTutorial6', highlight: '#btnCompleteDay' }
       ]
     },
     report: {
       label: 'tutReport',
-      page: 'reports',
+      page: 'home',
       steps: [
         { textKey: 'reportTutorial1', highlight: null },
-        { textKey: 'reportTutorial2', highlight: '.period-toggles' },
-        { textKey: 'reportTutorial3', highlight: '.report-summary' },
+        { textKey: 'reportTutorial2', highlight: '#periodToggles' },
+        { textKey: 'reportTutorial3', highlight: '#reportSummary' },
         { textKey: 'reportTutorial4', highlight: '#reportTransactionsList' },
-        { textKey: 'reportTutorial5', highlight: '#reportBestSellersList' },
-        { textKey: 'reportTutorial6', highlight: '#reportLowStockList' }
+        { textKey: 'reportTutorial5', highlight: '#bestSellersList' },
+        { textKey: 'reportTutorial6', highlight: '#lowStockList' }
       ]
     },
     settings: {
@@ -3006,9 +3084,9 @@
       steps: [
         { textKey: 'settingsTutorial1', highlight: null },
         { textKey: 'settingsTutorial2', highlight: '#settingsLanguage' },
-        { textKey: 'settingsTutorial3', highlight: '.text-size-btn' },
+        { textKey: 'settingsTutorial3', highlight: null },
         { textKey: 'settingsTutorial4', highlight: '#settingsStoreName' },
-        { textKey: 'settingsTutorial5', highlight: '#settingsStockThreshold' }
+        { textKey: 'settingsTutorial5', highlight: '#settingsLowStockThreshold' }
       ]
     },
     addproduct: {
@@ -3042,7 +3120,8 @@
         { textKey: 'newDebtTutorial3', highlight: '#newDebtAmount' },
         { textKey: 'newDebtTutorial4', highlight: '#btnSaveDebt' }
       ]
-    },  };
+    }
+  };
 
   function getTutorialBoxAlignment(highlightSelector) {
     if (!highlightSelector) return 'center';
@@ -3221,8 +3300,15 @@
             }
             return resumeTutorial(saved);
           } else {
-            // Single-page tutorial - check if the tutorial page matches
-            if (tutorial.page && tutorial.page !== pageName) {
+            // Single-page tutorial - check if the current step's page matches first
+            var stepData = tutorial.steps[saved.step || 0];
+            if (stepData && stepData.page && stepData.page !== pageName) {
+              window.location.href = stepData.page + '.html?tutorial=true';
+              return true;
+            }
+            // Only fall back to tutorial-level page when the step has no page property
+            // (step-level page is authoritative - don't redirect away from a subpage)
+            if ((!stepData || !stepData.page) && tutorial.page && tutorial.page !== pageName) {
               window.location.href = tutorial.page + '.html?tutorial=true';
               return true;
             }
@@ -3735,6 +3821,7 @@
 
 
   function initProductPage() {
+    checkTutorialResume();
     if (pageName !== 'product') return;
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
@@ -3815,3 +3902,4 @@
   }
 
 })();
+

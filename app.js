@@ -1912,7 +1912,13 @@
       const product = state.products.find(p => p.id === editId);
       if (product) {
         product.name = name;
-        if (qty > 0) product.quantity += qty;
+        // Restock adds to existing; Edit replaces
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('restock')) {
+          if (qty > 0) product.quantity += qty;
+        } else {
+          product.quantity = qty;
+        }
         product.costPrice = costPrice;
         product.sellingPrice = sellingPrice;
         product.lowStockThreshold = product.lowStockThreshold || 5;

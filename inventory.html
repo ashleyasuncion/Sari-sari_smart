@@ -2,63 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sari-Sari Smart - Stock</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sari-Sari Smart - Stocks</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="phone-frame">
     <div class="phone-notch"></div>
     <div class="app-container" id="app">
+
       <!-- HEADER -->
-      <header class="app-header" style="background:var(--primary);color:white;">
-        <a class="header-btn" href="index.html" style="text-decoration:none;color:white;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        </a>
-        <h1 style="font-size:17px;font-weight:700;flex:1;text-align:center;" data-i18n="stockTitle">Stock</h1>
+      <header class="app-header">
+        <h1 class="header-title" id="headerTitle">Stocks</h1>
         <div class="header-actions">
-          <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('inventory', true)" aria-label="Tutorial" style="color:white;">
+          <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" aria-label="Tutorial">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           </button>
-          <a class="header-btn" href="setting.html" style="text-decoration:none;color:white;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </a>
-        </div>
+          <a class="header-btn" id="settingsBtn" href="setting.html" aria-label="Settings">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </a>
       </header>
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <div class="search-bar" style="margin-bottom:12px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="manageStockSearch" class="form-input" placeholder="Maghanap ng produkto..." style="border:none;padding:0;" oninput="renderManageInventory()" data-i18n-placeholder="searchPlaceholder">
+        <!-- Critical Stock Alert Banner -->
+        <div class="critical-stock-banner" id="criticalStockBanner" style="display:none;">
+          <div class="critical-stock-banner-header">
+            <span class="critical-stock-banner-icon">🚨</span>
+            <span class="critical-stock-banner-title" data-i18n="criticalStockAlert">Critical Stock Alert</span>
+          </div>
+          <div class="critical-stock-banner-desc" data-i18n="criticalAlertDesc">These items need immediate attention</div>
+          <div class="critical-stock-list" id="criticalStockList"></div>
         </div>
-        <a class="btn btn-primary btn-large" href="add_product.html" style="margin-bottom:12px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span data-i18n="addStockBtn">Magdagdag ng Stock</span>
+
+        <div class="search-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="stockSearch" placeholder="Search items..." data-i18n-placeholder="searchProducts">
+        </div>
+
+        <a class="btn btn-primary btn-large" id="btnAddStock" href="add_product.html">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span data-i18n="addStock">Add Stock</span>
         </a>
-        <div class="list-container" id="manageInventoryList"></div>
+
+        <!-- Kulang Na Section -->
+        <div id="kulangNaSection" style="display:none;">
+          <div class="section-label" data-i18n="kulangNa">Running Low</div>
+          <div class="list-container" id="kulangNaList"></div>
+        </div>
+
+        <!-- All Items -->
+        <div class="section-label" id="allItemsLabel" data-i18n="allItems">All Items</div>
+        <div class="list-container" id="allStocksList">
+          <div class="empty-state" data-i18n="noStockItems">No stock items yet. Add your first item!</div>
+        </div>
       </main>
 
       <!-- BOTTOM NAV -->
       <nav class="bottom-nav" id="bottomNav">
-        <a class="nav-item" href="index.html">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
-          <span class="nav-label" data-i18n="navMorning">Umaga</span>
+        <a class="nav-item" data-page="home" data-i18n-label="home" href="home.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span class="nav-label" data-i18n="home">Home</span>
         </a>
-        <a class="nav-item active" href="inventory.html">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-          <span class="nav-label" data-i18n="stocksLink">Stock</span>
+        <a class="nav-item active" data-page="inventory" data-i18n-label="stocks" href="inventory.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span class="nav-badge" style="display:none;">0</span>
+          <span class="nav-label" data-i18n="stocks">Stocks</span>
         </a>
-        <a class="nav-item" href="debts.html">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/></svg>
-          <span class="nav-label" data-i18n="debtsLink">Utang</span>
+        <a class="nav-item" data-page="sales" data-i18n-label="sales" href="sales.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span class="nav-label" data-i18n="sales">Sales</span>
+        </a>
+        <a class="nav-item" data-page="debts" data-i18n-label="utang" href="debts.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M16 12h.01"/><path d="M8 12h.01"/></svg>
+          <span class="nav-label" data-i18n="utang">Utang</span>
+        </a>
+        <a class="nav-item" data-page="help" data-i18n-label="help" href="help.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="nav-label" data-i18n="help">Help</span>
         </a>
       </nav>
 
+      <!-- CONFIRMATION MODAL -->
+      <div class="overlay" id="confirmOverlay">
+        <div class="overlay-content overlay-xs">
+          <div class="confirm-icon" id="confirmIcon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3 class="confirm-title" id="confirmTitle">Are you sure?</h3>
+          <p class="confirm-message" id="confirmMessage">This action cannot be undone.</p>
+          <div class="confirm-actions">
+            <button class="btn btn-secondary" id="confirmNo" data-i18n="cancel">Cancel</button>
+            <button class="btn btn-primary" id="confirmYes" data-i18n="confirm">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOAST -->
       <div class="toast-container" id="toastContainer"></div>
+
     </div>
     <div class="phone-home-bar"></div>
   </div>
@@ -74,8 +121,8 @@
         </div>
         <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
         <div class="tutorial-actions">
-          <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
-          <button class="btn btn-primary btn-sm" id="tutorialNext" onclick="advanceTutorial()" data-i18n="next">Next</button>
+          <button class="btn btn-secondary btn-sm" id="tutorialSkip" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-primary btn-sm" id="tutorialNext" data-i18n="next">Next</button>
         </div>
       </div>
     </div>

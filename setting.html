@@ -2,92 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sari-Sari Smart - Settings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="phone-frame">
     <div class="phone-notch"></div>
     <div class="app-container" id="app">
-
       <!-- HEADER -->
-      <header class="app-header">
-        <a class="header-btn" id="btnSettingsBack" href="home.html" style="text-decoration:none;color:white;">
+      <header class="app-header" style="background:var(--primary);color:white;">
+        <a class="header-btn" href="index.html" style="text-decoration:none;color:white;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         </a>
-        <h1 class="header-title" id="headerTitle" data-i18n="settings">Settings</h1>
-        <span style="width:36px;"></span>
+        <h1 style="font-size:17px;font-weight:700;flex:1;text-align:center;" data-i18n="settingsTitle">Settings</h1>
+        <div class="header-actions">
+          <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('setting', true)" aria-label="Tutorial" style="color:white;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </button>
+        </div>
       </header>
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <div style="padding:16px;">
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="language">Language</div>
-            <select class="form-input" id="settingsLanguage">
-              <option value="en">English</option>
-              <option value="fil">Filipino</option>
-            </select>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settingsLanguage">Wika</div>
+          <select id="settingsLanguage" class="form-input" onchange="saveSettings()">
+            <option value="en">English</option>
+            <option value="fil">Filipino</option>
+          </select>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="textSize">Text Size</div>
+          <div class="text-size-options">
+            <button class="text-size-btn active" data-size="standard" onclick="setTextSize('standard')" data-i18n="standard">Standard</button>
+            <button class="text-size-btn" data-size="large" onclick="setTextSize('large')" data-i18n="large">Large</button>
+            <button class="text-size-btn" data-size="extra-large" onclick="setTextSize('extra-large')" data-i18n="extraLarge">Extra Large</button>
           </div>
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="textSize">Text Size</div>
-            <div class="text-size-options">
-              <button class="text-size-btn" data-size="standard" data-i18n="standard">Standard</button>
-              <button class="text-size-btn" data-size="large" data-i18n="large">Large</button>
-              <button class="text-size-btn" data-size="extra-large" data-i18n="extraLarge">Extra Large</button>
-            </div>
-          </div>
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="storeInformation">Store Information</div>
-            <div class="form-group">
-              <label for="settingsStoreName" data-i18n="storeName">Store Name</label>
-              <input type="text" id="settingsStoreName" class="form-input">
-            </div>
-            <div class="form-group">
-              <label for="settingsOwnerName" data-i18n="ownerName">Owner Name</label>
-              <input type="text" id="settingsOwnerName" class="form-input">
-            </div>
-          </div>
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="stockSettings">Stock Alert Settings</div>
-            <div class="form-group">
-              <label for="settingsStockThreshold" data-i18n="alertThreshold">Low Stock Threshold</label>
-              <input type="number" id="settingsStockThreshold" class="form-input" placeholder="3" min="1" max="20" step="1">
-              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" data-i18n="alertThresholdDesc">Alert when stock falls below this number</div>
-            </div>
-          </div>
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="dataManagement">Data Management</div>
-            <button class="btn btn-secondary btn-full" id="btnExportData" data-i18n="exportData" style="margin-bottom:8px;">Export Data</button>
-            <button class="btn btn-secondary btn-full" id="btnImportData" data-i18n="importData" style="margin-bottom:8px;">Import Data</button>
-            <button class="btn btn-danger btn-full" id="btnResetData" data-i18n="resetData">Reset Sample Data</button>
-          </div>
-          <button class="btn btn-primary btn-full" id="btnSaveSettings" data-i18n="saveSettings" style="margin-top:8px;">Save Settings</button>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settingsStore">Pangalan ng Tindahan</div>
+          <input type="text" id="settingsStoreName" class="form-input" onchange="saveSettings()">
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settingsOwner">Pangalan ng May-ari</div>
+          <input type="text" id="settingsOwnerName" class="form-input" onchange="saveSettings()">
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="dataMgmt">Data Management</div>
+          <button class="btn btn-secondary btn-full" onclick="resetData()" style="margin-bottom:8px;">
+            <span data-i18n="resetDataBtn">I-reset ang Data</span>
+          </button>
+          <button class="btn btn-secondary btn-full" onclick="exportData()">
+            <span data-i18n="exportDataBtn">I-export ang Data</span>
+          </button>
         </div>
       </main>
 
-      <!-- CONFIRMATION MODAL -->
-      <div class="overlay" id="confirmOverlay">
-        <div class="overlay-content overlay-xs">
-          <div class="confirm-icon" id="confirmIcon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <h3 class="confirm-title" id="confirmTitle">Are you sure?</h3>
-          <p class="confirm-message" id="confirmMessage">This action cannot be undone.</p>
-          <div class="confirm-actions">
-            <button class="btn btn-secondary" id="confirmNo" data-i18n="cancel">Cancel</button>
-            <button class="btn btn-primary" id="confirmYes" data-i18n="confirm">Confirm</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TOAST -->
       <div class="toast-container" id="toastContainer"></div>
-
     </div>
     <div class="phone-home-bar"></div>
   </div>
@@ -103,8 +78,8 @@
         </div>
         <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
         <div class="tutorial-actions">
-          <button class="btn btn-secondary btn-sm" id="tutorialSkip" data-i18n="skip" style="display:none;">Skip</button>
-          <button class="btn btn-primary btn-sm" id="tutorialNext" data-i18n="next">Next</button>
+          <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-primary btn-sm" id="tutorialNext" onclick="advanceTutorial()" data-i18n="next">Next</button>
         </div>
       </div>
     </div>

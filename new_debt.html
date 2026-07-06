@@ -2,73 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sari-Sari Smart - New Debt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sari-Sari Smart - Bagong Utang</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="phone-frame">
     <div class="phone-notch"></div>
     <div class="app-container" id="app">
-
       <!-- HEADER -->
-      <header class="app-header">
-        <a class="header-btn" id="btnNewDebtCancel" href="debts.html" style="text-decoration:none;color:white;">
+      <header class="app-header" style="background:var(--primary);color:white;">
+        <a class="header-btn" href="debts.html" style="text-decoration:none;color:white;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         </a>
-        <h1 class="header-title" data-i18n="newDebtManual">New Debt</h1>
+        <h1 style="font-size:17px;font-weight:700;flex:1;text-align:center;">Bagong Utang</h1>
         <span style="width:36px;"></span>
       </header>
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <div style="padding:16px;">
-          <div class="form-group">
-            <label for="newDebtCustomerName" data-i18n="customerName">Customer Name</label>
-            <input type="text" id="newDebtCustomerName" class="form-input" placeholder="Enter customer name" data-i18n-placeholder="enterCustomerNameDebt">
-          </div>
-          <div class="form-group">
-            <label for="newDebtAmount" data-i18n="debtAmount">Debt Amount (₱)</label>
-            <input type="number" id="newDebtAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01">
-          </div>
-          <div style="padding:12px 16px;background:var(--primary-bg);border-radius:var(--radius);margin-bottom:16px;">
-            <span style="color:var(--text-secondary);font-size:var(--text-sm,13px);" data-i18n="debtNote">This will add the amount to the customer's outstanding balance. You can record payments from the Debts screen.</span>
-          </div>
-          <div class="form-actions">
-            <a class="btn btn-secondary" href="debts.html" data-i18n="cancel">Cancel</a>
-            <button class="btn btn-primary" id="btnSaveDebt" data-i18n="saveDebt">Save Debt</button>
-          </div>
+        <div class="form-group">
+          <label>Pangalan ng Kostumer</label>
+          <input type="text" id="newDebtCustomer" class="form-input" placeholder="Ilagay ang pangalan">
         </div>
+        <div class="form-group">
+          <label>Halaga ng Utang (₱)</label>
+          <input type="number" id="newDebtAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="saveNewDebt()">I-save ang Utang</button>
       </main>
 
-      <!-- TOAST -->
       <div class="toast-container" id="toastContainer"></div>
-
     </div>
     <div class="phone-home-bar"></div>
   </div>
-
-  <!-- TUTORIAL OVERLAY (outside phone-frame for correct position:fixed behavior) -->
-  <div id="tutorialRoot">
-    <div class="tutorial-overlay" id="tutorialOverlay" style="display:none;">
-      <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
-      <div class="tutorial-highlight" id="tutorialHighlight"></div>
-      <div class="tutorial-box" id="tutorialBox">
-        <div class="tutorial-step-indicator">
-          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
-        </div>
-        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
-        <div class="tutorial-actions">
-          <button class="btn btn-secondary btn-sm" id="tutorialSkip" data-i18n="skip" style="display:none;">Skip</button>
-          <button class="btn btn-primary btn-sm" id="tutorialNext" data-i18n="next">Next</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script src="app.js"></script>
 </body>
 </html>

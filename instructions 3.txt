@@ -1,0 +1,378 @@
+================================================================================
+INSTRUCTIONS 3 — PROJECT MAP & REMAINING WORK
+================================================================================
+Last Updated: July 6, 2026
+Source: Comprehensive Analysis of App 2.7 (Web Prototype) vs Sarisari Smart (Android)
+================================================================================
+
+This document serves as the authoritative project map. It documents what exists,
+what was recently implemented, and what remains to be done across both projects.
+
+================================================================================
+SECTION 1: PROJECT OVERVIEW
+================================================================================
+
+Two codebases exist:
+
+  A. APP 2.7 (backup/app2.7/) — The Latest Stable Web Prototype
+     ─────────────────────────────────────────────────────────
+     Type:      HTML/CSS/JS mobile-first web app (12 pages)
+     Storage:   localStorage
+     Status:    v2.7 of the Three Moment Redesign — STABLE
+     Location:  backup/app2.7/
+
+  B. SARISARI SMART (Sari-sari_smart/) — The Android Mobile App
+     ─────────────────────────────────────────────────────────
+     Type:      Kotlin + Jetpack Compose + Material 3
+     Storage:   Room Database (SQLite)
+     Status:    ~90% complete — capstone-ready pending remaining tasks
+     Location:  Sari-sari_smart/
+
+================================================================================
+SECTION 2: CURRENT STATE OF THE ANDROID APP
+================================================================================
+
+All 7 Development Phases — COMPLETED:
+
+  Phase 1:  Project Foundation           ✓ 100%  (Gradle, Compose, Nav, Theme)
+  Phase 2:  Screen-by-Screen UI           ✓ 100%  (20 screens → 18 active)
+  Phase 3:  Tutorial System               ✓ 100%  (14-step main + highlights)
+  Phase 4:  Room Database                 ✓ 100%  (5 entities, 5 DAOs, Repository)
+  Phase 5:  UX Polish                     ✓ 100%  (snackbar, confirmations, badges)
+  Phase 6:  Gap Resolution                ✓ 100%  (time-ago, tips, trends, export)
+  Phase 7:  Testing & Bug Fixes           ✓ 100%  (35 DAO tests, all passing)
+
+Latest Implemented Features (Phases 6-7):
+  • Time-ago display on all transactions
+  • 6 rotating business tips with pending profit awareness
+  • Sales trend analysis (vs 7-day average)
+  • Collapsible sections on Reports and DailySalesScreen
+  • Settings Export/Import via ActivityResultContracts
+  • Cleaned up deprecated screens (HomeScreen.kt, EndOfDayScreen.kt)
+  • 35 Room DAO instrumented tests (all passing on Android 14)
+
+================================================================================
+SECTION 3: EXISTING ARCHITECTURE — ANDROID APP
+================================================================================
+
+Technology Stack:
+  Language:       Kotlin 2.0.21
+  UI:             Jetpack Compose + Material 3
+  Navigation:     Navigation Compose (single-activity)
+  Database:       Room (5 entities, 5 DAOs)
+  Architecture:   MVVM + Repository Pattern
+  State:          StateFlow + collectAsStateWithLifecycle
+  DI:             Manual (via SariSariApp.applicationContext — NO Hilt)
+  Testing:        35 instrumented DAO tests
+
+Current Project Structure:
+
+  Sari-sari_smart/app/src/main/java/com/example/sari_sari_smart/
+  │
+  ├── SariSariApp.kt                          // Application class (DB singleton)
+  ├── MainActivity.kt                         // Single Activity entry
+  │
+  ├── data/
+  │   ├── Models.kt                           // Data classes (Product, Sale, Debt, etc.)
+  │   ├── AppRepository.kt                    // Repository wrapping all 5 DAOs
+  │   ├── SnackbarManager.kt                  // Snackbar event system
+  │   ├── TimeUtils.kt                        // Time-ago formatting
+  │   └── local/
+  │       ├── AppDatabase.kt                  // Room database singleton
+  │       ├── Converters.kt                   // Type converters (JSON lists, dates)
+  │       ├── dao/
+  │       │   ├── ProductDao.kt               // Products CRUD + search + low stock
+  │       │   ├── DailyEntryDao.kt            // Today's entries + range queries
+  │       │   ├── SpecificSaleDao.kt          // Detailed sale records
+  │       │   ├── CustomerDebtDao.kt          // Debts CRUD + active/payment queries
+  │       │   └── EndOfDayDao.kt              // Daily summaries + history
+  │       └── entity/
+  │           ├── ProductEntity.kt
+  │           ├── DailyEntryEntity.kt
+  │           ├── SpecificSaleEntity.kt
+  │           ├── CustomerDebtEntity.kt
+  │           └── EndOfDayEntity.kt
+  │
+  └── ui/
+      ├── MainScaffold.kt                     // Three Moment shell + bottom nav
+      ├── SupportScaffold.kt                  // Sub-page scaffold (back + title)
+      ├── navigation/
+      │   ├── Routes.kt                       // All route definitions
+      │   ├── BottomNavBar.kt                 // Bottom nav composable
+      │   └── NavGraph.kt                     // Navigation graph
+      ├── localization/
+      │   ├── Strings.kt                      // 200+ string keys (EN/FIL)
+      │   └── AppSettings.kt                  // Language/text size prefs
+      ├── theme/
+      │   ├── Color.kt                        // Colors (light + dark defined, only light used)
+      │   ├── Theme.kt                        // Material 3 theme
+      │   └── Type.kt                         // Typography
+      ├── components/
+      │   ├── TutorialOverlay.kt
+      │   ├── TutorialHighlightState.kt
+      │   ├── SaleBottomSheet.kt
+      │   ├── ScaledText.kt
+      │   └── DeveloperPanel.kt
+      └── screens/ (18 total)
+          ├── AppViewModel.kt                 // Shared ViewModel (central state)
+          ├── SplashScreen.kt                 // Splash with logo
+          ├── SetupScreen.kt                  // First-launch store setup
+          ├── MorningCheckScreen.kt           // Stock warnings + debt summary
+          ├── DayModeScreen.kt                // Live stats + transaction feed
+          ├── EveningClosingScreen.kt         // End-of-day closing
+          ├── DailySalesScreen.kt             // Daily transaction history
+          ├── SpecificSaleScreen.kt           // Single sale detail
+          ├── ReportsScreen.kt                // Weekly + trend reports
+          ├── StocksScreen.kt                 // Product inventory list
+          ├── AddStockScreen.kt               // Add new product
+          ├── ProductDetailScreen.kt          // Edit/restock/deduct product
+          ├── DebtsScreen.kt                  // Customer debt list
+          ├── NewDebtScreen.kt                // Manual debt creation
+          ├── CustomerDebtDetailScreen.kt     // Individual customer ledger
+          ├── RecordPaymentScreen.kt          // Payment recording
+          ├── SettingsScreen.kt               // Language, size, data mgmt
+          └── HelpScreen.kt                   // Help/instructions
+
+================================================================================
+SECTION 4: FEATURE PARITY GAPS — APP 2.7 vs ANDROID APP
+================================================================================
+
+These are features present in the web prototype (App 2.7) but missing or
+incomplete in the Android app:
+
+  +----------------------------------------------------------------------+
+  | Feature                      | App 2.7   | Android   | Priority      |
+  |------------------------------|-----------|-----------|---------------|
+  | Closing Page Restructuring   |    ✓      |    ❌     | CRITICAL      |
+  | (Recorded Sales Today,       |           |           |               |
+  |  Actual Sales Today,         |           |           |               |
+  |  Sales Difference,           |           |           |               |
+  |  Profit = Actual - Cost)     |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | "Recorded Sales Today" label |    ✓      |    ❌     | CRITICAL      |
+  | (instead of "Today's         |           |           |               |
+  |  Earnings" on Day page)      |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | ViewModel Unit Tests         |    N/A    |    ❌     | HIGH          |
+  | (0 ViewModel tests exist)    |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Compose UI Tests             |    N/A    |    ❌     | HIGH          |
+  | (0 UI tests exist)           |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Unit Tests (app/src/test/)   |    N/A    |    ❌     | HIGH          |
+  | (empty directory)            |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Dark Theme Implementation    |    N/A    |    ⚠️     | MEDIUM        |
+  | (colors defined but unused)  |           | Partial   |               |
+  |------------------------------|-----------|-----------|---------------|
+  | App Icon (custom)            |    N/A    |    ❌     | MEDIUM        |
+  | (still default Android icon) |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | README / Documentation       |    N/A    |    ❌     | MEDIUM        |
+  |------------------------------|-----------|-----------|---------------|
+  | User Research Evidence       |    N/A    |    ❌     | MEDIUM        |
+  | (interview notes, personas)  |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Architecture Diagrams        |    N/A    |    ❌     | MEDIUM        |
+  | (MVVM + Room + Repository)   |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Store Name Editing           |    ✓      |    ❌     | LOW           |
+  | (in Settings)                |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Live Language Switch         |    ✓      |    ⚠️     | LOW           |
+  | (no restart needed)          |           | Partial   |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Stock Status Visual Icons    |    ✓      |    ⚠️     | LOW           |
+  | (colored dots on inventory)  |           | Partial   |               |
+  |------------------------------|-----------|-----------|---------------|
+  | Charts in Reports            |    ❌     |    ❌     | LOW           |
+  | (text-only currently)        |           |           |               |
+  |------------------------------|-----------|-----------|---------------|
+  | CSV/PDF Export               |    ❌     |    ❌     | LOW           |
+  | (JSON export exists)         |           |           |               |
+  +----------------------------------------------------------------------+
+
+================================================================================
+SECTION 5: PROJECT MAP — ROADMAP FOR REMAINING WORK
+================================================================================
+
+The following is the prioritized roadmap organized by capstone defense impact.
+
+==============================================================================
+WAVE 1 — CAPSTONE CRITICAL (Do before defense)
+==============================================================================
+Estimated effort: 1-2 focused coding sessions
+
+  [ ] TASK 1.1: PORT CLOSING PAGE RESTRUCTURING TO ANDROID
+      Files to modify:
+        • EveningClosingScreen.kt     — Restructure Sales section
+        • AppViewModel.kt             — Add recordedSales, actualSales, salesDiff state
+        • EndOfDayEntity.kt           — Add recordedSales, actualSales, salesDiff fields
+        • EndOfDayDao.kt              — Update queries if needed
+        • Strings.kt                  — Add/update string keys (EN/FIL)
+      Description:
+        Replace "Today's Earnings" with "Recorded Sales Today" on both
+        DayModeScreen and EveningClosingScreen. Add "Actual Sales Today"
+        manual input. Add auto-calculated "Sales Difference" field.
+        Restructure Profit = Actual Sales - Cost of Goods.
+      Reference: backup/app2.7/app.js (getTodayEarnings, updateClosingTotal,
+                 completeDay functions) and backup/app2.7/closing.html
+
+  [ ] TASK 1.2: ADD VIEWMODEL UNIT TESTS
+      Files to create:
+        • app/src/test/java/com/example/sari_sari_smart/.../AppViewModelTest.kt
+      Description:
+        Test computed values: getTodayEarnings(), getTodayTotalCost(),
+        getSalesDifference(), getClosingProfit(), etc.
+        Use Turbine library for StateFlow assertions.
+      Testing approach:
+        Create in-memory Room database, inject into AppRepository,
+        verify state updates correctly after inserting sales/debts.
+
+  [ ] TASK 1.3: ADD COMPOSE UI TESTS
+      Files to create:
+        • app/src/androidTest/java/.../MorningCheckScreenTest.kt
+        • app/src/androidTest/java/.../DayModeScreenTest.kt
+        • app/src/androidTest/java/.../EveningClosingScreenTest.kt
+      Description:
+        Test that key UI elements render, buttons are clickable,
+        and navigation flows work.
+
+==============================================================================
+WAVE 2 — DEFENSE PRESENTATION (Prepare before defense)
+==============================================================================
+Estimated effort: 1 session
+
+  [ ] TASK 2.1: CREATE README
+      File: Sari-sari_smart/README.md
+      Content to include:
+        • Project title and description
+        • Tech stack (Kotlin, Compose, Room, MVVM)
+        • Screenshots/GIFs of the 3 main moments
+        • Setup instructions
+        • Testing instructions
+        • Architecture overview
+
+  [ ] TASK 2.2: CREATE ARCHITECTURE DOCUMENTATION
+      Files to create:
+        • Sari-sari_smart/docs/architecture.md
+        • Sari-sari_smart/docs/database_schema.md
+      Content:
+        • MVVM + Repository + Room architecture diagram (ASCII or link to Excalidraw)
+        • Data flow diagram (UI → ViewModel → Repository → DAO → Room)
+        • Entity-Relationship diagram for the 5 Room tables
+        • Navigation graph showing screen hierarchy
+
+  [ ] TASK 2.3: COMPILE USER RESEARCH EVIDENCE
+      File: Sari-sari_smart/docs/user_research.md
+      Content:
+        • Interview summaries (if done)
+        • Usability test results from the web prototype
+        • Design decisions justified by user feedback
+        • Before/after comparisons showing how feedback shaped features
+
+  [ ] TASK 2.4: CREATE CUSTOM APP ICON
+      Files to modify:
+        • res/mipmap-*/ic_launcher.webp (replace default)
+        • res/mipmap-*/ic_launcher_round.webp (replace default)
+        • res/mipmap-anydpi-v26/ic_launcher.xml (update adaptive icon)
+        • res/drawable/ic_launcher_foreground.xml (custom foreground)
+        • res/drawable/ic_launcher_background.xml (custom background)
+
+==============================================================================
+WAVE 3 — POLISH & ENHANCEMENT (If time permits)
+==============================================================================
+Estimated effort: 1-2 sessions
+
+  [ ] TASK 3.1: ENABLE DARK THEME
+      Files to modify:
+        • Theme.kt      — Add DarkColorScheme support
+        • Color.kt      — Already has dark colors defined
+        • AppSettings.kt — Add dark mode preference
+        • SettingsScreen.kt — Add dark mode toggle
+      Reference: Color.kt already defines DarkColors — just needs wiring.
+
+  [ ] TASK 3.2: ADD STORE NAME EDITING IN SETTINGS
+      Files to modify:
+        • SettingsScreen.kt — Add editable fields for store name and owner name
+        • AppViewModel.kt   — Add get/set methods for store info
+      Reference: backup/app2.7/setting.html
+
+  [ ] TASK 3.3: IMPROVE STOCK VISUAL INDICATORS
+      Files to modify:
+        • StocksScreen.kt  — Add colored dots for stock status levels
+      Reference: backup/app2.7/inventory.html (green/yellow/red dots)
+
+  [ ] TASK 3.4: FIX LANGUAGE SWITCHING (RESTORE NAV STATE)
+      Files to modify:
+        • AppSettings.kt  — Preserve navigation state on locale change
+        • MainActivity.kt — Restore nav back stack after restart
+
+  [ ] TASK 3.5: ADD CHARTS TO REPORTS (OPTIONAL)
+      Library: Vico or MPAndroidChart
+      Files to modify:
+        • ReportsScreen.kt — Add bar/line chart for sales trends
+
+==============================================================================
+SECTION 6: REFERENCE — KEY FILE LOCATIONS
+==============================================================================
+
+  APP 2.7 (Web Prototype) — Use as reference for feature behavior:
+  ─────────────────────────────────────────────────────────────────────
+  backup/app2.7/app.js          — All logic, state, localization, functions
+  backup/app2.7/style.css       — Visual design, layout, theming
+  backup/app2.7/day.html        — Day page (Recorded Sales Today)
+  backup/app2.7/closing.html    — Closing page (restructured Sales section)
+  backup/app2.7/index.html      — Main entry, navigation
+  backup/app2.7/morning.html    — Morning Check
+  backup/app2.7/inventory.html  — Product inventory
+  backup/app2.7/debts.html      — Debt management
+  backup/app2.7/setting.html    — Settings
+  backup/app2.7/progress.txt    — Full development history (500+ lines)
+
+  ANDROID APP — Source files to modify:
+  ─────────────────────────────────────────────────────────────────────
+  Sari-sari_smart/app/.../ui/screens/EveningClosingScreen.kt
+  Sari-sari_smart/app/.../ui/screens/DayModeScreen.kt
+  Sari-sari_smart/app/.../ui/screens/AppViewModel.kt
+  Sari-sari_smart/app/.../ui/localization/Strings.kt
+  Sari-sari_smart/app/.../data/local/entity/EndOfDayEntity.kt
+  Sari-sari_smart/app/.../data/local/dao/EndOfDayDao.kt
+  Sari-sari_smart/app/.../ui/theme/Color.kt
+  Sari-sari_smart/app/.../ui/theme/Theme.kt
+  Sari-sari_smart/app/.../ui/screens/SettingsScreen.kt
+
+  DOCUMENTATION FILES:
+  ─────────────────────────────────────────────────────────────────────
+  Sari-sari_smart/progress.txt            — Dev history (7 phases)
+  Sari-sari_smart/adaptation_plan.txt     — Frontend adaptation plan
+  Sari-sari_smart/adaptation_plan2.txt    — Backend features plan
+  Sari-sari_smart/system_documentation.txt — Brief system overview
+  backup/app2.7/instructions.txt          — Original product specification
+  backup/app2.7/instructions 2.txt        — Post-interview feature directives
+  backup/app2.7/instructions 3.txt        — THIS FILE (project map)
+  backup/app2.7/analysis.txt              — Capstone panel evaluation
+
+================================================================================
+SECTION 7: SUMMARY — WHAT TO FOCUS ON
+================================================================================
+
+  TOP 3 FOR CAPSTONE DEFENSE:
+  1. Port Closing page restructuring from App 2.7 to Android
+     (EveningClosingScreen + AppViewModel + EndOfDayEntity changes)
+  2. Add ViewModel unit tests (app/src/test/)
+  3. Add Compose UI tests (app/src/androidTest/)
+
+  TOP 3 FOR PRESENTATION:
+  4. Create README
+  5. Create architecture documentation with diagrams
+  6. Compile user research evidence
+
+  NICE TO HAVE:
+  7. Custom app icon
+  8. Dark theme
+  9. Store name editing in Settings
+
+================================================================================
+END — INSTRUCTIONS 3
+================================================================================

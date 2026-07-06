@@ -83,5 +83,178 @@ stronger than a feature list alone and demonstrates both technical and design
 competency.
 
 ================================================================================
+CAPSTONE PANEL EVALUATION — SARi-SARI SMART
+================================================================================
+
+Date: July 5, 2026
+Evaluator: Capstone Panel (Simulated)
+
+=== OVERALL IMPRESSION ===
+
+You've built an impressively thorough HTML/CSS/JS prototype. The polish is
+genunine — the phone frame, the animations, the tutorial system, the bilingual
+support, the markup helper — these show you've invested real effort. However,
+there are hard truths that need to be addressed before a capstone defense.
+
+===============================================================================
+>> CRITICAL CONCERNS
+===============================================================================
+
+=== 1. This is NOT a capstone-ready deliverable. It is a prototype. ===
+
+Your own analysis notes that this is a "rapid design/UX prototype for the actual
+capstone deliverable, which will be built in Android Studio." The problem is
+clear: there is no Android app visible. If you walk into a capstone defense with
+only HTML/CSS/JS, you will fail — or at best be asked to resubmit.
+
+A capstone in Android development must demonstrate:
+  - MVVM architecture (ViewModel + LiveData/StateFlow)
+  - Room database (local SQLite persistence)
+  - Material Design 3 (Jetpack Compose or XML)
+  - Unit tests (JUnit)
+  - UI tests (Espresso or Compose UI tests)
+
+=== 2. Where is the user research evidence? ===
+
+The instructions reference interviews with sari-sari store owners and a
+transcript, but none of these artifacts are in the repository. In a capstone
+defense, the first question a panelist asks is: "Show me your research process."
+If the answer is just "we talked to people," that is not sufficient.
+
+At minimum, the repository should include:
+  - 3-5 interview summaries (anonymized)
+  - A before/after comparison showing how interview insights changed the design
+  - At least one usability test result showing measurable improvement
+
+=== 3. localStorage is NOT a database ===
+
+The entire app runs on localStorage. This is acceptable for a prototype, but
+as a capstone deliverable, you must demonstrate understanding of:
+  - Why localStorage has size limits (~5-10MB)
+  - Why localStorage is synchronous and blocks the UI thread
+  - Why localStorage does not support queries, indexes, or transactions
+  - How Room/SQLite solves all of these problems
+
+Expect the question: "How would you migrate this from localStorage to Room?"
+You need a concrete answer, not a vague plan.
+
+=== 4. The code has structural issues ===
+
+The app.js file is a ~2,000+ line monolithic IIFE with no modularity. This
+is fine for a prototype sprint, but does not demonstrate software engineering
+best practices. At a capstone defense, expect questions like:
+  - "How would you test this code?"
+  - "How would you separate concerns?"
+  - "What design patterns did you use?"
+
+For the Android version, you need proper architecture (MVVM, Repository
+pattern, Dependency Injection).
+
+===============================================================================
+>> STRENGTHS TO HIGHLIGHT
+===============================================================================
+
+1. Tutorial system is thoughtful. The guided overlay with cross-page
+   navigation, highlight tracking via requestAnimationFrame, and replay
+   capability shows real UX maturity.
+
+2. Bilingual support is well-implemented. The data-i18n attribute system
+   and full translation dictionary demonstrate you thought about
+   internationalization from day one.
+
+3. The "three moments" redesign shows iteration. Going from a
+   feature-organized app (Sales, Inventory, Debts) to a time-organized one
+   (Morning, Day, Closing) is a user-centered design decision backed by
+   interview insights.
+
+4. Markup helper feature (cost → markup% → suggested price) shows you
+   understood the user's actual mental model — the kind of detail that
+   separates good projects from great ones.
+
+5. Progress documentation (progress.txt) is genuinely impressive as a
+   process artifact showing iteration, bug tracking, and decisions over time.
+
+===============================================================================
+>> SPECIFIC GAPS TO ADDRESS
+===============================================================================
+
+  | Area          | Issue                                        | Severity |
+  |---------------|----------------------------------------------|----------|
+  | Data Export   | Shows placeholder toast — not implemented     | High     |
+  | Data Import   | Same placeholder                              | High     |
+  | Reports       | Period toggles don't actually filter data     | Medium   |
+  | Confirmation  | Uses confirm() dialog instead of modal system | Medium   |
+  | Empty states  | Some screens show "Loading..." placeholder    | Low      |
+  | EOD flow      | endofday.html and closing.html overlap        | Medium   |
+
+Code-level issues:
+  - progress.txt is 500+ lines (prepare a concise slide deck for defense)
+  - Sample products are hardcoded (need proper DB seeding in Android)
+  - No error handling for localStorage failures visible to the user
+
+===============================================================================
+>> QUESTIONS YOU WILL BE ASKED AT A DEFENSE
+===============================================================================
+
+  1. "Show me the Android app. Where is it?"
+
+  2. "Walk me through your MVVM architecture. Where is your ViewModel,
+     Repository, and Room DAO?"
+
+  3. "You mentioned user interviews. Show me the raw data. What changed
+     between v1 and v2 because of those interviews?"
+
+  4. "How does this app handle offline scenarios?"
+
+  5. "How would you test the sale recording logic? Show me a unit test."
+
+  6. "Why did you choose localStorage over IndexedDB? Why multi-page HTML
+     over a single-page app with routing?"
+
+  7. "What is your plan for the Android implementation? What libraries?
+     What is your estimated timeline?"
+
+If you cannot answer at least 5 of 7 confidently, you are not ready to defend.
+
+===============================================================================
+>> RECOMMENDED PRIORITY ORDER (Before Defense)
+===============================================================================
+
+  1. BUILD THE ANDROID APP — Nothing else matters without this.
+     Even a simpler app with 2 of the 3 pillars is better than a prototype.
+
+  2. PREPARE RESEARCH EVIDENCE — Compile interview summaries, design
+     iteration notes, and at least one usability test result.
+
+  3. ADD ARCHITECTURE DOCUMENTATION — Create a clear diagram of your
+     planned Android architecture (MVVM + Room + Repository).
+
+  4. FIX PLACEHOLDERS — Export/Import should work or be honestly scoped.
+
+  5. CLEAN UP PROTOTYPE — Remove dead code, fix overlapping EOD pages,
+     replace confirm() calls with your modal system.
+
+===============================================================================
+>> BOTTOM LINE
+===============================================================================
+
+Grade (if submitted as-is with just this prototype): Incomplete / Needs Revision
+
+You have a strong prototype and a clear understanding of the problem domain.
+Your UX thinking is genuinely good. But a capstone is about demonstrating
+engineering competency, and this project currently shows front-end prototyping
+skills, not Android development skills. The difference matters.
+
+Your narrative should be:
+
+  "I used this HTML prototype for rapid design validation through user testing.
+  Based on that research, I built a production-quality Android app using MVVM
+  architecture with Room database, Material Design 3, and comprehensive
+  unit testing."
+
+Right now, you have the first half of that story nailed. The second half
+is missing.
+
+================================================================================
 END - ANALYSIS
 ================================================================================

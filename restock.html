@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sari-Sari Smart - Restock Day</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="app-container" id="app">
+      <!-- HEADER -->
+      <header class="app-header" style="background:var(--primary);color:white;">
+        <a class="header-btn" href="inventory.html" style="text-decoration:none;color:white;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </a>
+        <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" id="restockTitle">Restock Day 🚚</h1>
+        <span style="width:36px;"></span>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="app-content" id="appContent">
+        <!-- Step Indicator -->
+        <div class="restock-step-indicator">
+          <div class="restock-step-dot active" id="restockStep1Dot">1</div>
+          <div class="restock-step-line"></div>
+          <div class="restock-step-dot" id="restockStep2Dot">2</div>
+        </div>
+
+        <!-- ===== STEP 1: Physical Count ===== -->
+        <div id="restockStep1">
+          <div class="restock-section-header" id="restockCorrectionHeader">Step 1: Check Shelves</div>
+          <p class="restock-section-desc">Tingnan ang aktwal na stock sa shelf. Itama ang bilang kung hindi tugma sa app.</p>
+
+          <!-- Search -->
+          <div class="search-bar" style="margin-bottom:12px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="restockSearch" class="form-input" placeholder="Maghanap ng produkto..." style="border:none;padding:0;">
+          </div>
+
+          <div class="restock-correction-count" id="restockCorrectionCount">0/0 items checked</div>
+
+          <!-- Product list -->
+          <div class="list-container" id="restockProductList"></div>
+
+          <!-- Actions -->
+          <button class="btn btn-primary btn-large" id="restockContinueBtn" onclick="window.restockContinueToPurchases()" style="margin-top:16px;">
+            <span>Continue to Purchases →</span>
+          </button>
+          <button class="btn btn-secondary btn-full" id="restockCancelBtn" onclick="window.restockCancelRestock()" style="margin-top:8px;">
+            <span>Cancel Restock</span>
+          </button>
+        </div>
+
+        <!-- ===== STEP 2: Record Purchases ===== -->
+        <div id="restockStep2" style="display:none;">
+          <div class="restock-section-header" id="restockPurchaseHeader">Step 2: Record Purchases</div>
+          <p class="restock-section-desc">Itala kung ano ang binili mo ngayong araw para i-restock ang tindahan.</p>
+
+          <!-- Add purchase form -->
+          <div class="restock-purchase-form">
+            <div class="form-group">
+              <label>Product</label>
+              <div class="product-search-wrap">
+                <input type="text" id="restockPurchaseProduct" class="form-input" placeholder="Maghanap ng produkto..." autocomplete="off">
+                <div class="product-suggestions" id="restockPurchaseSuggestions"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <div class="form-group" style="flex:1;">
+                <label>Cost per unit (₱)</label>
+                <input type="number" id="restockPurchaseCost" class="form-input" placeholder="0.00" min="0" step="0.01">
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label>Qty bought</label>
+                <input type="number" id="restockPurchaseQty" class="form-input" value="1" min="1" step="1">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full" id="restockPurchaseAddBtn" onclick="window.restockAddPurchase()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Add Item</span>
+            </button>
+          </div>
+
+          <!-- Purchased items list -->
+          <div class="restock-purchased-section">
+            <div class="restock-section-header" style="font-size:var(--text-xs);margin-top:16px;margin-bottom:8px;">Items purchased today</div>
+            <div class="list-container" id="restockPurchaseList">
+              <div class="empty-state">No items added yet.</div>
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="restock-total-row">
+            <span>Total Spent</span>
+            <span class="restock-total-amount" id="restockPurchaseTotal">₱0.00</span>
+          </div>
+
+          <!-- Actions -->
+          <button class="btn btn-primary btn-large" id="restockDoneBtn" onclick="window.restockCompleteRestock()" style="margin-top:12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Done ✓</span>
+          </button>
+          <button class="btn btn-secondary btn-full" onclick="window.restockCancelRestock()" style="margin-top:8px;">
+            <span>Cancel Restock</span>
+          </button>
+        </div>
+      </main>
+
+      <!-- BOTTOM NAV -->
+      <nav class="bottom-nav">
+        <a class="nav-item" href="morning.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+          <span class="nav-label">Umaga</span>
+        </a>
+        <a class="nav-item active" href="inventory.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <span class="nav-label">Stock</span>
+        </a>
+        <a class="nav-item" href="debts.html">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/></svg>
+          <span class="nav-label">Utang</span>
+        </a>
+      </nav>
+
+      <div class="toast-container" id="toastContainer"></div>
+    </div>
+    <div class="phone-home-bar"></div>
+  </div>
+
+  <!-- TUTORIAL OVERLAY (outside phone-frame for correct position:fixed behavior) -->
+  <div id="tutorialRoot">
+    <div class="tutorial-overlay" id="tutorialOverlay" style="display:none;">
+      <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
+      <div class="tutorial-highlight" id="tutorialHighlight"></div>
+      <div class="tutorial-box" id="tutorialBox">
+        <div class="tutorial-step-indicator">
+          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
+        </div>
+        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
+        <div class="tutorial-actions">
+          <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-primary btn-sm" id="tutorialNext" onclick="advanceTutorial()" data-i18n="next">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="restock.js"></script>
+</body>
+</html>

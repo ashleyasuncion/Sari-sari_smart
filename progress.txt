@@ -1524,6 +1524,123 @@ the on-the-launch tutorials have a skip button."
      - app.js: state.settings (removed hasCompletedTutorial, added launchCount),
        init() morning handler, endTutorial(), resetData(), handleDevAction('resetAll')
 
+=== July 8, 2026 — Restock Day feature (Issues #4 & #5) ===
+Source: Client interview issues #4 (irregular restock breaks closing profit) and #5 (inventory drift from unrecorded sales)
+
+[✓] New: restock.js — standalone module for 2-step Restock Day flow
+     - Independent localStorage management (sss_v3_restockLog, sss_v3_lastRestockDate, sss_v3_restockTemp)
+     - Step 1: Physical count correction — user inputs actual shelf count for each product
+       → Green check = matches app. Red = unrecorded sales found. Shows diff per item.
+       → Corrections overwrite app quantities to match physical reality
+     - Step 2: Record purchases — product search with suggestions, cost/quantity inputs
+       → Items added to purchase list with running total
+       → On complete: quantities updated, restockLog entry created, lastRestockDate saved
+     - Cancel restock: reverts corrections, clears temp state, navigates back to inventory
+     - Full localization support (EN + FIL) reading settings from localStorage
+     - Works alongside app.js without conflicts (separate IIFE, different localStorage keys)
+
+[✓] New: restock.html — dedicated 2-step guided Restock Day page
+     - Header with back button, step indicator (1 → 2), Search products
+     - Step 1: Product list with current vs actual inputs, diff display, check count
+     - Step 2: Purchase form with product search/suggestions, cost/quantity, item list, total
+     - 3-item bottom nav (Umaga/Stock/Utang), toast container
+     - Added tutorial overlay + app.js script for tutorial system support
+
+[✓] Modified: closing.html — removed Cost of Goods input
+     - "Cost of Goods" input row removed entirely
+     - "Profit from Items Sold" now shows per-sale profit (sum of each item's sellingPrice - costPrice × qty)
+     - Added "Last restock" info line showing days since last restock
+     - Recorded Sales / Actual Sales / Sales Difference remain unchanged
+
+[✓] Modified: morning.html — added restock reminder card
+     - New card appears after 2+ days since last restock: "🚚 Restock Reminder"
+     - Shows "X day(s) since restock. Tap to check inventory!"
+     - Tapping navigates to restock.html
+     - Hidden on days 0-1 (too soon) or if never restocked
+
+[✓] Modified: inventory.html — added "Start Restock Day" button
+     - Outlined button in accent color linking to restock.html
+     - Placed below "Add Stock" button, above product list
+
+[✓] Modified: app.js — profit calculation overhaul + restock integration
+     - Added getTodayProfit() — sums per-sale profit from today's sales
+     - Added getDaysSinceLastRestock() — reads lastRestockDate from localStorage
+     - updateClosingTotal(): profit now uses getTodayProfit() instead of actualSales - expenses
+     - completeDay(): profit uses getTodayProfit(), expenses removed from history entry
+     - renderClosingScreen(): removed closingExpenses.value reference
+     - renderMorningCheck(): added restock reminder logic (shows card after 2+ days)
+     - Event wiring: removed closingExpenses input listener (element no longer exists)
+     - Window exports: added showClosingScreen to window (fixes day.html nav button)
+     - All tutorial highlights updated: #closingExpenses → #closingActualSales
+
+[✓] Modified: style.css — added restock page styles
+     - .restock-step-indicator, .restock-section-header/desc
+     - .restock-correction-item (product card with correction input)
+     - .restock-purchase-form/item/total-row
+     - Animation support (fadeIn for purchase items)
+
+[✓] Added: Tutorial for Restock Day (8 steps)
+     - restock tutorial definition in tutorials object with page: 'restock'
+     - 8 EN + 8 FIL string keys covering Step 1 (shelf check) and Step 2 (purchases)
+     - Highlights: restockStep1, restockSearch, restockProductList, restockContinueBtn,
+       restockPurchaseProduct, restockPurchaseList, restockDoneBtn
+
+[✓] Added: Restock section to Developer Panel (Shift+N)
+     - 3 actions: Clear Restock Data, Set Restock Date to Today, View Restock Log
+     - handleDevAction cases: clearRestockData, setRestockDate, viewRestockLog
+
+[✓] Updated: setting.html — added "Restock Day Tutorial" to tutorial selector
+
+[✓] Updated: Closing tutorial text — removed Cost of Goods references
+     - closingTutorial2: now describes Actual Sales input (not Cost of Goods)
+     - closingTutorial4: profit described as per-item (not actualSales - expenses)
+     - mainTutorial9: similarly updated to reflect actual cash entry focus=== July 8, 2026 — Bug fixes: 4 syntax/runtime errors from patches ===
+Root cause: String-based patching of app.js (107K+ file with CRLF endings)
+
+[✓] Fixed: restockTutorial8 EN used semicolon instead of comma as object property separator
+     - Caused strings object literal to break after line 294
+     - Symptoms: app.js wouldn't parse → entire IIFE failed → no functions exported
+
+[✓] Fixed: Tutorial restock definition placed AFTER tutorials object closing brace
+     - _patch2.js appended ", restock: { ... }" after "};" that closes var tutorials = {...};
+     - Caused "restock:" to be parsed as a label statement outside object context
+     - Symptom: "Unexpected token ':'" syntax error at line 808
+     - Fix: Moved restock definition INSIDE the tutorials object, before the closing ";"
+
+[✓] Fixed: Dev panel missing + in string concatenation
+     - Two consecutive "<div class=.dev-panel-section.>" lines without + operator
+     - Symptom: runtime error when building dev panel HTML
+
+[✓] Fixed: Undefined "expenses" variable in completeDay() history entry
+     - Earlier patch removed "var expenses = ..." declaration but missed the reference
+     - "expenses: expenses," in historyEntry object caused ReferenceError on day complete
+     - Fix: Replaced with "expenses: 0," (expenses field kept for backward compat)
+
+=== July 8, 2026 — Tutorial & Dev Panel updated for Restock Day ===
+
+[✓] Tutorial system updated for Restock Day
+     - app.js: Added restock tutorial definition (8 steps, restock page) in tutorials object
+     - Added 8 EN + 8 FIL restock tutorial strings covering Step 1 (shelf check) and Step 2 (purchases)
+     - Closing tutorial text updated: closingTutorial2 and closingTutorial4 no longer reference
+       Cost of Goods; profit described as per-item calculation
+     - mainTutorial9 text updated to reflect actual cash entry focus
+     - All remaining #closingExpenses tutorial highlights fixed → #closingActualSales
+     - setting.html: Added "Restock Day Tutorial" option to tutorial selector dropdown
+
+[✓] Dev panel updated with Restock section
+     - app.js buildDevPanel(): Added "Restock" section with 3 action buttons:
+       → Clear Restock Data — resets lastRestockDate, restockLog, restockTemp
+       → Set Restock Date to Today — sets lastRestockDate to now (for testing reminder)
+       → View Restock Log — shows entry count via alert
+     - handleDevAction(): Added 3 corresponding cases (clearRestockData, setRestockDate, viewRestockLog)
+
+[✓] restock.html — tutorial overlay fix
+     - Added tutorialRoot HTML (highlight, backdrop, tutorial box, step indicator, Skip/Next buttons)
+     - Added <script src="app.js"> loaded before restock.js so tutorial system is available
+     - This was required because the tutorial system lives in app.js, which restock.html didn't load
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================
+
+

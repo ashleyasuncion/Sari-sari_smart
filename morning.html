@@ -75,6 +75,17 @@
                 <div class="morning-card-desc" id="morningYesterdayDesc">Yesterday's earnings</div>
               </div>
             </div>
+
+            <!-- Restock reminder -->
+            <div class="morning-card" id="morningRestockCard" style="display:none;cursor:pointer;" onclick="window.location.href='restock.html'">
+              <div class="morning-card-icon" style="background:var(--accent-light);color:var(--accent);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 10.5 10.5 13.5 16.5 7.5"/></svg>
+              </div>
+              <div class="morning-card-body">
+                <div class="morning-card-title" id="morningRestockTitle">🚚 Restock Day</div>
+                <div class="morning-card-desc" id="morningRestockDesc">Check inventory and record purchases</div>
+              </div>
+            </div>
           </div>
 
           <button class="btn btn-primary btn-large morning-start-btn" id="btnStartDay" onclick="startDay()">

@@ -916,6 +916,165 @@ select.form-input {
   .dev-panel { width: 96%; max-height: 90vh; border-radius: 12px; }
 }
 
+/* ═══════════════ RESTOCK DAY ═══════════════ */
+.restock-step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 4px 0 16px;
+}
+.restock-step-dot {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-sm); font-weight: 700;
+  transition: all var(--transition);
+}
+.restock-step-dot.active {
+  background: var(--primary);
+  color: white;
+}
+.restock-step-line {
+  width: 40px; height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+}
+.restock-section-header {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.restock-section-desc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+.restock-correction-count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.restock-correction-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+}
+.restock-correction-info { flex: 1; min-width: 0; }
+.restock-correction-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.restock-correction-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+.restock-correction-sep {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.restock-correction-input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.restock-correction-input:focus {
+  border-color: var(--primary);
+}
+.restock-correction-diff {
+  flex-shrink: 0;
+  text-align: right;
+}
+.restock-purchase-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.restock-purchase-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  animation: fadeIn 0.2s ease;
+}
+.restock-purchase-info { flex: 1; min-width: 0; }
+.restock-purchase-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+.restock-purchase-detail {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.restock-purchase-total {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.restock-purchase-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.restock-purchase-remove:hover {
+  color: var(--danger);
+  background: var(--danger-light);
+}
+.restock-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--primary-bg);
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 8px;
+}
+.restock-total-amount {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--primary);
+}
+.restock-purchased-section { margin-top: 4px; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

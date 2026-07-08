@@ -181,7 +181,7 @@
       mainTutorial6: 'The Today summary shows your earnings, items sold, and utang transactions at a glance.',
       mainTutorial7: 'Tap the Sell button to open the sale sheet. Select a product, enter quantity, and save the sale.',
       mainTutorial8: 'At the end of the day, the Closing screen shows a full summary of today\'s performance.',
-      mainTutorial9: 'Enter your cost of goods and cash earnings for the day. The app calculates your profit automatically.',
+      mainTutorial9: 'Enter the actual cash you counted. Profit is calculated from each item selling margin.',
       mainTutorial10: 'Tap "Day Complete" when you\'re ready to finalize. Your daily summary will be saved to history.',
       mainTutorial11: 'The Inventory page lets you search, add, and manage all your stock items in one place.',
       mainTutorial12: 'Tap "Add Stock" to add new products or restock existing items with cost and selling price.',
@@ -202,9 +202,9 @@
       dayTutorial6: 'When your store day is done, tap "Close Store" to view the closing summary.',
       // Closing Tutorial
       closingTutorial1: 'This is the Closing screen — finalize your day with a complete summary.',
-      closingTutorial2: 'Enter how much you spent on stock today (gastos sa paninda).',
+      closingTutorial2: 'Enter the actual cash you counted at the end of the day (actual sales).',
       closingTutorial3: 'Enter the actual total sales counted at the end of the day (actual sales).',
-      closingTutorial4: 'Your profit is calculated automatically as actual sales minus cost of goods.',
+      closingTutorial4: 'Your profit is calculated from each item - selling price minus cost price.',
       closingTutorial5: 'All items sold today are listed here with quantities and amounts.',
       closingTutorial6: 'Items running low are shown here so you know what to restock tomorrow.',
       closingTutorial7: 'Outstanding debts are listed here — follow up with customers who still owe.',
@@ -282,6 +282,16 @@
       stockTitle: 'Stock',
       searchPlaceholder: 'Search product...',
       addStockBtn: 'Add Stock',
+      // Restock
+      tutRestock: 'Restock Day Tutorial',
+      restockTutorial1: 'This is the Restock Day page - a guided 2-step workflow to update inventory.',
+      restockTutorial2: 'Step 1: Check your shelves. Update the actual count for each product.',
+      restockTutorial3: 'Enter the real count you see on your shelf next to what the app thinks.',
+      restockTutorial4: 'Green check = count matches. Red = unrecorded sales were found.',
+      restockTutorial5: 'After checking, tap Continue to Purchases to record what you bought.',
+      restockTutorial6: 'Step 2: Search for a product, enter cost per unit and quantity, tap Add Item.',
+      restockTutorial7: 'Review your purchases. Total cost is shown at the bottom.',
+      restockTutorial8: 'Tap Done to save. Your inventory is updated. Find the reminder on Morning page.',
       // Debts
       debtsTitle: 'Debts',
       debtsTotalLabel: 'Total Debt',
@@ -389,7 +399,7 @@
       mainTutorial6: 'Ang Today summary ay nagpapakita ng iyong kita, naibenta, at utang sa isang sulyap.',
       mainTutorial7: 'I-tap ang Sell button para buksan ang sale sheet. Pumili ng produkto, ilagay ang dami, at i-save ang benta.',
       mainTutorial8: 'Sa pagtatapos ng araw, ang Closing screen ay nagpapakita ng buong summary ng performance ngayong araw.',
-      mainTutorial9: 'Ilagay ang iyong gastos sa paninda at kinita ngayon. Awtomatikong kukuwentahin ng app ang iyong kita.',
+      mainTutorial9: 'Ilagay ang aktwal na pera. Awtomatikong kukuwentahin ang kita mula sa bawat item.',
       mainTutorial10: 'I-tap ang "Tapos Na ang Araw" para tapusin. Ang iyong daily summary ay mase-save sa history.',
       mainTutorial11: 'Ang Inventory page ay nagbibigay-daan sa iyo na maghanap, magdagdag, at mamahala ng stock.',
       mainTutorial12: 'I-tap ang "Magdagdag ng Stock" para magdagdag ng bagong produkto o mag-restock.',
@@ -410,9 +420,9 @@
       dayTutorial6: 'Kapag tapos na ang araw ng tindahan, i-tap ang "Isara ang Tindahan" para makita ang closing summary.',
       // Closing Tutorial
       closingTutorial1: 'Ito ang Closing screen — tapusin ang iyong araw na may kumpletong summary.',
-      closingTutorial2: 'Ilagay kung magkano ang ginastos mo sa paninda ngayon (gastos sa paninda).',
+      closingTutorial2: 'Ilagay ang aktwal na perang nabilang mo sa pagtatapos ng araw (aktwal na benta).',
       closingTutorial3: 'Ilagay ang aktwal na kabuuang benta na nabilang mo sa pagtatapos ng araw.',
-      closingTutorial4: 'Ang iyong kita ay awtomatikong kinakwenta bilang aktwal na benta minus gastos sa paninda.',
+      closingTutorial4: 'Ang kita ay kinakwenta mula sa bawat item - presyo ng benta minus presyo ng stock.',
       closingTutorial5: 'Lahat ng items na naibenta ngayong araw ay nakalista dito kasama ang dami at halaga.',
       closingTutorial6: 'Ang mga item na nauubos ay ipinapakita dito para malaman mo ang kailangan i-restock bukas.',
       closingTutorial7: 'Ang mga natitirang utang ay nakalista dito — kausapin ang mga kostumer na may utang pa.',
@@ -598,6 +608,23 @@
     return entry ? entry.earnings : null;
   }
 
+  function getTodayProfit() {
+    return getTodaySales().reduce(function(sum, s) {
+      return sum + (s.profit || 0);
+    }, 0);
+  }
+
+  function getDaysSinceLastRestock() {
+    try {
+      var d = localStorage.getItem('sss_v3_lastRestockDate');
+      if (!d) return -1;
+      var then = new Date(JSON.parse(d));
+      var now = new Date();
+      var diff = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+      return diff;
+    } catch(e) { return -1; }
+  }
+
   function calcMarkupSuggestion(cost, markup) {
     if (!cost || cost <= 0) return null;
     markup = markup || 20;
@@ -688,7 +715,7 @@
         { textKey: 'mainTutorial6', highlight: '#daySummary', page: 'day' },
         { textKey: 'mainTutorial7', highlight: '#navSale', page: 'day' },
         { textKey: 'mainTutorial8', highlight: null, page: 'closing' },
-        { textKey: 'mainTutorial9', highlight: '#closingExpenses', page: 'closing' },
+        { textKey: 'mainTutorial9', highlight: '#closingActualSales', page: 'closing' },
         { textKey: 'mainTutorial10', highlight: '#btnCompleteDay', page: 'closing' },
         { textKey: 'mainTutorial11', highlight: '#manageStockSearch', page: 'inventory' },
         { textKey: 'mainTutorial12', highlight: 'a[href="add_product.html"].btn-primary', page: 'inventory' },
@@ -724,7 +751,7 @@
       page: 'closing',
       steps: [
         { textKey: 'closingTutorial1', highlight: null },
-        { textKey: 'closingTutorial2', highlight: '#closingExpenses' },
+        { textKey: 'closingTutorial2', highlight: '#closingActualSales' },
         { textKey: 'closingTutorial3', highlight: '#closingActualSales' },
         { textKey: 'closingTutorial4', highlight: '#closingTotalToday' },
         { textKey: 'closingTutorial5', highlight: '#closingSoldItems' },
@@ -775,6 +802,20 @@
         { textKey: 'addProductTutorial3', highlight: '#productCost' },
         { textKey: 'addProductTutorial4', highlight: '#productPrice' },
         { textKey: 'addProductTutorial5', highlight: '.btn-primary.btn-full' }
+      ]
+    },
+    restock: {
+      label: 'tutRestock',
+      page: 'restock',
+      steps: [
+        { textKey: 'restockTutorial1', highlight: null },
+        { textKey: 'restockTutorial2', highlight: '#restockStep1' },
+        { textKey: 'restockTutorial3', highlight: '#restockSearch' },
+        { textKey: 'restockTutorial4', highlight: '#restockProductList' },
+        { textKey: 'restockTutorial5', highlight: '#restockContinueBtn' },
+        { textKey: 'restockTutorial6', highlight: '#restockPurchaseProduct' },
+        { textKey: 'restockTutorial7', highlight: '#restockPurchaseList' },
+        { textKey: 'restockTutorial8', highlight: '#restockDoneBtn' }
       ]
     }
   };
@@ -1188,6 +1229,20 @@
         dom.btnStartDay.onclick = startDay;
       }
     }
+    // Restock reminder
+    var restockCard = document.getElementById('morningRestockCard');
+    if (restockCard) {
+      var days = getDaysSinceLastRestock();
+      if (days < 0 || days === 0 || days === 1) {
+        restockCard.style.display = 'none';
+      } else {
+        restockCard.style.display = '';
+        var restockTitle = document.getElementById('morningRestockTitle');
+        var restockDesc = document.getElementById('morningRestockDesc');
+        if (restockTitle) restockTitle.textContent = '🚚 Restock Reminder';
+        if (restockDesc) restockDesc.textContent = days + ' day(s) since restock. Tap to check inventory!';
+      }
+    }
     updateHeader();
   }
 
@@ -1550,7 +1605,6 @@
     if (dom.closingWeeklySales) dom.closingWeeklySales.textContent = formatCurrency(weekly.total);
     if (dom.closingTopSeller) dom.closingTopSeller.textContent = weekly.topSeller || '\u2014';
 
-    if (dom.closingExpenses) dom.closingExpenses.value = state.todayExpenses || '';
     if (dom.closingActualSales) dom.closingActualSales.value = state.todayEarnings || '';
     updateClosingTotal();
 
@@ -1561,16 +1615,22 @@
   }
 
   function updateClosingTotal() {
-    if (!dom.closingExpenses || !dom.closingActualSales || !dom.closingRecordedSales || !dom.closingSalesDiff || !dom.closingTotalToday) return;
+    if (!dom.closingActualSales || !dom.closingRecordedSales || !dom.closingSalesDiff || !dom.closingTotalToday) return;
     var recordedSales = getTodayEarnings() + (state.todayEarnings || 0);
-    var expenses = parseFloat(dom.closingExpenses.value) || 0;
     var actualSales = parseFloat(dom.closingActualSales.value) || 0;
     var diff = actualSales - recordedSales;
-    var profit = actualSales - expenses;
+    var profit = getTodayProfit();
     dom.closingRecordedSales.textContent = formatCurrency(recordedSales);
     dom.closingSalesDiff.textContent = (diff >= 0 ? '+' : '') + formatCurrency(diff);
     dom.closingSalesDiff.style.color = diff === 0 ? 'var(--text-muted)' : (diff > 0 ? 'var(--primary)' : 'var(--danger)');
     dom.closingTotalToday.textContent = formatCurrency(profit);
+    var restockInfo = document.getElementById('closingRestockText');
+    if (restockInfo) {
+      var days = getDaysSinceLastRestock();
+      if (days < 0) restockInfo.textContent = 'Last restock: none yet';
+      else if (days === 0) restockInfo.textContent = 'Restocked today!';
+      else restockInfo.textContent = 'Last restock: ' + days + ' day(s) ago';
+    }
   }
 
   function backToDay() {
@@ -1584,15 +1644,14 @@
     if (!state.dayOpen) return;
 
     var recordedSales = getTodayEarnings();
-    var expenses = parseFloat(dom.closingExpenses ? dom.closingExpenses.value : 0) || 0;
     var actualSales = parseFloat(dom.closingActualSales ? dom.closingActualSales.value : 0) || 0;
-    state.todayExpenses = expenses;
+    state.todayExpenses = 0;
     state.todayEarnings = actualSales;
 
     var totalItemsSold = getTodayItemsSold();
     var totalUtang = getTodayUtang();
     var diff = actualSales - recordedSales;
-    var profit = actualSales - expenses;
+    var profit = getTodayProfit();
 
     // Update or create today's history entry (overwrite if exists)
     var todayHistoryIndex = -1;
@@ -1608,7 +1667,7 @@
       recordedSales: recordedSales,
       actualSales: actualSales,
       salesDiff: diff,
-      expenses: expenses,
+      expenses: 0,
       profit: profit,
       itemsSold: totalItemsSold,
       utangTotal: totalUtang,
@@ -1631,7 +1690,6 @@
     if (dom.summaryDetails) {
       dom.summaryDetails.innerHTML =
         '<div class="summary-detail-row"><span>' + t('closingRecordedSales') + '</span><span>' + formatCurrency(recordedSales) + '</span></div>' +
-        '<div class="summary-detail-row"><span>' + t('closingExpenses') + '</span><span>' + formatCurrency(expenses) + '</span></div>' +
         '<div class="summary-detail-row"><span>' + t('closingActualSales') + '</span><span>' + formatCurrency(actualSales) + '</span></div>' +
         (diff !== 0 ? '<div class="summary-detail-row"><span>' + t('closingSalesDiff') + '</span><span style="color:' + (diff > 0 ? 'var(--primary)' : 'var(--danger)') + ';">' + (diff > 0 ? '+' : '') + formatCurrency(diff) + '</span></div>' : '') +
         '<div class="summary-detail-row" style="border-top:1px solid var(--border);padding-top:8px;font-weight:700;"><span>' + t('profitLabel') + '</span><span style="color:var(--primary);">' + formatCurrency(profit) + '</span></div>' +
@@ -2020,6 +2078,13 @@
             '<button class="dev-panel-btn" onclick="handleDevAction(\'addSampleDebts\')">Add Sample Debts</button>' +
           '</div>' +
           '<div class="dev-panel-section">' +
+            '<div class="dev-panel-section">' +
+            '<div class="dev-panel-section-title">Restock</div>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'clearRestockData\')">Clear Restock Data</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'setRestockDate\')">Set Restock Date to Today</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'viewRestockLog\')">View Restock Log</button>' +
+          '</div>' +
+          '<div class="dev-panel-section">' +
             '<div class="dev-panel-section-title">Inventory</div>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'clearInventory\')">Clear All Inventory</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'seedProducts\')">Seed Sample Products</button>' +
@@ -2173,7 +2238,6 @@
   // EVENT WIRING
   // ============================================
   function setupEvents() {
-    if (dom.closingExpenses) dom.closingExpenses.addEventListener('input', updateClosingTotal);
     if (dom.closingActualSales) dom.closingActualSales.addEventListener('input', updateClosingTotal);
     if (dom.productCost) dom.productCost.addEventListener('input', updateMarkupHint);
     if (dom.productMarkup) dom.productMarkup.addEventListener('input', updateMarkupHint);

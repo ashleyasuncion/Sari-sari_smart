@@ -27,12 +27,14 @@
   --radius-lg: 16px;
   --radius-full: 50%;
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --text-sm: 13px;
-  --text-base: 15px;
-  --text-lg: 16px;
-  --text-xl: 18px;
-  --text-2xl: 22px;
-  --text-3xl: 26px;
+  --text-sm: 15px;
+  --text-base: 19px;
+  --text-lg: 21px;
+  --text-xl: 24px;
+  --text-2xl: 29px;
+  --text-3xl: 35px;
+  --text-xs: 14px;
+  --text-xxs: 12px;
   --header-h: 52px;
   --nav-h: 64px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,20 +42,24 @@
 
 /* ─── Text Size Variants ─── */
 .text-size-large {
-  --text-sm: 14px;
-  --text-base: 17px;
-  --text-lg: 18px;
-  --text-xl: 21px;
-  --text-2xl: 25px;
-  --text-3xl: 30px;
+  --text-sm: 17px;
+  --text-base: 21px;
+  --text-lg: 23px;
+  --text-xl: 27px;
+  --text-2xl: 32px;
+  --text-3xl: 39px;
+  --text-xs: 15px;
+  --text-xxs: 13px;
 }
 .text-size-extra-large {
-  --text-sm: 15px;
-  --text-base: 19px;
-  --text-lg: 21px;
-  --text-xl: 24px;
-  --text-2xl: 29px;
-  --text-3xl: 35px;
+  --text-sm: 19px;
+  --text-base: 24px;
+  --text-lg: 26px;
+  --text-xl: 30px;
+  --text-2xl: 36px;
+  --text-3xl: 44px;
+  --text-xs: 16px;
+  --text-xxs: 14px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -153,7 +159,7 @@ body {
 .morning-card-icon.summary-bg { background: var(--primary-bg); color: var(--primary); }
 .morning-card-body { flex: 1; min-width: 0; }
 .morning-card-title { font-size: var(--text-base); font-weight: 600; color: var(--text); }
-.morning-card-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.morning-card-desc { font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px; }
 
 .morning-start-btn { margin-top: 8px; }
 
@@ -179,7 +185,7 @@ body {
 .day-stat-icon.cash-bg { background: var(--primary-bg); color: var(--primary); }
 .day-stat-icon.item-bg { background: #e0f2fe; color: #0284c7; }
 .day-stat-icon.debt-bg { background: var(--accent-light); color: var(--accent); }
-.day-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 2px; }
+.day-stat-label { font-size: var(--text-xs); color: var(--text-muted); font-weight: 500; margin-bottom: 2px; }
 .day-stat-value { font-size: var(--text-lg); font-weight: 700; color: var(--text); }
 
 .day-transactions { margin-bottom: 16px; }
@@ -231,12 +237,12 @@ body {
 .transaction-icon.debt { background: var(--accent-light); color: var(--accent); }
 .transaction-info { flex: 1; min-width: 0; }
 .transaction-name { font-size: var(--text-sm); font-weight: 600; color: var(--text); }
-.transaction-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.transaction-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 1px; }
 .transaction-amount { font-size: var(--text-base); font-weight: 700; color: var(--primary); flex-shrink: 0; }
 .transaction-amount.debt-amount { color: var(--danger); }
 .transaction-customer {
   display: inline-block; background: var(--accent-light); color: #92400e;
-  font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; margin-left: 4px;
+  font-size: var(--text-xxs); font-weight: 600; padding: 1px 6px; border-radius: 4px; margin-left: 4px;
 }
 
 /* ═══════════════ EVENING CLOSING ═══════════════ */
@@ -355,7 +361,7 @@ body {
 }
 .nav-item.active { color: var(--primary); }
 .nav-item:hover:not(.active) { color: var(--text); }
-.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
+.nav-label { font-size: var(--text-xxs); font-weight: 600; letter-spacing: 0.2px; }
 
 .nav-spacer { width: 48px; flex: 0 0 auto; }
 .nav-fab-item { position: relative; }
@@ -414,7 +420,7 @@ body {
 .product-suggestion-item:not(:last-child) { border-bottom: 1px solid var(--border-light); }
 .product-suggestion-name { font-weight: 500; }
 .product-suggestion-price { color: var(--primary); font-weight: 600; font-size: var(--text-sm); }
-.product-suggestion-stock { color: var(--text-muted); font-size: 12px; }
+.product-suggestion-stock { color: var(--text-muted); font-size: var(--text-xs); }
 
 .customer-suggestions {
   display: none; position: absolute; z-index: 10;
@@ -457,7 +463,7 @@ body {
   font-family: var(--font); font-size: var(--text-xl); font-weight: 700; color: var(--text);
   outline: none;
 }
-.stock-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.stock-hint { font-size: var(--text-xs); color: var(--text-muted); margin-top: 4px; }
 
 /* ─── Sale Total ─── */
 .sale-total-display {
@@ -490,10 +496,10 @@ body {
 .debt-manage-item:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
 .debt-manage-info { flex: 1; min-width: 0; }
 .debt-manage-name { font-size: var(--text-sm); font-weight: 600; color: var(--text); }
-.debt-manage-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.debt-manage-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 1px; }
 .debt-manage-amount { font-size: var(--text-lg); font-weight: 700; color: var(--danger); }
 .debt-manage-pay-btn {
-  padding: 6px 14px; font-size: 12px; font-weight: 600;
+  padding: 6px 14px; font-size: var(--text-xs); font-weight: 600;
   background: var(--primary); color: white; border: none;
   border-radius: 16px; cursor: pointer; white-space: nowrap;
   transition: all var(--transition);
@@ -518,10 +524,10 @@ body {
 .inv-manage-icon.out { background: var(--danger-light); color: var(--danger); }
 .inv-manage-info { flex: 1; min-width: 0; }
 .inv-manage-name { font-size: var(--text-sm); font-weight: 600; color: var(--text); }
-.inv-manage-detail { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.inv-manage-detail { font-size: var(--text-xs); color: var(--text-muted); margin-top: 1px; }
 .inv-manage-actions { display: flex; gap: 4px; flex-shrink: 0; }
 .inv-manage-btn {
-  padding: 5px 10px; font-size: 11px; font-weight: 600;
+  padding: 5px 10px; font-size: var(--text-xs); font-weight: 600;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 6px; cursor: pointer; transition: all var(--transition);
   color: var(--text-secondary); font-family: var(--font);
@@ -592,7 +598,7 @@ select.form-input {
 /* ─── EMPTY STATE ─── */
 .empty-state { text-align: center; padding: 24px 16px; color: var(--text-muted); font-size: var(--text-sm); }
 .section-label {
-  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  font-size: var(--text-xs); font-weight: 600; color: var(--text-secondary);
   text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 8px;
 }
 
@@ -635,6 +641,21 @@ select.form-input {
   font-weight: 600;
 }
 
+/* ─── Tutorial Selector ─── */
+.tutorial-selector-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tutorial-selector-row select {
+  flex: 1;
+}
+.tutorial-selector-row .btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 12px 20px;
+}
+
 /* ─── SETTINGS ─── */
 .settings-section { margin-bottom: 20px; }
 .settings-section-title {
@@ -663,7 +684,7 @@ select.form-input {
 }
 
 /* ─── MARKUP HINT ─── */
-.markup-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.markup-hint { font-size: var(--text-xs); color: var(--text-muted); margin-top: 4px; }
 
 /* ─── SEARCH BAR ─── */
 .search-bar {
@@ -852,7 +873,7 @@ select.form-input {
 .dev-panel-content { padding: 12px 20px 20px; }
 .dev-panel-section { margin-bottom: 16px; }
 .dev-panel-section-title {
-  font-size: 11px;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: #64748b;
   text-transform: uppercase;

@@ -1355,6 +1355,86 @@ Status: All modules [✓] remain fully implemented with no changes needed.
      - add_product.html: Added data-i18n attributes, markup helper block
      - progress.txt: This entry
 
+=== July 8, 2026 — UX refinements: qty-selector, sale sheet flow, collapsible transactions, tutorial auto-scroll ===
+
+[✓] Qty-selector now disabled until a product is selected
+     - day.html: qty-selector remains visible but non-interactive when no product chosen
+     - style.css: Added .qty-selector.disabled (opacity: 0.45, pointer-events: none)
+     - app.js: openSaleSheet() adds .disabled, selectProduct() removes it,
+       adjustQty() early-returns if state.selectedProduct is null
+     - Two layers of defense: CSS pointer-events + JS guard
+
+[✓] Sale sheet stays open after saving a sale
+     - app.js saveSale(): Replaced closeSaleSheet() with form reset logic
+     - After save: selectedProduct set to null, search field cleared, qty reset to 1,
+       customer field cleared, total reset to ₱0.00, suggestions hidden,
+       qty-selector re-disabled — sheet ready for next entry
+     - User explicitly closes via Cancel button or tapping outside the sheet
+     - Toast confirmation still fires before reset
+
+[✓] Day transactions list is now collapsible
+     - day.html: Section label wrapped in clickable header with chevron SVG icon
+     - style.css: .day-transactions-header (flex, pointer cursor, hover dim),
+       .day-transactions-chevron (rotates -90° when collapsed),
+       .day-transactions.collapsed .list-container (display: none)
+     - app.js: Added toggleDayTransactions() function, exported to window
+     - Click header to collapse → Close Store button becomes immediately reachable
+
+[✓] Tutorial auto-scroll — off-screen highlights now scroll into view
+     - app.js renderTutorialStep(): Before positioning highlight, checks if target
+       element is outside the visible area of .app-content scroll container
+     - If target is below viewport (bottom buffer 60px), scrolls down
+     - If target is above viewport (top buffer 30px), scrolls up
+     - Fixes: closing tutorial steps 6 (#closingLowStock), 7 (#closingDebts),
+       8 (#btnCompleteDay), and main tutorial step 10 on closing page
+     - General solution — protects any tutorial step on any page
+
+[✓] Fixed: closing tutorial step 3 selector typo
+     - app.js: #closingEarnings → #closingActualSales (wrong element ID)
+     - No element with id="closingEarnings" exists on closing.html
+     - Step 3 now correctly highlights the Actual Sales input field
+
+[✓] Full tutorial analysis performed
+     - Analyzed all 9 tutorials (main + 8 page-specific) against 393×852 viewport
+     - 4 steps needed auto-scroll (all on closing page): closing tutorial 6-8,
+       main tutorial 10 on closing page — all now fixed by general solution
+     - Other tutorials (morning, day, inventory, debts, setting, add_product)
+       have all highlighted elements within viewport — no changes needed
+
+[✓] Affected files:
+     - app.js: saveSale() form reset, adjustQty() guard, selectProduct()/openSaleSheet()
+       qty-selector toggle, toggleDayTransactions(), renderTutorialStep() auto-scroll,
+       closing tutorial step 3 selector fix
+     - style.css: .qty-selector.disabled, .day-transactions-header/chevron/collapsed
+     - day.html: Collapsible transaction header with chevron
+     - progress.txt: This entry
+
+=== July 8, 2026 — Text size baseline shift (Approach A: Shift everything up) ===
+Source: Client interview issue #8
+
+Issue: "The text-size-btn active extra-large should be the default text size of the
+app, all text change from that point shall be adjusted appropriately." Requested
+during client interview as an accessibility improvement for older users who need
+larger default text.
+
+[✓] Approach A implemented — text size baseline shifted up to old "extra-large"
+     - The base Typography in Type.kt has been scaled ×1.25, making the old
+       "extra-large" sizes the new default baseline for all text styles
+     - bodyMedium: 14sp → 18sp, bodyLarge: 16sp → 20sp, titleLarge: 20sp → 25sp
+     - All line heights scaled proportionally
+     - AppSettings.kt getTextScaleFactor() reordered with "standard" → 1.0f
+       as explicit first case ("large" → 1.125f, else → 1.25f)
+     - Default text size remains "standard" (1.0x) since the base typography
+       now represents the old extra-large size — avoids double-scaling
+     - Users on "standard" now see the old "extra-large" text size by default
+     - "large" (1.125×) and "extra-large" (1.25×) push even higher for users
+       who need bigger text
+
+[✓] Affected files:
+     - Type.kt: All 11 text styles scaled ×1.25 (font size + line height)
+     - AppSettings.kt: Scale factors reordered with "standard" first
+     - progress.txt: This entry
+
 ================================================================================
 END OF PROGRESS REPORT
 ================================================================================

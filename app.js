@@ -240,6 +240,9 @@
       tutDebts: 'Debts Tutorial',
       tutSetting: 'Settings Tutorial',
       tutAddProduct: 'Add Product Tutorial',
+      tutSelector: 'Select a tutorial...',
+      tutLaunch: 'Launch',
+      tutSection: 'Tutorials',
       // Nav
       navMorning: 'Morning',
       navSale: 'Sell',
@@ -445,6 +448,9 @@
       tutDebts: 'Debts na Tutorial',
       tutSetting: 'Settings na Tutorial',
       tutAddProduct: 'Add Product na Tutorial',
+      tutSelector: 'Pumili ng tutorial...',
+      tutLaunch: 'Simulan',
+      tutSection: 'Mga Tutorial',
       // Nav
       navMorning: 'Umaga',
       navSale: 'Benta',
@@ -717,7 +723,7 @@
       steps: [
         { textKey: 'closingTutorial1', highlight: null },
         { textKey: 'closingTutorial2', highlight: '#closingExpenses' },
-        { textKey: 'closingTutorial3', highlight: '#closingEarnings' },
+        { textKey: 'closingTutorial3', highlight: '#closingActualSales' },
         { textKey: 'closingTutorial4', highlight: '#closingTotalToday' },
         { textKey: 'closingTutorial5', highlight: '#closingSoldItems' },
         { textKey: 'closingTutorial6', highlight: '#closingLowStock' },
@@ -900,6 +906,18 @@
       if (step.highlight) {
         var target = document.querySelector(step.highlight);
         if (target) {
+          // Scroll the content so the highlighted element is visible
+          var scrollContainer = document.getElementById('appContent');
+          if (scrollContainer) {
+            var containerRect = scrollContainer.getBoundingClientRect();
+            var targetRect = target.getBoundingClientRect();
+            var buffer = 60; // leave room for the tutorial box
+            if (targetRect.bottom > containerRect.bottom - buffer) {
+              scrollContainer.scrollTop += targetRect.bottom - containerRect.bottom + buffer;
+            } else if (targetRect.top < containerRect.top + 30) {
+              scrollContainer.scrollTop -= containerRect.top - targetRect.top + 30;
+            }
+          }
           var rect = target.getBoundingClientRect();
           dom.tutorialHighlight.style.position = 'fixed';
           dom.tutorialHighlight.style.zIndex = '151';
@@ -962,6 +980,22 @@
     }
     _tutorialState.id = null;
     _tutorialState.step = 0;
+  }
+
+  // ─── Launch Tutorial from Selector ───
+  function launchTutorial() {
+    var select = document.getElementById('tutorialSelector');
+    if (!select) return;
+    var tutorialId = select.value;
+    if (!tutorialId) {
+      return;
+    }
+    var tutorial = tutorials[tutorialId];
+    if (!tutorial) return;
+    var firstStep = tutorial.steps[0];
+    var targetPage = firstStep && firstStep.page ? firstStep.page : (tutorial.page || 'morning');
+    saveTutorialState(tutorialId, 0, true);
+    window.location.href = targetPage + '.html?tutorial=true';
   }
 
   // ─── Check Tutorial Resume (call on page init) ───
@@ -2047,13 +2081,6 @@
     if (dom.productMarkup) dom.productMarkup.addEventListener('input', updateMarkupHint);
     if (dom.productPrice) dom.productPrice.addEventListener('input', updateMarkupHint);
 
-    // Tutorial overlay close on backdrop click
-    if (dom.tutorialBackdrop) {
-      dom.tutorialBackdrop.addEventListener('click', function(e) {
-        if (e.target === dom.tutorialBackdrop) endTutorial();
-      });
-    }
-
     document.addEventListener('keydown', function(e) {
       // Shift+N: toggle developer panel
       if (e.key === 'N' && e.shiftKey && !e.repeat) {
@@ -2180,6 +2207,7 @@
   // WINDOW EXPORTS
   // ============================================
   window.toggleDayTransactions = toggleDayTransactions;
+  window.launchTutorial = launchTutorial;
   window.completeSetup = completeSetup;
   window.showMorningCheck = showMorningCheck;
   window.startDay = startDay;

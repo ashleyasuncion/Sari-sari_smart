@@ -183,6 +183,37 @@ body {
 .day-stat-value { font-size: var(--text-lg); font-weight: 700; color: var(--text); }
 
 .day-transactions { margin-bottom: 16px; }
+
+/* ─── Collapsible Day Transactions ─── */
+.day-transactions-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 4px 0;
+  transition: opacity var(--transition);
+}
+.day-transactions-header:hover {
+  opacity: 0.7;
+}
+.day-transactions-header .section-label {
+  margin: 0;
+  flex: 1;
+}
+.day-transactions-chevron {
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.day-transactions.collapsed .day-transactions-chevron {
+  transform: rotate(-90deg);
+}
+.day-transactions.collapsed .list-container {
+  display: none;
+}
+
 .close-day-btn { margin-top: 8px; }
 
 /* ─── Transaction list items ─── */
@@ -403,6 +434,14 @@ body {
   display: flex; align-items: center; gap: 12px;
   background: var(--border-light); border-radius: var(--radius);
   padding: 6px; width: fit-content;
+  transition: opacity var(--transition);
+}
+.qty-selector.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+.qty-selector.disabled .qty-btn {
+  cursor: default;
 }
 .qty-btn {
   width: 40px; height: 40px; border-radius: var(--radius-full);
@@ -492,23 +531,6 @@ body {
 .inv-manage-btn.sell:hover { background: var(--primary-bg); }
 .inv-manage-btn.danger { color: var(--danger); border-color: var(--danger); }
 .inv-manage-btn.danger:hover { background: var(--danger-light); }
-
-/* ─── MANAGE STORE TABS ─── */
-.manage-tabs {
-  display: flex; gap: 4px; margin-bottom: 16px;
-  background: var(--border-light); border-radius: var(--radius); padding: 4px;
-}
-.manage-tab {
-  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px; border: none; border-radius: var(--radius-sm);
-  background: transparent; color: var(--text-secondary);
-  font-family: var(--font); font-size: var(--text-sm); font-weight: 500;
-  cursor: pointer; transition: all var(--transition);
-}
-.manage-tab.active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
-.manage-tab:hover:not(.active) { color: var(--text); }
-.manage-tab-content { display: none; }
-.manage-tab-content.active { display: block; animation: fadeIn 0.2s ease; }
 
 /* ─── OVERLAY ─── */
 .overlay {

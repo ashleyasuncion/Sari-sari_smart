@@ -47,7 +47,6 @@
   function cacheDom() {
     var ids = [
       'headerGreeting', 'appContent',
-      'momentMorning', 'momentDay', 'momentClosing',
       'morningGreeting', 'morningSubtitle',
       'morningStockTitle', 'morningStockDesc',
       'morningDebtTitle', 'morningDebtDesc',
@@ -67,15 +66,15 @@
       'paymentSheetOverlay', 'paymentSheet',
       'paymentCustomerName', 'paymentCustomerBalance',
       'paymentAmount', 'paymentRemaining',
-      'manageStoreOverlay', 'manageInventoryList', 'manageDebtsList',
+      'manageInventoryList', 'manageDebtsList',
       'manageTotalDebt', 'manageStockSearch',
-      'addProductOverlay', 'addProductTitle',
+      'addProductTitle',
       'productName', 'productQty', 'productCost', 'productPrice', 'productMarkup',
       'productMarkupHint', 'editProductId',
       'headerTutorialBtn', 'tutorialOverlay', 'tutorialBackdrop', 'tutorialHighlight',
       'tutorialBox', 'tutorialText', 'tutorialCurrent', 'tutorialTotal',
       'tutorialSkip', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
-      'newDebtOverlay', 'newDebtCustomer', 'newDebtAmount',
+      'newDebtCustomer', 'newDebtAmount',
       'settingsLanguage', 'settingsStoreName', 'settingsOwnerName',
       'setupOverlay', 'setupStoreName', 'setupOwnerName', 'setupLanguage',
       'toastContainer'
@@ -114,9 +113,7 @@
       closingProfitLabel: 'Profit',
       noSales: 'No sales recorded today.',
       closingRecordedSales: 'Recorded Sales Today',
-      closingRecordedSalesFil: 'Naitalang Benta Ngayon',
       closingSalesDiff: 'Sales Difference',
-      closingSalesDiffFil: 'Pagkakaiba sa Benta',
       allStockOk: 'All stock is good.',
       noDebts: 'No outstanding debts.',
       dayCompleteSub: 'Rest well, {name}. See you tomorrow!',
@@ -1065,13 +1062,6 @@
   }
 
   // ============================================
-  // NAVIGATION (screens are now on separate pages; kept for backward compat)
-  // ============================================
-  function showScreen(screenId) {
-    // No-op: screens are on separate pages now
-  }
-
-  // ============================================
   // SETUP
   // ============================================
   function completeSetup() {
@@ -1225,6 +1215,14 @@
   }
 
   // ============================================
+  // TOGGLE DAY TRANSACTIONS
+  // ============================================
+  function toggleDayTransactions() {
+    var el = document.getElementById('dayTransactions');
+    if (el) el.classList.toggle('collapsed');
+  }
+
+  // ============================================
   // SALE SHEET
   // ============================================
   function openSaleSheet() {
@@ -1242,6 +1240,9 @@
     if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
     if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
     if (dom.saleSheetOverlay) dom.saleSheetOverlay.classList.add('open');
+    // Disable qty-selector until a product is selected
+    var qtySelector = document.querySelector('.qty-selector');
+    if (qtySelector) qtySelector.classList.add('disabled');
   }
 
   function closeSaleSheet() {
@@ -1283,10 +1284,14 @@
     state.selectedProduct = product;
     if (dom.saleProductName) dom.saleProductName.value = product.name;
     if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
+    // Enable qty-selector now that a product is selected
+    var qtySelector = document.querySelector('.qty-selector');
+    if (qtySelector) qtySelector.classList.remove('disabled');
     updateSaleTotal();
   }
 
   function adjustQty(delta) {
+    if (!state.selectedProduct) return;
     if (!dom.saleQty) return;
     var qty = parseInt(dom.saleQty.value) || 1;
     qty = Math.max(1, qty + delta);
@@ -1407,10 +1412,22 @@
     }
 
     saveState();
-    closeSaleSheet();
     renderDayMode();
     renderMorningCheck();
     showToast(t('saleSaved'));
+
+    // Stay open for next sale — reset the form
+    state.selectedProduct = null;
+    if (dom.saleProductName) dom.saleProductName.value = '';
+    if (dom.saleQty) dom.saleQty.value = '1';
+    if (dom.saleCustomer) dom.saleCustomer.value = '';
+    if (dom.saleTotalAmount) dom.saleTotalAmount.textContent = '\u20b10.00';
+    if (dom.saleStockHint) dom.saleStockHint.textContent = '';
+    if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
+    if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
+    // Re-disable the qty-selector until a new product is selected
+    var qtySelector = document.querySelector('.qty-selector');
+    if (qtySelector) qtySelector.classList.add('disabled');
   }
 
   // ============================================
@@ -1623,12 +1640,11 @@
     if (dom.productPrice) dom.productPrice.value = '';
     if (dom.productMarkup) dom.productMarkup.value = '20';
     if (dom.productMarkupHint) dom.productMarkupHint.textContent = '';
-    if (dom.addProductOverlay) dom.addProductOverlay.classList.add('open');
     updateMarkupHint();
+    // (overlay replaced by separate add_product.html page)
   }
 
   function closeAddProduct() {
-    if (dom.addProductOverlay) dom.addProductOverlay.classList.remove('open');
     state.editProductId = null;
   }
 
@@ -1764,11 +1780,10 @@
   function openNewDebt() {
     if (dom.newDebtCustomer) dom.newDebtCustomer.value = '';
     if (dom.newDebtAmount) dom.newDebtAmount.value = '';
-    if (dom.newDebtOverlay) dom.newDebtOverlay.classList.add('open');
+    // (overlay replaced by separate new_debt.html page)
   }
 
   function closeNewDebt() {
-    if (dom.newDebtOverlay) dom.newDebtOverlay.classList.remove('open');
   }
 
   function saveNewDebt() {
@@ -2164,6 +2179,7 @@
   // ============================================
   // WINDOW EXPORTS
   // ============================================
+  window.toggleDayTransactions = toggleDayTransactions;
   window.completeSetup = completeSetup;
   window.showMorningCheck = showMorningCheck;
   window.startDay = startDay;

@@ -1357,6 +1357,32 @@ Status: All modules [✓] remain fully implemented with no changes needed.
 
 === July 8, 2026 — UX refinements: qty-selector, sale sheet flow, collapsible transactions, tutorial auto-scroll ===
 
+=== July 8, 2026 — Text size baseline shift (Approach A: Shift everything up) ===
+Source: Client interview issue #8
+
+Issue: "The text-size-btn active extra-large should be the default text size of the
+app, all text change from that point shall be adjusted appropriately." Requested
+during client interview as an accessibility improvement for older users who need
+larger default text.
+
+[✓] Approach A implemented — text size baseline shifted up to old "extra-large"
+     - The base Typography in Type.kt has been scaled ×1.25, making the old
+       "extra-large" sizes the new default baseline for all text styles
+     - bodyMedium: 14sp → 18sp, bodyLarge: 16sp → 20sp, titleLarge: 20sp → 25sp
+     - All line heights scaled proportionally
+     - AppSettings.kt getTextScaleFactor() reordered with "standard" → 1.0f
+       as explicit first case ("large" → 1.125f, else → 1.25f)
+     - Default text size remains "standard" (1.0x) since the base typography
+       now represents the old extra-large size — avoids double-scaling
+     - Users on "standard" now see the old "extra-large" text size by default
+     - "large" (1.125×) and "extra-large" (1.25×) push even higher for users
+       who need bigger text
+
+[✓] Affected files:
+     - Type.kt: All 11 text styles scaled ×1.25 (font size + line height)
+     - AppSettings.kt: Scale factors reordered with "standard" first
+     - progress.txt: This entry
+
 [✓] Qty-selector now disabled until a product is selected
      - day.html: qty-selector remains visible but non-interactive when no product chosen
      - style.css: Added .qty-selector.disabled (opacity: 0.45, pointer-events: none)
@@ -1409,31 +1435,94 @@ Status: All modules [✓] remain fully implemented with no changes needed.
      - day.html: Collapsible transaction header with chevron
      - progress.txt: This entry
 
-=== July 8, 2026 — Text size baseline shift (Approach A: Shift everything up) ===
-Source: Client interview issue #8
+=== July 8, 2026 — EOD editability + sales data lifecycle ===
+Source: Client interview issue #1
 
-Issue: "The text-size-btn active extra-large should be the default text size of the
-app, all text change from that point shall be adjusted appropriately." Requested
-during client interview as an accessibility improvement for older users who need
-larger default text.
+Issue: "EOD/closing can't be edited after submission, the user must have that
+ability to edit it for some last minute customers."
 
-[✓] Approach A implemented — text size baseline shifted up to old "extra-large"
-     - The base Typography in Type.kt has been scaled ×1.25, making the old
-       "extra-large" sizes the new default baseline for all text styles
-     - bodyMedium: 14sp → 18sp, bodyLarge: 16sp → 20sp, titleLarge: 20sp → 25sp
-     - All line heights scaled proportionally
-     - AppSettings.kt getTextScaleFactor() reordered with "standard" → 1.0f
-       as explicit first case ("large" → 1.125f, else → 1.25f)
-     - Default text size remains "standard" (1.0x) since the base typography
-       now represents the old extra-large size — avoids double-scaling
-     - Users on "standard" now see the old "extra-large" text size by default
-     - "large" (1.125×) and "extra-large" (1.25×) push even higher for users
-       who need bigger text
+Sub-issue: Today's transaction list and dayEarnings are not reset even after
+the user presses btnCompleteDay — data only appears to "reset" when the system
+detects a different calendar day.
+
+[✓] Added: dayDate and dayArchived to state object
+     - dayDate tracks which calendar date the business day started on (YYYY-MM-DD)
+     - dayArchived tracks whether day's sales data has been archived to history
+     - Both persisted via saveState()/loadState() with new sss_v3_dayDate and
+       sss_v3_dayArchived localStorage keys
+
+[✓] Modified: completeDay() — keeps data available for editing
+     - Sets dayOpen = false but keeps dayArchived = false
+     - Creates or overwrites today's entry in state.history (not push-only)
+     - Re-completing the day overwrites the existing history entry
+
+[✓] Modified: closeDayAndShowMorning() — preserves closing data
+     - No longer resets todayExpenses/todayEarnings to 0
+     - Just hides summary overlay and navigates to morning.html
+
+[✓] Added: reopenClosing() — re-opens closing for editing
+     - Finds today's history entry, restores todayExpenses and todayEarnings
+     - Sets dayOpen = true, navigates to closing.html?edit=true
+     - Closing page detects ?edit=true param and shows "Update Closing" button
+
+[✓] Added: archiveDaySales() — archives sales data when starting a new day
+     - Attaches today's sales to the corresponding history entry
+     - Removes those sales from the active state.sales array
+     - Sets dayArchived = true to prevent re-editing of old days
+
+[✓] Modified: startDay() — archives old day before starting fresh
+     - Checks if state.dayDate differs from todayStr()
+     - If so, calls archiveDaySales() to move sales to history
+     - Then opens new day with fresh state
+
+[✓] Modified: renderMorningCheck() — context-aware button
+     - Day open → "Close Store"
+     - Day closed today, not archived → "Edit Today's Closing"
+     - Default → "Start the Day"
+
+[✓] Added: Edit Closing button to closing.html summary overlay
+     - Calls reopenClosing() which restores state and navigates with ?edit=true
+     - Closing page in edit mode shows "✏️ Update Closing" instead of "Day Complete"
+
+[✓] Added: window exports for reopenClosing and archiveDaySales
 
 [✓] Affected files:
-     - Type.kt: All 11 text styles scaled ×1.25 (font size + line height)
-     - AppSettings.kt: Scale factors reordered with "standard" first
-     - progress.txt: This entry
+     - app.js: State model, saveState/loadState, completeDay, closeDayAndShowMorning,
+       reopenClosing, archiveDaySales, startDay, renderMorningCheck, renderClosingScreen,
+       window exports (all within git/Sari-sari_smart/ directory)
+     - closing.html: Added Edit Closing button in summary overlay
+
+=== July 8, 2026 — Tutorial repeats every launch with conditional skip button ===
+Source: Client interview issue #3
+
+Issue: "The main tutorial shall be repeated every launch, but only the first
+even launch tutorial after sign-up will not have a skip button; the rest of
+the on-the-launch tutorials have a skip button."
+
+[✓] Added: launchCount counter to state.settings
+     - Tracks how many times the user has visited morning.html
+     - Initialized to 0, persists via localStorage as part of settings
+     - launchCount === 1 → first launch (no skip button)
+     - launchCount > 1 → subsequent launches (skip button shown)
+
+[✓] Updated: init() morning page handler
+     - Every morning.html visit increments launchCount and calls saveState()
+     - Removed hasCompletedTutorial gating — tutorial now auto-starts every visit
+     - Uses launchCount to determine isReplay parameter for startTutorial()
+
+[✓] Updated: endTutorial()
+     - Removed hasCompletedTutorial = true flag setting (no longer needed)
+     - Replaced with comment referencing the new launch-based system
+
+[✓] Updated: resetData() and dev panel resetAll
+     - Both now reset launchCount = 0, so next launch after reset is "first launch"
+
+[✓] Cleaned up: Removed dead hasCompletedTutorial from state.settings
+     - was only used by the two functions that were replaced above
+
+[✓] Affected files:
+     - app.js: state.settings (removed hasCompletedTutorial, added launchCount),
+       init() morning handler, endTutorial(), resetData(), handleDevAction('resetAll')
 
 ================================================================================
 END OF PROGRESS REPORT

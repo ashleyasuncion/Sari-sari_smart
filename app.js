@@ -24,7 +24,7 @@
       storeName: 'Aking Tindahan',
       ownerName: 'May-ari',
       hasCompletedSetup: false,
-      hasCompletedTutorial: false,
+      launchCount: 0,
       lowStockThreshold: 5
     },
     products: [],
@@ -32,6 +32,8 @@
     debts: [],
     history: [],
     dayOpen: false,
+    dayDate: '',          // date this business day started (YYYY-MM-DD)
+    dayArchived: false,   // whether day's sales data has been archived to history
     todayExpenses: 0,
     todayEarnings: 0,
     selectedProduct: null,
@@ -973,11 +975,7 @@
     dom.tutorialOverlay.classList.remove('active');
     if (dom.tutorialHighlight) dom.tutorialHighlight.style.display = 'none';
     clearTutorialState();
-    // Mark tutorial as completed on first finish (not on replay)
-    if (!_tutorialState.isReplay && !state.settings.hasCompletedTutorial) {
-      state.settings.hasCompletedTutorial = true;
-      saveState();
-    }
+    // Tutorial auto-starts on every launch (see init morning handler)
     _tutorialState.id = null;
     _tutorialState.step = 0;
   }
@@ -1049,6 +1047,8 @@
       localStorage.setItem('sss_v3_debts', JSON.stringify(state.debts));
       localStorage.setItem('sss_v3_history', JSON.stringify(state.history));
       localStorage.setItem('sss_v3_dayOpen', JSON.stringify(state.dayOpen));
+      localStorage.setItem('sss_v3_dayDate', JSON.stringify(state.dayDate));
+      localStorage.setItem('sss_v3_dayArchived', JSON.stringify(state.dayArchived));
       localStorage.setItem('sss_v3_todayExpenses', JSON.stringify(state.todayExpenses));
       localStorage.setItem('sss_v3_todayEarnings', JSON.stringify(state.todayEarnings));
     } catch(e) { /* ignore */ }
@@ -1069,6 +1069,10 @@
       if (s) state.history = JSON.parse(s);
       s = localStorage.getItem('sss_v3_dayOpen');
       if (s !== null) state.dayOpen = JSON.parse(s);
+      s = localStorage.getItem('sss_v3_dayDate');
+      if (s !== null) state.dayDate = JSON.parse(s);
+      s = localStorage.getItem('sss_v3_dayArchived');
+      if (s !== null) state.dayArchived = JSON.parse(s);
       s = localStorage.getItem('sss_v3_todayExpenses');
       if (s !== null) state.todayExpenses = JSON.parse(s);
       s = localStorage.getItem('sss_v3_todayEarnings');
@@ -1164,12 +1168,21 @@
       dom.morningYesterdayCard.style.display = 'none';
     }
 
+    // Determine which button to show based on state
     if (state.dayOpen) {
+      // Day is currently open → show Close Store
       if (dom.btnStartDay) {
         dom.btnStartDay.innerHTML = '<span>' + t('closeDay') + ' \ud83c\udf19</span>';
         dom.btnStartDay.onclick = showClosingScreen;
       }
+    } else if (!state.dayOpen && state.dayDate === todayStr() && !state.dayArchived) {
+      // Day was closed today but not archived AND has sales → show Edit Closing
+      if (dom.btnStartDay) {
+        dom.btnStartDay.innerHTML = '<span>\uD83D\uDCDD Edit Today\'s Closing</span>';
+        dom.btnStartDay.onclick = reopenClosing;
+      }
     } else {
+      // Default: Start the Day
       if (dom.btnStartDay) {
         dom.btnStartDay.innerHTML = '<span>' + t('startDay') + '</span>';
         dom.btnStartDay.onclick = startDay;
@@ -1186,9 +1199,16 @@
       showToast(t('dayAlreadyOpen'));
       return;
     }
+    // If starting a day on a different date than the last business day, archive old sales
+    if (state.dayDate && state.dayDate !== todayStr()) {
+      archiveDaySales();
+    }
+    state.dayDate = todayStr();
+    state.dayArchived = false;
     state.dayOpen = true;
+    state.todayExpenses = 0;
+    state.todayEarnings = 0;
     saveState();
-    // Redirect to day page
     window.location.href = 'day.html';
   }
 
@@ -1477,7 +1497,9 @@
   }
 
   function renderClosingScreen() {
-    // Renders closing data on closing.html
+    // Detect edit mode from URL param
+    var isEdit = window.location.search.indexOf('edit=true') >= 0;
+
     var todaySales = getTodaySales();
     if (dom.closingSoldItems) {
       if (todaySales.length === 0) {
@@ -1531,6 +1553,11 @@
     if (dom.closingExpenses) dom.closingExpenses.value = state.todayExpenses || '';
     if (dom.closingActualSales) dom.closingActualSales.value = state.todayEarnings || '';
     updateClosingTotal();
+
+    // In edit mode, change the complete button text
+    if (isEdit && dom.btnCompleteDay) {
+      dom.btnCompleteDay.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>\u270F\uFE0F Update Closing</span>';
+    }
   }
 
   function updateClosingTotal() {
@@ -1567,7 +1594,15 @@
     var diff = actualSales - recordedSales;
     var profit = actualSales - expenses;
 
-    state.history.push({
+    // Update or create today's history entry (overwrite if exists)
+    var todayHistoryIndex = -1;
+    for (var i = 0; i < state.history.length; i++) {
+      if (state.history[i].date === todayStr()) {
+        todayHistoryIndex = i;
+        break;
+      }
+    }
+    var historyEntry = {
       date: todayStr(),
       earnings: actualSales,
       recordedSales: recordedSales,
@@ -1578,9 +1613,15 @@
       itemsSold: totalItemsSold,
       utangTotal: totalUtang,
       salesCount: getTodaySales().length
-    });
+    };
+    if (todayHistoryIndex >= 0) {
+      state.history[todayHistoryIndex] = historyEntry;
+    } else {
+      state.history.push(historyEntry);
+    }
 
     state.dayOpen = false;
+    state.dayArchived = false; // keep data available for editing
     saveState();
 
     if (dom.summaryOverlay) dom.summaryOverlay.classList.add('open');
@@ -1596,17 +1637,72 @@
         '<div class="summary-detail-row" style="border-top:1px solid var(--border);padding-top:8px;font-weight:700;"><span>' + t('profitLabel') + '</span><span style="color:var(--primary);">' + formatCurrency(profit) + '</span></div>' +
         '<div class="summary-detail-row"><span>Items Sold</span><span>' + totalItemsSold + '</span></div>' +
         (totalUtang > 0 ? '<div class="summary-detail-row"><span>Unpaid Debt</span><span style="color:var(--danger);">' + formatCurrency(totalUtang) + '</span></div>' : '');
-
     }
   }
 
   function closeDayAndShowMorning() {
     if (dom.summaryOverlay) dom.summaryOverlay.classList.remove('open');
     state.dayOpen = false;
-    state.todayExpenses = 0;
-    state.todayEarnings = 0;
+    // Keep todayExpenses/todayEarnings intact so user can re-open and edit
     saveState();
     window.location.href = 'morning.html';
+  }
+
+  // ─── Re-open Closing for Editing ───
+  function reopenClosing() {
+    // Restore the day state from history so closing inputs are pre-filled
+    var todayEntry = null;
+    for (var i = 0; i < state.history.length; i++) {
+      if (state.history[i].date === todayStr()) {
+        todayEntry = state.history[i];
+        break;
+      }
+    }
+    if (todayEntry) {
+      state.todayExpenses = todayEntry.expenses || 0;
+      state.todayEarnings = todayEntry.actualSales || 0;
+    }
+    state.dayDate = todayStr();
+    state.dayOpen = true;
+    state.dayArchived = false;
+    saveState();
+    window.location.href = 'closing.html?edit=true';
+  }
+
+  // ─── Archive Day Sales ───
+  function archiveDaySales() {
+    if (!state.dayDate) return;
+    // Attach today's sales data to the history entry for that date
+    var salesForDate = state.sales.filter(function(s) { return s.date === state.dayDate; });
+    if (salesForDate.length > 0) {
+      var found = false;
+      for (var i = 0; i < state.history.length; i++) {
+        if (state.history[i].date === state.dayDate) {
+          state.history[i].archivedSales = JSON.parse(JSON.stringify(salesForDate));
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        state.history.push({
+          date: state.dayDate,
+          archivedSales: JSON.parse(JSON.stringify(salesForDate)),
+          earnings: 0,
+          recordedSales: 0,
+          actualSales: 0,
+          salesDiff: 0,
+          expenses: 0,
+          profit: 0,
+          itemsSold: 0,
+          utangTotal: 0,
+          salesCount: salesForDate.length
+        });
+      }
+    }
+    // Remove those sales from the active array
+    state.sales = state.sales.filter(function(s) { return s.date !== state.dayDate; });
+    state.dayArchived = true;
+    saveState();
   }
 
   // ============================================
@@ -1878,6 +1974,7 @@
     state.dayOpen = false;
     state.todayExpenses = 0;
     state.todayEarnings = 0;
+    state.settings.launchCount = 0;
     saveState();
     renderMorningCheck();
     renderManageInventory();
@@ -2049,6 +2146,7 @@
         state.sales = []; state.debts = []; state.history = [];
         state.dayOpen = false; state.todayExpenses = 0; state.todayEarnings = 0;
         state.settings.hasCompletedSetup = false;
+        state.settings.launchCount = 0;
         saveState();
         window.location.href = 'index.html';
         return;
@@ -2135,9 +2233,12 @@
       applyTranslations();
       renderMorningCheck();
       // Auto-start main tutorial for new users (only if not resuming)
-      if (!state.settings.hasCompletedTutorial && dom.tutorialOverlay) {
+      state.settings.launchCount = (state.settings.launchCount || 0) + 1;
+      saveState();
+      if (dom.tutorialOverlay) {
+        var isFirstLaunch = state.settings.launchCount === 1;
         setTimeout(function() {
-          startTutorial('main', false);
+          startTutorial('main', !isFirstLaunch);
         }, 500);
       }
     } else if (pageName === 'day') {
@@ -2248,5 +2349,7 @@
   window.startTutorial = startTutorial;
   window.advanceTutorial = advanceTutorial;
   window.endTutorial = endTutorial;
+  window.reopenClosing = reopenClosing;
+  window.archiveDaySales = archiveDaySales;
 
 })();

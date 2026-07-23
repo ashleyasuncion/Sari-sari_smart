@@ -823,6 +823,10 @@
   var _tutorialState = { active: false, id: null, step: 0, isReplay: false };
   var _tutorialRAF = null;
 
+  // ─── Markup auto-population flags ───
+  var _userEditedPrice = false;
+  var _suppressPriceListener = false;
+
   // ─── Tutorial State Persistence ───
   function saveTutorialState(tutorialId, step, isReplay) {
     try {
@@ -1793,21 +1797,12 @@
           '<div class="inv-manage-detail">Stock: ' + p.quantity + ' | +' + margin + '% | ' + formatCurrency(p.sellingPrice) + '</div>' +
         '</div>' +
         '<div class="inv-manage-actions">' +
-          '<button class="inv-manage-btn sell" onclick="window.quickSell(\'' + p.id + '\')">Sell</button>' +
           '<button class="inv-manage-btn" onclick="window.editProduct(\'' + p.id + '\')">\u270f\ufe0f</button>' +
         '</div>' +
       '</div>';
     }).join('');
   }
 
-  function quickSell(id) {
-    var product = state.products.find(function(p) { return p.id === id; });
-    if (!product) return;
-    state.selectedProduct = product;
-    openSaleSheet();
-    if (dom.saleProductName) dom.saleProductName.value = product.name;
-    updateSaleTotal();
-  }
 
   function editProduct(id) {
     var product = state.products.find(function(p) { return p.id === id; });
@@ -1843,8 +1838,10 @@
     var suggested = calcMarkupSuggestion(cost, markup);
     if (suggested) {
       dom.productMarkupHint.textContent = t('markupHint', { pct: markup, price: formatCurrency(suggested) });
-      if (dom.productPrice && !dom.productPrice.value) {
+      if (dom.productPrice && !_userEditedPrice) {
+        _suppressPriceListener = true;
         dom.productPrice.value = suggested.toFixed(2);
+        _suppressPriceListener = false;
       }
       // Show/hide the markup helper block
       if (dom.markupSuggestion && cost > 0 && markup > 0) {
@@ -2241,7 +2238,13 @@
     if (dom.closingActualSales) dom.closingActualSales.addEventListener('input', updateClosingTotal);
     if (dom.productCost) dom.productCost.addEventListener('input', updateMarkupHint);
     if (dom.productMarkup) dom.productMarkup.addEventListener('input', updateMarkupHint);
-    if (dom.productPrice) dom.productPrice.addEventListener('input', updateMarkupHint);
+    if (dom.productPrice) {
+      dom.productPrice.addEventListener('input', function() {
+        if (_suppressPriceListener) return;
+        _userEditedPrice = true;
+      });
+      dom.productPrice.addEventListener('input', updateMarkupHint);
+    }
 
     document.addEventListener('keydown', function(e) {
       // Shift+N: toggle developer panel
@@ -2296,14 +2299,19 @@
       // Morning check page
       applyTranslations();
       renderMorningCheck();
-      // Auto-start main tutorial for new users (only if not resuming)
-      state.settings.launchCount = (state.settings.launchCount || 0) + 1;
-      saveState();
-      if (dom.tutorialOverlay) {
-        var isFirstLaunch = state.settings.launchCount === 1;
-        setTimeout(function() {
-          startTutorial('main', !isFirstLaunch);
-        }, 500);
+      // Auto-start main tutorial on fresh app launch (cleared on tab close)
+      var _tutorialShown = false;
+      try { _tutorialShown = sessionStorage.getItem('sss_v3_tutorialShown') === '1'; } catch(e) {}
+      if (!_tutorialShown) {
+        state.settings.launchCount = (state.settings.launchCount || 0) + 1;
+        saveState();
+        if (dom.tutorialOverlay) {
+          var isFirstLaunch = state.settings.launchCount === 1;
+          setTimeout(function() {
+            startTutorial('main', !isFirstLaunch);
+          }, 500);
+        }
+        try { sessionStorage.setItem('sss_v3_tutorialShown', '1'); } catch(e) {}
       }
     } else if (pageName === 'day') {
       // Day mode page
@@ -2394,7 +2402,6 @@
   window.updatePaymentPreview = updatePaymentPreview;
   window.savePayment = savePayment;
   window.renderManageInventory = renderManageInventory;
-  window.quickSell = quickSell;
   window.editProduct = editProduct;
   window.openAddProduct = openAddProduct;
   window.closeAddProduct = closeAddProduct;

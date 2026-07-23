@@ -1173,6 +1173,24 @@ Status: All modules [✓] remain fully implemented with no changes needed.
      - Removed overlay references from Escape key handler
      - Removed manageStoreOverlay / tab-switching code
 
+=== v2.19 markup auto-population bug fix (July 16, 2026) ===
+
+[✓] Fixed: Auto-population of selling price on Add Product page showed 1.20 instead of 120.00
+     - Root cause: The guard condition `!dom.productPrice.value` checked if the field was empty,
+       but when typing "100" digit by digit, the first keystroke "1" correctly calculated
+       suggested = 1.20 and auto-filled it. Subsequent keystrokes (1 → 10 → 100) recalculated
+       correctly but the guard blocked overwriting because the field now had "1.20".
+     - Fix: Replaced `!dom.productPrice.value` guard with a `_userEditedPrice` boolean flag:
+       → `_userEditedPrice` starts false and is set to true only on actual user input
+       → `_suppressPriceListener` prevents the programmatic .value assignment from being
+         mistaken as user input
+       → Added a flag-setter event listener that fires BEFORE updateMarkupHint, ensuring
+         the flag is set before the auto-population check
+     - Result: Auto-population now updates correctly on every keystroke until the user
+       manually types in the selling price field. Once the user edits it manually,
+       auto-population stops permanently.
+     - Affected file: app.js (3 edits)
+
 === Three Moment Redesign — Phase 2: Dedicated pages + i18n + dev panel (July 4, 2026) ===
 
 [✓] Split three moments into dedicated HTML files (replacing monolithic SPA):
@@ -1638,6 +1656,25 @@ Root cause: String-based patching of app.js (107K+ file with CRLF endings)
      - Added tutorialRoot HTML (highlight, backdrop, tutorial box, step indicator, Skip/Next buttons)
      - Added <script src="app.js"> loaded before restock.js so tutorial system is available
      - This was required because the tutorial system lives in app.js, which restock.html didn't load
+
+=== July 14, 2026 — Bug fix: Tutorial repeats on every morning.html navigation ===
+
+[✓] Fixed: Tutorial no longer repeats on every navigation to morning.html
+     - Problem: Every page load of morning.html incremented launchCount and
+       re-started the main tutorial, causing it to repeat on every internal
+       navigation (e.g., after completing closing and returning to morning)
+     - Fix: Added sessionStorage check (sss_v3_tutorialShown) before the
+       tutorial auto-start logic. sessionStorage persists across same-tab
+       page navigations but is cleared when the tab/window is closed
+     - Line 2298: Wrapped the launchCount increment + startTutorial() call
+       inside `if (!_tutorialShown) { ... }` where _tutorialShown reads
+       sessionStorage.getItem('sss_v3_tutorialShown')
+     - After firing, sets sessionStorage.setItem('sss_v3_tutorialShown', '1')
+       to prevent re-triggering on subsequent page loads within the same session
+     - Wrapped in try/catch for compatibility with private browsing modes
+     - `launchCount` now only increments on fresh tab launches, so
+       `launchCount === 1` correctly detects first-ever launch (no skip button)
+     - Affected file: git/Sari-sari_smart/app.js
 
 ================================================================================
 END OF PROGRESS REPORT

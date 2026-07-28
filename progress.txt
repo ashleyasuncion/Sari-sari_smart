@@ -1187,6 +1187,60 @@ Status: All modules [✓] remain fully implemented with no changes needed.
        → Added a flag-setter event listener that fires BEFORE updateMarkupHint, ensuring
          the flag is set before the auto-population check
      - Result: Auto-population now updates correctly on every keystroke until the user
+     - Affected files: app.js
+
+=== v2.20 debt management overhaul — clickable debtors, detail overlay, paid debts, real dates (July 23, 2026) ===
+
+[✓] Implemented: Debt management fixes for Issue #7 (see investigation report)
+
+[✓] Made debt cards clickable → open Debt Detail overlay
+     - Added onclick='openDebtDetail(id)' on debt card divs in renderManageDebts()
+     - Pay button uses event.stopPropagation() to prevent card click
+     - New openDebtDetail()/closeDebtDetail()/renderDebtDetail() functions
+     - Debt Detail overlay shows:
+       → Balance card (outstanding amount or fully settled indicator)
+       → Total debt + total collected summary
+       → Chronological transaction history with running balance
+       → All debt entries (product purchases) and payment records listed in order
+       → "Record Payment" button when balance > 0
+     - All functions exposed via window.* for inline onclick handlers
+
+[✓] Fixed "Last" date showing hardcoded "Today"
+     - Added formatDateSafe() helper — shows "Today", "Yesterday", or formatted date
+     - Based on actual updatedAt/createdAt timestamps instead of hardcoded "Today" string
+     - Now shows meaningful dates (e.g., "Jul 15", "Yesterday", "Today")
+
+[✓] Added full chronological debt history in detail overlay
+     - renderDebtDetail() displays all transactions[] entries sorted by date
+     - Each row: icon (🟢 debt / 🟠 payment), description, date, amount (+/-), and running balance
+     - Payment records were already stored as transactions — now visible in history
+
+[✓] Added Paid Debts collapsible section
+     - Below active debts: collapsible "✅ Paid Debts (N)"
+     - Each paid debtor: name, "Was ₱X", settlement date
+     - Uses same collapsible pattern as Day page transaction list
+     - clicked via togglePaidDebts() exposed on window
+
+[✓] Legacy migration in loadState()
+     - Old debts without createdAt, updatedAt, transactions are auto-migrated once on startup
+     - Sets: createdAt, updatedAt, transactions array with initial debt entry
+
+[✓] Clear after payment
+     - savePayment() now calls closeDebtDetail() after recording a payment
+     - Debt detail overlay closes automatically, list refreshes
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: ~100 lines added — formatDateSafe(), openDebtDetail(), closeDebtDetail(),
+       renderDebtDetail(), togglePaidDebts(), legacy migration in loadState(),
+       updated renderManageDebts() with clickable cards and paid debts section,
+       savePayment() now calls closeDebtDetail(), window.* exports
+     - debts.html: Debt detail overlay + paid debts collapsible section added
+     - style.css: ~60 lines — .debt-detail-balance-card, .debt-detail-section,
+       .debt-detail-pay-btn, .debt-history-row, .debt-history-table,
+       .debt-running-balance, .debt-paid-item, .debt-paid-was, .debt-paid-date
+     - progress.txt: This entry
        manually types in the selling price field. Once the user edits it manually,
        auto-population stops permanently.
      - Affected file: app.js (3 edits)
@@ -1681,3 +1735,133 @@ END OF PROGRESS REPORT
 ================================================================================
 
 
+
+=== v2.20 debt management overhaul — clickable debtors, detail overlay, paid debts, real dates (July 23, 2026) ===
+
+[✓] Implemented: Debt management fixes for Issue #7 (see investigation report)
+
+[✓] Made debt cards clickable → open Debt Detail overlay
+     - Added onclick='openDebtDetail(id)' on debt card divs in renderManageDebts()
+     - Pay button uses event.stopPropagation() to prevent card click
+     - New openDebtDetail()/closeDebtDetail()/renderDebtDetail() functions
+     - Debt Detail overlay shows: balance card, total debt + collected summary,
+       chronological transaction history with running balance, Record Payment button
+     - All functions exposed via window.* for inline onclick handlers
+
+[✓] Fixed Last date showing hardcoded Today
+     - Added formatDateSafe() helper — shows Today, Yesterday, or formatted date
+     - Based on actual updatedAt/createdAt timestamps instead of hardcoded Today string
+
+[✓] Added full chronological debt history in detail overlay
+     - renderDebtDetail() displays all transactions[] entries sorted by date
+     - Each row: icon (debt/payment), description, date, amount (+/-), and running balance
+
+[✓] Added Paid Debts collapsible section
+     - Below active debts: collapsible Paid Debts (N) section
+     - Each paid debtor: name, Was ₱X, settlement date
+
+[✓] Legacy migration in loadState()
+     - Old debts without createdAt, updatedAt, transactions are auto-migrated once on startup
+
+[✓] Clear after payment
+     - savePayment() now calls closeDebtDetail() after recording a payment
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: formatDateSafe(), openDebtDetail(), closeDebtDetail(),
+       renderDebtDetail(), togglePaidDebts(), legacy migration in loadState(),
+       updated renderManageDebts(), savePayment() closeDebtDetail(), window.* exports
+     - debts.html: Debt detail overlay + paid debts collapsible section
+     - style.css: debt detail overlay, history table, paid items styles
+     - progress.txt: This entry
+
+=== v2.21 Day Access Control + Dev Panel Fixes (July 28, 2026) ===
+
+[✓] Fixed: Closing page init toast (was silent redirect)
+     - Added showToast(t('dayNotOpen')) + setTimeout() redirect before closing page init
+     - Matches the day.html pattern exactly
+
+[✓] Fixed: morning.html Close tab — direct <a> link → guarded <button>
+     - Changed from <a href="closing.html"> to <button onclick="showClosingScreen()">
+     - showClosingScreen() already has dayOpen guard with toast feedback
+
+[✓] Fixed: closing.html Sell FAB — direct <a> link → guarded <button>
+     - Changed from <a href="day.html"> to <button onclick="navigateToDayMode()">
+     - New navigateToDayMode() function checks state.dayOpen with toast
+
+[✓] Added: navigateToDayMode() function in app.js
+     - Guards navigation to day.html with dayOpen check + toast
+     - Exposed as window.navigateToDayMode for closing.html FAB
+
+[✓] Fixed: morning.html Sell FAB — direct <a> link → guarded <button>
+     - Changed from <a href="day.html"> to <button onclick="openSaleSheet()">
+     - openSaleSheet() already has dayOpen guard with toast feedback
+     - User stays on morning page if day hasn't started; toast appears
+
+[✓] Fixed: Developer Panel nested div HTML bug
+     - Removed duplicate <div class="dev-panel-section"> in Restock section
+     - Was causing malformed HTML at runtime
+
+[✓] Added: CSV Export button to Developer Panel
+     - Generates CSV with Products, Today's Sales, Debts sections
+     - Uses Blob download with proper headers
+
+[✓] Added: Day State section to Developer Panel
+     - 4 buttons: Toggle Day Open/Close, Start New Day, Archive Sales, Reset Tutorial
+     - Reuses existing archiveDaySales() function
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: navigateToDayMode(), CSV export, Day State actions, closing guard toast
+     - morning.html: Sell FAB <a>→<button>, Close tab <a>→<button>
+     - closing.html: Sell FAB <a>→<button>
+     - progress.txt: This entry
+
+=== v2.22 Dev Panel Feedback Fixes (July 28, 2026) ===
+
+[✓] Fixed: 3 Restock buttons missing switch cases in handleDevAction()
+     - clearRestockData, setRestockDate, viewRestockLog buttons had no
+       corresponding case statements in handleDevAction() switch
+     - Clicking these buttons silently did nothing with no toast feedback
+
+[✓] Added: case 'clearRestockData' — removes localStorage key, clears state, shows toast
+[✓] Added: case 'setRestockDate' — sets sss_v3_lastRestockDate to today, shows toast
+[✓] Added: case 'viewRestockLog' — reads last restock date + log count, shows toast
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: Added 3 switch cases with toast feedback in handleDevAction()
+     - progress.txt: This entry
+
+=== v2.23 Back Button Fix — history.back() + referrer (July 28, 2026) ===
+
+[✓] Fixed: Navigation loop between Settings and Inventory pages
+     - Root cause: sessionStorage-based storePreviousPage() used a single
+       slot that was overwritten on every page load, including back-navigation
+     - When returning to Inventory from Settings via Back, the stored
+       previousPage was overwritten from 'closing.html' to 'setting.html',
+       creating an infinite Settings↔Inventory loop
+     - Affected flows: Morning→Closing→Inventory→Settings→Back→Back
+       (Back from Inventory went to Settings instead of Closing)
+
+[✓] Replaced: sessionStorage history tracking with browser's native history.back()
+     - Removed: storePreviousPage() function and its call from init()
+     - Removed: sss_v3_currentPage / sss_v3_previousPage sessionStorage keys
+     - New historyBack(): checks document.referrer for same-origin,
+       then uses window.history.back() which handles arbitrary navigation depth
+     - Fallback: morning.html when referrer is empty (direct bookmark access)
+
+[✓] Browser history stack now correctly handles:
+     - Settings Back → Inventory ✅
+     - Inventory Back → Closing ✅
+     - Closing Back → Morning ✅
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: storePreviousPage() removed, historyBack() rewritten,
+       storePreviousPage() call removed from init()
+     - progress.txt: This entry

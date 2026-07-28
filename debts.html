@@ -15,9 +15,9 @@
     <div class="app-container" id="app">
       <!-- HEADER -->
       <header class="app-header" style="background:var(--primary);color:white;">
-        <a class="header-btn" href="morning.html" style="text-decoration:none;color:white;">
+        <button class="header-btn" onclick="historyBack()" style="color:white;background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:6px;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        </a>
+        </button>
         <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="debtsTitle">Utang</h1>
         <div class="header-actions">
           <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('debts', true)" aria-label="Tutorial" style="color:white;">
@@ -40,7 +40,71 @@
           <span data-i18n="newDebtBtn">Bagong Utang</span>
         </a>
         <div class="list-container" id="manageDebtsList"></div>
+
+        <!-- PAID DEBTS SECTION (collapsible) -->
+        <div id="paidDebtsContainer" style="display:none;margin-top:12px;">
+          <div class="day-transactions" id="paidDebtsSection">
+            <div class="day-transactions-header" onclick="togglePaidDebts()">
+              <div class="section-label">✅ Paid Debts (<span id="paidDebtsCount">0</span>)</div>
+              <svg class="day-transactions-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="list-container" id="paidDebtsList"></div>
+          </div>
+        </div>
       </main>
+
+      <!-- DEBT DETAIL OVERLAY -->
+      <div class="overlay" id="debtDetailOverlay" style="display:none;z-index:55;">
+        <div class="overlay-header" style="background:var(--primary);color:white;">
+          <button class="header-btn" onclick="closeDebtDetail()" style="color:white;background:none;border:none;cursor:pointer;padding:6px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+          <h2 id="debtDetailName" style="font-size:var(--text-lg);font-weight:700;flex:1;text-align:center;">Customer</h2>
+          <span style="width:36px;"></span>
+        </div>
+        <div class="overlay-scroll">
+          <!-- Balance Card -->
+          <div class="debt-detail-balance-card">
+            <span class="debt-detail-balance-label" data-i18n="currentBalance">Current Balance</span>
+            <span class="debt-detail-balance" id="debtDetailBalance">₱0.00</span>
+            <span class="debt-detail-settled-badge" id="debtDetailSettledBadge" style="display:none;">✅ Fully Settled</span>
+            <span class="debt-detail-meta" id="debtDetailCreated"></span>
+          </div>
+
+          <!-- Revenue/Collected Summary -->
+          <div class="debt-detail-summary-row">
+            <span>Total Debt</span>
+            <span id="debtDetailTotal" style="font-weight:700;font-size:var(--text-lg);">—</span>
+          </div>
+          <div class="debt-detail-summary-row" style="border:none;">
+            <span>Total Collected</span>
+            <span id="debtDetailCollected" style="font-weight:700;font-size:var(--text-lg);color:var(--primary);">₱0.00</span>
+          </div>
+
+          <!-- Record Payment Button -->
+          <button class="btn btn-primary btn-large" id="debtDetailPayBtn" style="margin-bottom:16px;display:none;" onclick="openPaymentSheet(this.getAttribute('data-debt-id'))">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="recordPayment">Record Payment</span>
+          </button>
+
+          <!-- Transaction History Header -->
+          <div class="section-label" style="margin:0 0 6px 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            History
+          </div>
+
+          <!-- History Table Header -->
+          <div class="debt-history-header">
+            <span></span>
+            <span>Description</span>
+            <span>Amount</span>
+            <span>Balance</span>
+          </div>
+          <div class="debt-history-list" id="debtDetailHistory">
+            <div class="empty-state">No history available.</div>
+          </div>
+        </div>
+      </div>
 
       <!-- PAYMENT BOTTOM SHEET -->
       <div class="bottom-sheet-overlay" id="paymentSheetOverlay" onclick="closePaymentSheet()">

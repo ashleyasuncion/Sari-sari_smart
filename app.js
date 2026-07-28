@@ -127,6 +127,7 @@
       customerPlaceholder: 'Customer name (optional)',
       totalLabel: 'Total:',
       cancel: 'Cancel',
+    close: 'Close',
       save: 'Save',
       stockHint: 'Available: {qty}',
       noStock: 'Out of stock',
@@ -345,6 +346,7 @@
       customerPlaceholder: 'Pangalan ng kostumer (opsyonal)',
       totalLabel: 'Total:',
       cancel: 'Kanselahin',
+    close: 'Isara',
       save: 'I-save',
       stockHint: 'Available: {qty}',
       noStock: 'Walang stock',
@@ -1127,6 +1129,23 @@
     if (!state.products || state.products.length === 0) {
       state.products = getSampleProducts();
     }
+
+    // ── Legacy debt migration: ensure createdAt, updatedAt, transactions ──
+    if (state.debts) {
+      state.debts.forEach(function(d) {
+        if (!d.createdAt) d.createdAt = new Date().toISOString();
+        if (!d.updatedAt) d.updatedAt = d.createdAt;
+        if (!d.transactions) {
+          d.transactions = [{
+            id: genId(),
+            date: d.createdAt,
+            type: 'debt',
+            description: 'Initial',
+            amount: d.amount
+          }];
+        }
+      });
+    }
   }
 
   // ============================================
@@ -1555,6 +1574,15 @@
     window.location.href = 'closing.html';
   }
 
+  /** Navigate to day mode — guards against accessing day without starting the day */
+  function navigateToDayMode() {
+    if (!state.dayOpen) {
+      showToast(t('dayNotOpen'));
+      return;
+    }
+    window.location.href = 'day.html';
+  }
+
   function renderClosingScreen() {
     // Detect edit mode from URL param
     var isEdit = window.location.search.indexOf('edit=true') >= 0;
@@ -1884,30 +1912,82 @@
   // ============================================
   // MANAGE DEBTS
   // ============================================
+  // ─── Date formatting helper ───
+  function formatDateSafe(isoString) {
+    if (!isoString) return '';
+    try {
+      var d = new Date(isoString);
+      if (isNaN(d.getTime())) return '';
+      var now = new Date();
+      var diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+      if (diff === 0) return 'Today';
+      if (diff === 1) return 'Yesterday';
+      // Use the locale for month/day
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch(e) { return ''; }
+  }
+
   function renderManageDebts() {
     if (!dom.manageDebtsList) return;
     var total = getTotalDebt();
     if (dom.manageTotalDebt) dom.manageTotalDebt.textContent = formatCurrency(total);
 
     var activeDebts = state.debts.filter(function(d) { return d.remainingBalance > 0; });
+    var paidDebts = state.debts.filter(function(d) { return d.remainingBalance <= 0; });
+
+    // ── Active debts ──
     if (activeDebts.length === 0) {
-      dom.manageDebtsList.innerHTML = '<div class="empty-state">' + t('noDebtItems') + '</div>';
-      return;
+      dom.manageDebtsList.innerHTML = '<div class="empty-state">\u2705 ' + t('noDebtItems') + '</div>';
+    } else {
+      dom.manageDebtsList.innerHTML = activeDebts.map(function(d) {
+        var activityLabel = '';
+        if (d.updatedAt) {
+          var formatted = formatDateSafe(d.updatedAt);
+          if (formatted) activityLabel = 'Last: ' + formatted;
+        }
+        return '<div class="debt-manage-item" onclick="openDebtDetail(\'' + d.id + '\')" style="cursor:pointer;">' +
+          '<div class="debt-manage-info">' +
+            '<div class="debt-manage-name">' + d.customerName + '</div>' +
+            '<div class="debt-manage-meta">' + activityLabel + '</div>' +
+          '</div>' +
+          '<div class="debt-manage-amount">' + formatCurrency(d.remainingBalance) + '</div>' +
+          '<button class="debt-manage-pay-btn" onclick="event.stopPropagation(); openPaymentSheet(\'' + d.id + '\')">' + t('payBtnLabel') + '</button>' +
+        '</div>';
+      }).join('');
     }
 
-    dom.manageDebtsList.innerHTML = activeDebts.map(function(d) {
-      var lastActivity = '';
-      if (d.updatedAt) {
-        var d2 = new Date(d.updatedAt);
-        lastActivity = d2.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    // ── Paid debts collapsible ──
+    var paidContainer = document.getElementById('paidDebtsContainer');
+    if (!paidContainer) return;
+    if (paidDebts.length === 0) {
+      paidContainer.style.display = 'none';
+      return;
+    }
+    paidContainer.style.display = 'block';
+    var paidCountEl = document.getElementById('paidDebtsCount');
+    if (paidCountEl) paidCountEl.textContent = paidDebts.length;
+
+    var paidList = document.getElementById('paidDebtsList');
+    if (!paidList) return;
+    paidList.innerHTML = paidDebts.map(function(d) {
+      var settledDate = '';
+      // Find the payment that settled it (the one that brought balance to 0)
+      if (d.transactions && d.transactions.length > 0) {
+        var payments = d.transactions.filter(function(t) { return t.type === 'payment'; });
+        if (payments.length > 0) {
+          settledDate = formatDateSafe(payments[payments.length - 1].date);
+        }
       }
-      return '<div class="debt-manage-item">' +
+      return '<div class="debt-manage-item paid-item">' +
         '<div class="debt-manage-info">' +
           '<div class="debt-manage-name">' + d.customerName + '</div>' +
-          '<div class="debt-manage-meta">' + (lastActivity ? 'Last: ' + lastActivity : '') + '</div>' +
+          '<div class="debt-manage-meta">\u2714\uFE0F Fully settled' +
+            (settledDate ? ' \u2022 ' + settledDate : '') +
+          '</div>' +
         '</div>' +
-        '<div class="debt-manage-amount">' + formatCurrency(d.remainingBalance) + '</div>' +
-        '<button class="debt-manage-pay-btn" onclick="window.openPaymentSheet(\'' + d.id + '\')">' + t('payBtnLabel') + '</button>' +
+        '<div class="debt-manage-amount" style="color:var(--primary);font-size:var(--text-sm);">' +
+          'Was ' + formatCurrency(d.amount) +
+        '</div>' +
       '</div>';
     }).join('');
   }
@@ -1915,6 +1995,136 @@
   // ============================================
   // PAYMENT SHEET
   // ============================================
+  // ============================================
+  // DEBT DETAIL OVERLAY
+  // ============================================
+  function openDebtDetail(debtId) {
+    var overlay = document.getElementById('debtDetailOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'flex';
+    overlay.classList.add('open');
+    renderDebtDetail(debtId);
+  }
+
+  function closeDebtDetail() {
+    var overlay = document.getElementById('debtDetailOverlay');
+    if (!overlay) return;
+    overlay.style.display = 'none';
+    overlay.classList.remove('open');
+  }
+
+  function renderDebtDetail(debtId) {
+    var debt = state.debts.find(function(d) { return d.id === debtId; });
+    if (!debt) return;
+
+    // Ensure legacy migration for this debt
+    if (!debt.createdAt) debt.createdAt = new Date().toISOString();
+    if (!debt.updatedAt) debt.updatedAt = debt.createdAt;
+    if (!debt.transactions) {
+      debt.transactions = [{
+        id: genId(),
+        date: debt.createdAt,
+        type: 'debt',
+        description: 'Initial',
+        amount: debt.amount
+      }];
+    }
+
+    // ── Customer name ──
+    var nameEl = document.getElementById('debtDetailName');
+    if (nameEl) nameEl.textContent = debt.customerName;
+
+    // ── Balance card ──
+    var balanceEl = document.getElementById('debtDetailBalance');
+    if (balanceEl) {
+      balanceEl.textContent = formatCurrency(debt.remainingBalance);
+      balanceEl.className = 'debt-detail-balance';
+      if (debt.remainingBalance <= 0) balanceEl.classList.add('settled');
+      else balanceEl.classList.add('outstanding');
+    }
+
+    var settledBadge = document.getElementById('debtDetailSettledBadge');
+    if (settledBadge) {
+      settledBadge.style.display = debt.remainingBalance <= 0 ? 'block' : 'none';
+    }
+
+    var createdLabel = document.getElementById('debtDetailCreated');
+    if (createdLabel) {
+      var createdDate = formatDateSafe(debt.createdAt);
+      createdLabel.textContent = createdDate ? 'Created: ' + createdDate : '';
+    }
+
+    // ── Record Payment button ──
+    var payBtn = document.getElementById('debtDetailPayBtn');
+    if (payBtn) {
+      payBtn.style.display = debt.remainingBalance > 0 ? 'flex' : 'none';
+      payBtn.setAttribute('data-debt-id', debt.id);
+    }
+
+    // ── Revenue conversion: total collected ──
+    var totalEl = document.getElementById('debtDetailTotal');
+    if (totalEl) totalEl.textContent = formatCurrency(debt.amount);
+
+    var collectedEl = document.getElementById('debtDetailCollected');
+    if (collectedEl) {
+      var collected = debt.amount - debt.remainingBalance;
+      collectedEl.textContent = formatCurrency(collected);
+    }
+
+    // ── Transaction history — chronological with running balance ──
+    var historyList = document.getElementById('debtDetailHistory');
+    if (!historyList) return;
+
+    // Collect all transactions and sort by date
+    var allEntries = [];
+    if (debt.transactions && debt.transactions.length > 0) {
+      allEntries = debt.transactions.slice().sort(function(a, b) {
+        return new Date(a.date) - new Date(b.date);
+      });
+    } else {
+      // Fallback: create initial debt entry
+      allEntries.push({ id: genId(), date: debt.createdAt, type: 'debt', description: 'Initial', amount: debt.amount });
+    }
+
+    // Compute running balance
+    var runningBalance = 0;
+    var html = '';
+    allEntries.forEach(function(entry) {
+      if (entry.type === 'debt') {
+        runningBalance += entry.amount;
+      } else if (entry.type === 'payment') {
+        runningBalance -= entry.amount;
+      }
+
+      var entryDate = formatDateSafe(entry.date);
+      var icon = entry.type === 'debt' ? '\ud83d\udfe2' : '\ud83d\udfe0';
+      var typeLabel = entry.type === 'debt' ? 'Added' : 'Payment';
+      var desc = entry.description || (entry.type === 'payment' ? 'Payment received' : 'Debt recorded');
+
+      html += '<div class="debt-history-row">' +
+        '<div class="debt-history-icon">' + icon + '</div>' +
+        '<div class="debt-history-info">' +
+          '<div class="debt-history-desc">' + desc + '</div>' +
+          '<div class="debt-history-date">' + entryDate + ' \u2022 ' + typeLabel + '</div>' +
+        '</div>' +
+        '<div class="debt-history-amount ' + (entry.type === 'debt' ? 'added' : 'paid') + '">' +
+          (entry.type === 'debt' ? '+' : '-') + formatCurrency(entry.amount) +
+        '</div>' +
+        '<div class="debt-history-running">' + formatCurrency(runningBalance) + '</div>' +
+      '</div>';
+    });
+
+    historyList.innerHTML = html;
+  }
+
+  // ============================================
+  // PAID DEBTS COLLAPSIBLE
+  // ============================================
+  function togglePaidDebts() {
+    var section = document.getElementById('paidDebtsSection');
+    if (section) section.classList.toggle('collapsed');
+  }
+
   function openPaymentSheet(debtId) {
     var debt = state.debts.find(function(d) { return d.id === debtId; });
     if (!debt) return;
@@ -1954,6 +2164,7 @@
 
     saveState();
     closePaymentSheet();
+    closeDebtDetail();
     renderManageDebts();
     renderMorningCheck();
     showToast(t('paymentSaved'));
@@ -2073,13 +2284,20 @@
             '<button class="dev-panel-btn" onclick="handleDevAction(\'resetTodaySales\')">Reset Today\'s Sales</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'generateTestSale\')">Generate Test Sale Entry</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'addSampleDebts\')">Add Sample Debts</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'exportCsv\')">Export All Data (CSV)</button>' +
           '</div>' +
           '<div class="dev-panel-section">' +
-            '<div class="dev-panel-section">' +
             '<div class="dev-panel-section-title">Restock</div>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'clearRestockData\')">Clear Restock Data</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'setRestockDate\')">Set Restock Date to Today</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'viewRestockLog\')">View Restock Log</button>' +
+          '</div>' +
+          '<div class="dev-panel-section">' +
+            '<div class="dev-panel-section-title">Day State</div>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'toggleDayOpen\')">Toggle Day Open/Close</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'startNewDay\')">Start New Day (Archive + Open)</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'archiveDaySales\')">Archive Today\'s Sales</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'resetTutorial\')">Reset Tutorial State</button>' +
           '</div>' +
           '<div class="dev-panel-section">' +
             '<div class="dev-panel-section-title">Inventory</div>' +
@@ -2224,6 +2442,82 @@
           else { showToast('No datasets selected.', 'error'); }
         })();
         break;
+      case 'exportCsv':
+        (function() {
+          var csv = 'Sari-Sari Smart - Data Export\n';
+          csv += 'Exported: ' + new Date().toISOString() + '\n\n';
+          csv += '=== PRODUCTS ===\n';
+          csv += 'Name,Quantity,Cost,Sell Price,Profit Margin\n';
+          state.products.forEach(function(p) {
+            var margin = p.costPrice > 0 ? ((p.sellingPrice - p.costPrice) / p.costPrice * 100).toFixed(1) + '%' : 'N/A';
+            csv += p.name + ',' + p.quantity + ',' + p.costPrice + ',' + p.sellingPrice + ',' + margin + '\n';
+          });
+          csv += '\n=== TODAY\'S SALES ===\n';
+          csv += 'Product,Quantity,Amount,Profit,Customer\n';
+          getTodaySales().forEach(function(s) {
+            csv += (s.productName || 'Unknown') + ',' + (s.quantity || 1) + ',' + s.amount + ',' + (s.profit || 0) + ',' + (s.customerName || 'Cash') + '\n';
+          });
+          csv += '\n=== DEBTS ===\n';
+          csv += 'Customer,Amount,Remaining\n';
+          state.debts.filter(function(d) { return d.remainingBalance > 0; }).forEach(function(d) {
+            csv += d.customerName + ',' + d.amount + ',' + d.remainingBalance + '\n';
+          });
+          var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          var link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'sari-sari-smart-data.csv';
+          link.click();
+          showToast('CSV exported!');
+        })();
+        break;
+      case 'toggleDayOpen':
+        state.dayOpen = !state.dayOpen;
+        saveState();
+        showToast('Day ' + (state.dayOpen ? 'opened' : 'closed') + ' manually.');
+        break;
+      case 'startNewDay':
+        if (state.dayDate && state.dayDate !== todayStr()) {
+          archiveDaySales();
+        }
+        state.dayDate = todayStr();
+        state.dayArchived = false;
+        state.dayOpen = true;
+        state.todayExpenses = 0;
+        state.todayEarnings = 0;
+        saveState();
+        showToast('New day started: ' + todayStr());
+        break;
+      case 'archiveDaySales':
+        archiveDaySales();
+        saveState();
+        showToast('Sales archived.');
+        break;
+      case 'resetTutorial':
+        state.settings.launchCount = 0;
+        state.settings.hasCompletedSetup = true;
+        try { sessionStorage.removeItem('sss_v3_tutorialShown'); } catch(e) {}
+        saveState();
+        showToast('Tutorial state reset. Will show on next launch.');
+        break;
+      case 'clearRestockData':
+        localStorage.removeItem('sss_v3_lastRestockDate');
+        state.restockLog = [];
+        saveState();
+        showToast('Restock data cleared.');
+        break;
+      case 'setRestockDate':
+        localStorage.setItem('sss_v3_lastRestockDate', todayStr());
+        showToast('Restock date set to today.');
+        break;
+      case 'viewRestockLog':
+        var lastDate = localStorage.getItem('sss_v3_lastRestockDate');
+        var logCount = (state.restockLog && state.restockLog.length) || 0;
+        if (lastDate) {
+          showToast('Last restock: ' + lastDate + ' | Log entries: ' + logCount);
+        } else {
+          showToast('No restock data recorded.');
+        }
+        break;
     }
     // Refresh UI
     renderMorningCheck();
@@ -2277,6 +2571,23 @@
   // ============================================
   // INIT
   // ============================================
+  // ============================================
+  // HISTORY-AWARE BACK NAVIGATION
+  // ============================================
+  /**
+   * Navigate back using the browser's native history stack.
+   * Only uses history.back() if the user came from within the app
+   * (same origin), falling back to morning.html for direct bookmarks.
+   */
+  function historyBack() {
+    var referrer = document.referrer || '';
+    if (referrer.indexOf(window.location.origin) === 0) {
+      window.history.back();
+    } else {
+      window.location.href = 'morning.html';
+    }
+  }
+
   function init() {
     cacheDom();
     loadState();
@@ -2325,7 +2636,8 @@
     } else if (pageName === 'closing') {
       // Evening closing page
       if (!state.dayOpen) {
-        window.location.href = 'morning.html';
+        showToast(t('dayNotOpen'));
+        setTimeout(function() { window.location.href = 'morning.html'; }, 1500);
         return;
       }
       applyTranslations();
@@ -2386,6 +2698,7 @@
   window.startDay = startDay;
   window.showClosingScreen = showClosingScreen;
   window.renderClosingScreen = renderClosingScreen;
+  window.navigateToDayMode = navigateToDayMode;
   window.backToDay = backToDay;
   window.completeDay = completeDay;
   window.closeDayAndShowMorning = closeDayAndShowMorning;
@@ -2397,6 +2710,9 @@
   window.onCustomerSearch = onCustomerSearch;
   window.selectCustomer = selectCustomer;
   window.saveSale = saveSale;
+  window.openDebtDetail = openDebtDetail;
+  window.closeDebtDetail = closeDebtDetail;
+  window.togglePaidDebts = togglePaidDebts;
   window.openPaymentSheet = openPaymentSheet;
   window.closePaymentSheet = closePaymentSheet;
   window.updatePaymentPreview = updatePaymentPreview;
@@ -2422,5 +2738,6 @@
   window.endTutorial = endTutorial;
   window.reopenClosing = reopenClosing;
   window.archiveDaySales = archiveDaySales;
+  window.historyBack = historyBack;
 
 })();

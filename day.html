@@ -122,7 +122,7 @@
               <label data-i18n="saleQtyLabel">Ilan?</label>
               <div class="qty-selector">
                 <button class="qty-btn" onclick="adjustQty(-1)">−</button>
-                <input type="number" id="saleQty" class="qty-input" value="1" min="1" readonly>
+                <input type="number" id="saleQty" class="qty-input qty-input-editable" value="1" min="1" onchange="onQtyChange()">
                 <button class="qty-btn" onclick="adjustQty(1)">+</button>
               </div>
               <div class="stock-hint" id="saleStockHint"></div>

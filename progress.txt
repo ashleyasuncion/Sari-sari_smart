@@ -1865,3 +1865,67 @@ END OF PROGRESS REPORT
      - app.js: storePreviousPage() removed, historyBack() rewritten,
        storePreviousPage() call removed from init()
      - progress.txt: This entry
+
+=== v2.24 Debt Today Sync — manual debt now creates sale record (July 28, 2026) ===
+
+[✓] Fixed: Manually-added debts (from Debts page) were not showing in Debt Today
+     - Root cause: Debt Today calculated from getTodaySales() where customerName is set
+     - Manual debt creation (saveNewDebt()) only pushed to state.debts, never
+       created a sale entry in state.sales
+     - getTodayUtang() sums sale amounts with customerName — no debt entry to count
+
+[✓] Added: state.sales.unshift({...}) in saveNewDebt() after debt creation
+     - Creates sale with customerName set, same amount as the debt
+     - description: 'Manual debt: ' + customer
+     - Existing getTodayUtang() calculation picks it up automatically
+     - No changes needed to Debt Today calculation itself
+
+[✓] Syntax validation: PASSED (node -c app.js)
+
+[✓] Affected files:
+     - app.js: saveNewDebt() now creates a sale entry after debt creation
+     - progress.txt: This entry
+
+=== v2.25 Dev Panel Day State Synchronization Fix (July 29, 2026) ===
+
+[✓] Fixed: "Start New Day" in Dev Panel left Morning page in wrong button state
+     - Issue: After Toggle Day Open/Close → "Edit Today's Closing", then Start New Day
+       → Morning showed "Close Store" instead of "Start the Day"
+
+     - Root cause: 3 bugs in handleDevAction('startNewDay'):
+       1. archiveDaySales() was skipped when dayDate === todayStr() (conditional guard)
+       2. dayDate = '' prevented morning page from detecting today's date
+       3. dayArchived = false triggered the "Edit Today's Closing" condition
+
+     - Fix (app.js):
+       → Changed conditional archiveDaySales() to unconditional (always archives)
+       → Changed dayDate = '' to dayDate = todayStr() (morning detects fresh day)
+       → Changed dayArchived = false to dayArchived = true (breaks "Edit Closing")
+       → Updated toast: "New day started! Tap 'Start the Day' to open store."
+
+     - State trace after fix:
+       1. Store Open → Toggle Close → "Edit Today's Closing" ✅
+       2. Start New Day → archiveDaySales(), dayDate=todayStr(), dayArchived=true
+       3. renderMorningCheck(): dayOpen? false→skip, dayDate==today && !dayArchived? false→skip
+       4. Falls to else → "Start the Day" ✅✅✅
+
+     Affected files:
+       - app.js: startNewDay case in handleDevAction()
+
+     Syntax validation: PASSED
+
+=== v2.26 Sale Sheet: Quantity Input Usability + Stock Clamp (July 29, 2026) ===
+
+[✓] Issue 2 — Quantity now supports direct typing (not just +/- buttons)
+     - day.html: Removed readonly from #saleQty input, added onchange="onQtyChange()"
+     - app.js: Added onQtyChange() function — parses typed input, clamps to 1..stock
+     - app.js: adjustQty() now clamps + button to available stock via Math.min()
+     - style.css: Added .qty-input-editable styling with normal text cursor
+
+[✓] Issue 3 — Quantity clamped to available stock immediately
+     - app.js adjustQty(): Added Math.min(qty, state.selectedProduct.quantity) after
+       Math.max(1, ...) clamp — + button stops at available stock
+     - app.js onQtyChange(): clamps typed value to 1..available stock
+     - Stock hint always reflects clamped/max state
+
+[✓] Syntax validation: Passed (node -c app.js)

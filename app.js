@@ -1427,6 +1427,17 @@
     if (!dom.saleQty) return;
     var qty = parseInt(dom.saleQty.value) || 1;
     qty = Math.max(1, qty + delta);
+    // Clamp to available stock so the + button can't exceed inventory (Issue 3 fix)
+    qty = Math.min(qty, state.selectedProduct.quantity);
+    dom.saleQty.value = qty;
+    updateSaleTotal();
+  }
+
+  function onQtyChange() {
+    if (!state.selectedProduct || !dom.saleQty) return;
+    var qty = parseInt(dom.saleQty.value) || 1;
+    // Clamp to valid range: 1 to available stock
+    qty = Math.max(1, Math.min(qty, state.selectedProduct.quantity));
     dom.saleQty.value = qty;
     updateSaleTotal();
   }
@@ -2206,6 +2217,17 @@
       });
     }
 
+    // Also record a specific sale so Debt Today on the Day page picks it up
+    state.sales.unshift({
+      id: genId(),
+      date: todayStr(),
+      productName: 'Manual debt: ' + customer,
+      amount: amount,
+      quantity: 1,
+      customerName: customer,
+      profit: 0
+    });
+
     saveState();
     closeNewDebt();
     showToast(t('debtSaved'));
@@ -2474,18 +2496,22 @@
         state.dayOpen = !state.dayOpen;
         saveState();
         showToast('Day ' + (state.dayOpen ? 'opened' : 'closed') + ' manually.');
+        toggleDevPanel();
+        if (pageName === 'morning') renderMorningCheck();
         break;
       case 'startNewDay':
-        if (state.dayDate && state.dayDate !== todayStr()) {
-          archiveDaySales();
-        }
+        // Always archive current day's sales before creating fresh day
+        archiveDaySales();
+        // Initialize a fresh pre-opening day for today
         state.dayDate = todayStr();
-        state.dayArchived = false;
-        state.dayOpen = true;
+        state.dayArchived = true;   // sales were archived, so "Edit Closing" condition won't match
+        state.dayOpen = false;
         state.todayExpenses = 0;
         state.todayEarnings = 0;
         saveState();
-        showToast('New day started: ' + todayStr());
+        showToast('New day started! Tap "Start the Day" to open store.');
+        toggleDevPanel();
+        if (pageName === 'morning') renderMorningCheck();
         break;
       case 'archiveDaySales':
         archiveDaySales();
@@ -2707,6 +2733,7 @@
   window.onProductSearch = onProductSearch;
   window.selectProduct = selectProduct;
   window.adjustQty = adjustQty;
+  window.onQtyChange = onQtyChange;
   window.onCustomerSearch = onCustomerSearch;
   window.selectCustomer = selectCustomer;
   window.saveSale = saveSale;

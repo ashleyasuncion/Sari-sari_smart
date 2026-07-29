@@ -431,9 +431,23 @@ body {
 .customer-suggestions.open { display: block; }
 .customer-suggestion-item {
   padding: 10px 14px; cursor: pointer; font-size: var(--text-sm);
+  display: flex; justify-content: space-between; align-items: center;
   transition: background var(--transition);
 }
 .customer-suggestion-item:hover { background: var(--primary-bg); }
+.customer-suggestion-name {
+  font-weight: 500;
+}
+.customer-suggestion-balance {
+  font-size: var(--text-xxs);
+  font-weight: 600;
+  color: var(--danger);
+  white-space: nowrap;
+}
+.customer-suggestion-balance.settled {
+  color: var(--primary);
+  font-weight: 500;
+}
 
 /* ─── Qty Selector ─── */
 .qty-selector {

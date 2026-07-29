@@ -1929,3 +1929,57 @@ END OF PROGRESS REPORT
      - Stock hint always reflects clamped/max state
 
 [✓] Syntax validation: Passed (node -c app.js)
+
+=== v2.27 customer suggestion debt visibility + New Debt autocomplete (July 29, 2026) ===
+
+Customer Suggestion Debt Visibility Investigation identified that customer
+suggestion dropdowns across Sales Sheet and New Debt page displayed only the
+customer name without showing outstanding debt balance. This was fixed on both
+web and mobile apps.
+
+[✓] Fixed: Sales Sheet (day.html + app.js) — Customer suggestions now show debt balance
+     - Modified onCustomerSearch() in app.js to build a debt balance lookup map
+       from state.debts (groupBy customerName, sum remainingBalance)
+     - Each suggestion item now shows:
+       → Customer name (left side)
+       → "Debt: ₱XXX.XX" in red if outstanding balance > 0
+       → "✓ Balance: ₱0.00" in green if fully settled
+     - Updated .customer-suggestion-item CSS to use flexbox layout
+       (display:flex, justify-content:space-between, align-items:center)
+     - Added .customer-suggestion-name, .customer-suggestion-balance,
+       .customer-suggestion-balance.settled CSS classes
+
+[✓] Fixed: New Debt page (new_debt.html + app.js) — Added customer suggestions
+     - Previously had NO customer autocomplete at all
+     - Added <div class="customer-suggestions" id="newDebtSuggestions"></div>
+       container after customer name input in new_debt.html
+     - Added autocomplete="off" oninput="onNewDebtCustomerSearch()" to input
+     - Added onNewDebtCustomerSearch() function in app.js — same logic as
+       onCustomerSearch() with debt balance display
+     - Added selectNewDebtCustomer() handler for click-to-fill
+     - Added newDebtSuggestions to cacheDom() and exported both functions
+       via window object
+     - Added position:relative to parent form-group for proper absolute
+       positioning of suggestions dropdown
+
+[✓] Fixed: CSS containing block issue — customer suggestions dropdown width
+     - Identified root cause: .customer-suggestions uses position:absolute with
+       width:100%, but nearest positioned ancestor was .bottom-sheet-overlay
+       (full phone width = 393px) instead of the parent form-group
+     - Added style="position:relative;" to the form-group in day.html to make
+       it the containing block, constraining width to the bottom-sheet's
+       padded content area (~361px)
+     - Same fix was already applied to new_debt.html in the same session
+
+[✓] Syntax validation: Passed (node -c app.js)
+
+[✓] Affected files:
+     - app.js: onCustomerSearch() rewritten with balance lookup; onNewDebtCustomerSearch(),
+       selectNewDebtCustomer() added; newDebtSuggestions added to cacheDom();
+       window exports added
+     - day.html: style="position:relative;" on customer form-group
+     - new_debt.html: customer suggestions container, position:relative wrapper,
+       autocomplete/oninput attributes
+     - style.css: .customer-suggestion-item changed to flex layout;
+       .customer-suggestion-name, .customer-suggestion-balance,
+       .customer-suggestion-balance.settled added

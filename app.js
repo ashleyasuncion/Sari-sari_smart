@@ -76,7 +76,7 @@
       'headerTutorialBtn', 'tutorialOverlay', 'tutorialBackdrop', 'tutorialHighlight',
       'tutorialBox', 'tutorialText', 'tutorialCurrent', 'tutorialTotal',
       'tutorialSkip', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
-      'newDebtCustomer', 'newDebtAmount',
+      'newDebtCustomer', 'newDebtAmount', 'newDebtSuggestions',
       'settingsLanguage', 'settingsStoreName', 'settingsOwnerName',
       'setupOverlay', 'setupStoreName', 'setupOwnerName', 'setupLanguage',
       'toastContainer'
@@ -1482,8 +1482,23 @@
       return;
     }
 
+    // Build debt balance lookup map
+    var debtBalances = {};
+    state.debts.forEach(function(d) {
+      if (d.remainingBalance > 0) {
+        debtBalances[d.customerName] = (debtBalances[d.customerName] || 0) + d.remainingBalance;
+      }
+    });
+
     dom.customerSuggestions.innerHTML = matches.map(function(name) {
-      return '<div class="customer-suggestion-item" onclick="window.selectCustomer(\'' + name.replace(/'/g, "\\'") + '\')">' + name + '</div>';
+      var balance = debtBalances[name] || 0;
+      var balanceHtml = balance > 0
+        ? '<span class="customer-suggestion-balance">' + t('debtTotal', { amount: formatCurrency(balance) }) + '</span>'
+        : '<span class="customer-suggestion-balance settled">\u2714\uFE0F ' + t('payBalance', { amount: formatCurrency(0) }) + '</span>';
+      return '<div class="customer-suggestion-item" onclick="window.selectCustomer(\'' + name.replace(/'/g, "\\'") + '\')">' +
+        '<span class="customer-suggestion-name">' + name + '</span>' +
+        balanceHtml +
+        '</div>';
     }).join('');
     dom.customerSuggestions.classList.add('open');
   }
@@ -2187,7 +2202,53 @@
   function openNewDebt() {
     if (dom.newDebtCustomer) dom.newDebtCustomer.value = '';
     if (dom.newDebtAmount) dom.newDebtAmount.value = '';
+    if (dom.newDebtSuggestions) dom.newDebtSuggestions.classList.remove('open');
     // (overlay replaced by separate new_debt.html page)
+  }
+
+  function onNewDebtCustomerSearch() {
+    if (!dom.newDebtCustomer || !dom.newDebtSuggestions) return;
+    var query = dom.newDebtCustomer.value.toLowerCase().trim();
+    if (!query) {
+      dom.newDebtSuggestions.classList.remove('open');
+      return;
+    }
+    var names = {};
+    state.debts.forEach(function(d) { names[d.customerName] = true; });
+    state.sales.forEach(function(s) { if (s.customerName) names[s.customerName] = true; });
+    var matches = Object.keys(names).filter(function(n) {
+      return n.toLowerCase().includes(query);
+    }).slice(0, 5);
+
+    if (matches.length === 0) {
+      dom.newDebtSuggestions.classList.remove('open');
+      return;
+    }
+
+    // Build debt balance lookup map
+    var debtBalances = {};
+    state.debts.forEach(function(d) {
+      if (d.remainingBalance > 0) {
+        debtBalances[d.customerName] = (debtBalances[d.customerName] || 0) + d.remainingBalance;
+      }
+    });
+
+    dom.newDebtSuggestions.innerHTML = matches.map(function(name) {
+      var balance = debtBalances[name] || 0;
+      var balanceHtml = balance > 0
+        ? '<span class="customer-suggestion-balance">' + t('debtTotal', { amount: formatCurrency(balance) }) + '</span>'
+        : '<span class="customer-suggestion-balance settled">\u2714\uFE0F ' + t('payBalance', { amount: formatCurrency(0) }) + '</span>';
+      return '<div class="customer-suggestion-item" onclick="window.selectNewDebtCustomer(\'' + name.replace(/'/g, "\\'") + '\')">' +
+        '<span class="customer-suggestion-name">' + name + '</span>' +
+        balanceHtml +
+        '</div>';
+    }).join('');
+    dom.newDebtSuggestions.classList.add('open');
+  }
+
+  function selectNewDebtCustomer(name) {
+    if (dom.newDebtCustomer) dom.newDebtCustomer.value = name;
+    if (dom.newDebtSuggestions) dom.newDebtSuggestions.classList.remove('open');
   }
 
   function closeNewDebt() {
@@ -2736,6 +2797,8 @@
   window.onQtyChange = onQtyChange;
   window.onCustomerSearch = onCustomerSearch;
   window.selectCustomer = selectCustomer;
+  window.onNewDebtCustomerSearch = onNewDebtCustomerSearch;
+  window.selectNewDebtCustomer = selectNewDebtCustomer;
   window.saveSale = saveSale;
   window.openDebtDetail = openDebtDetail;
   window.closeDebtDetail = closeDebtDetail;

@@ -24,9 +24,10 @@
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <div class="form-group">
+        <div class="form-group" style="position:relative;">
           <label>Pangalan ng Kostumer</label>
-          <input type="text" id="newDebtCustomer" class="form-input" placeholder="Ilagay ang pangalan">
+          <input type="text" id="newDebtCustomer" class="form-input" placeholder="Ilagay ang pangalan" autocomplete="off" oninput="onNewDebtCustomerSearch()">
+          <div class="customer-suggestions" id="newDebtSuggestions"></div>
         </div>
         <div class="form-group">
           <label>Halaga ng Utang (₱)</label>

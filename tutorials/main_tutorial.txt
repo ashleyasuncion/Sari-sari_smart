@@ -1,0 +1,141 @@
+SARI-SARI SMART — MAIN TUTORIAL (14 STEPS, MULTI-PAGE)
+=======================================================
+Config: app.js -> tutorials.main
+Pages: morning -> day -> closing -> inventory -> debts -> setting
+Launch: auto on morning.html first visit per tab; also from Settings -> Tutorial selector ("Main Tutorial")
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, pointer-events none, RAF-tracked, target+8px with 4px offset
+- Navigation: Next advances; Skip only on replay; on step 14 Next finishes and returns to morning.html
+- Box position rule: target in top 40% of viewport -> box at bottom; else box at top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Welcome
+  Text EN : "Welcome to Sari-Sari Smart! This quick tour will guide you through your store's daily routine — from morning check to closing."
+  Text FIL: "Maligayang pagdating sa Sari-Sari Smart! Ang tour na ito ay gagabay sa iyo sa pang-araw-araw na gawain ng iyong tindahan."
+  Target page     : morning
+  Target element  : none
+  Highlight       : none (no frame)
+  Box position    : centered
+  Page transition : stays on morning
+  Interaction     : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Stock card
+  Text EN : "The Stock card shows items running low or out of stock. Tap Stock in the nav to view and manage your inventory."
+  Text FIL: "Ang Stock card ay nagpapakita ng mga item na nauubos o wala na. I-tap ang Stock sa nav para tingnan ang iyong inventory."
+  Target page     : morning
+  Target element  : #morningStockTitle
+  Highlight       : Stock card title (top area) -> box expected at bottom
+  Page transition : stays on morning
+  Interaction     : look at Stock card, tap Next
+----------------------------------------------------------------------
+STEP 3 — Debt card
+  Text EN : "The Debt card shows how much customers owe you. Tap Debts to view and track payments."
+  Text FIL: "Ang Debt card ay nagpapakita ng utang ng mga kostumer. I-tap ang Debts para makita at subaybayan ang mga bayad."
+  Target page     : morning
+  Target element  : #morningDebtTitle
+  Highlight       : Debt card title -> box expected at bottom/top per runtime rule
+  Page transition : stays on morning
+  Interaction     : look at Debt card, tap Next
+----------------------------------------------------------------------
+STEP 4 — Start the Day
+  Text EN : "When ready, tap \"Start the Day\" to open your store for business and start recording sales."
+  Text FIL: "Kapag handa na, i-tap ang \"Simulan ang Araw\" para buksan ang tindahan at magsimulang magtala ng benta."
+  Target page     : morning
+  Target element  : #btnStartDay
+  Highlight       : Start Day button (bottom of page) -> box expected at top
+  Page transition : stays on morning
+  Interaction     : see the button, tap Next
+----------------------------------------------------------------------
+STEP 5 — Day Mode intro
+  Text EN : "Welcome to Day Mode! This is where you record sales as they happen throughout the day."
+  Text FIL: "Maligayang pagdating sa Day Mode! Dito mo itinatala ang mga benta habang nangyayari ang mga ito."
+  Target page     : day (navigates here)
+  Target element  : none
+  Highlight       : none (no frame)
+  Box position    : centered
+  Page transition : morning -> day
+  Interaction     : read text, tap Next
+----------------------------------------------------------------------
+STEP 6 — Today summary
+  Text EN : "The Today summary shows your earnings, items sold, and utang transactions at a glance."
+  Text FIL: "Ang Today summary ay nagpapakita ng iyong kita, naibenta, at utang sa isang sulyap."
+  Target page     : day
+  Target element  : #daySummary
+  Highlight       : Today summary stats -> box per runtime rule
+  Page transition : stays on day
+  Interaction     : look at summary, tap Next
+----------------------------------------------------------------------
+STEP 7 — Sell button
+  Text EN : "Tap the Sell button to open the sale sheet. Select a product, enter quantity, and save the sale."
+  Text FIL: "I-tap ang Sell button para buksan ang sale sheet. Pumili ng produkto, ilagay ang dami, at i-save ang benta."
+  Target page     : day
+  Target element  : #navSale
+  Highlight       : Sell (FAB) button in bottom nav -> box expected at top
+  Page transition : stays on day
+  Interaction     : see the Sell button, tap Next
+----------------------------------------------------------------------
+STEP 8 — Closing intro
+  Text EN : "At the end of the day, the Closing screen shows a full summary of today's performance."
+  Text FIL: "Sa pagtatapos ng araw, ang Closing screen ay nagpapakita ng buong summary ng performance ngayong araw."
+  Target page     : closing (navigates here)
+  Target element  : none
+  Highlight       : none
+  Box position    : centered
+  Page transition : day -> closing
+  Interaction     : read text, tap Next
+----------------------------------------------------------------------
+STEP 9 — Actual Sales input
+  Text EN : "Enter the actual cash you counted. Profit is calculated from each item selling margin."
+  Text FIL: "Ilagay ang aktwal na pera. Awtomatikong kukuwentahin ang kita mula sa bawat item."
+  Target page     : closing
+  Target element  : #closingActualSales
+  Highlight       : Actual Sales Today input -> box per runtime rule
+  Page transition : stays on closing
+  Interaction     : see the input, tap Next
+----------------------------------------------------------------------
+STEP 10 — Day Complete button
+  Text EN : "Tap \"Day Complete\" when you're ready to finalize. Your daily summary will be saved to history."
+  Text FIL: "I-tap ang \"Tapos Na ang Araw\" para tapusin. Ang iyong daily summary ay mase-save sa history."
+  Target page     : closing
+  Target element  : #btnCompleteDay
+  Highlight       : Day Complete button (bottom) -> box expected at top
+  Page transition : stays on closing
+  Interaction     : see the button, tap Next
+----------------------------------------------------------------------
+STEP 11 — Inventory search
+  Text EN : "The Inventory page lets you search, add, and manage all your stock items in one place."
+  Text FIL: "Ang Inventory page ay nagbibigay-daan sa iyo na maghanap, magdagdag, at mamahala ng stock."
+  Target page     : inventory (navigates here)
+  Target element  : #manageStockSearch
+  Highlight       : Stock search bar (top) -> box expected at bottom
+  Page transition : closing -> inventory
+  Interaction     : see search bar, tap Next
+----------------------------------------------------------------------
+STEP 12 — Add Stock button
+  Text EN : "Tap \"Add Stock\" to add new products or restock existing items with cost and selling price."
+  Text FIL: "I-tap ang \"Magdagdag ng Stock\" para magdagdag ng bagong produkto o mag-restock."
+  Target page     : inventory
+  Target element  : a[href="add_product.html"].btn-primary
+  Highlight       : Add Stock button -> box per runtime rule
+  Page transition : stays on inventory
+  Interaction     : see the button, tap Next
+----------------------------------------------------------------------
+STEP 13 — Debts total
+  Text EN : "The Debts page tracks all customer debts. The total outstanding amount is shown at the top."
+  Text FIL: "Ang Debts page ay sumusubaybay sa lahat ng utang ng kostumer. Ang kabuuang halaga ay nasa itaas."
+  Target page     : debts (navigates here)
+  Target element  : #manageTotalDebt
+  Highlight       : Total debt summary (top) -> box expected at bottom
+  Page transition : inventory -> debts
+  Interaction     : see the total, tap Next
+----------------------------------------------------------------------
+STEP 14 — Settings
+  Text EN : "Visit Settings anytime to change language, text size, store name, or owner name."
+  Text FIL: "Pumunta sa Settings anumang oras para baguhin ang wika, laki ng teksto, o pangalan ng tindahan."
+  Target page     : setting (navigates here)
+  Target element  : #settingsLanguage
+  Highlight       : Language selector (top) -> box expected at bottom
+  Page transition : debts -> setting
+  Interaction     : see the setting, tap Next
+  Completion      : Next on this step FINISHES the tutorial and navigates back to morning.html

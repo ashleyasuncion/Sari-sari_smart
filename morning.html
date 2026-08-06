@@ -17,7 +17,7 @@
       <!-- HEADER -->
       <header class="app-header">
         <div class="header-left">
-          <span class="header-greeting" id="headerGreeting">Magandang araw! 👋</span>
+          <h1 class="header-page-title" id="headerPageTitle" data-i18n="pageMorning">Umaga</h1>
         </div>
         <div class="header-actions">
           <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('morning', true)" aria-label="Tutorial">
@@ -43,6 +43,18 @@
           </div>
 
           <div class="morning-cards">
+            <!-- Overdue store banner (store left open across business days) -->
+            <div class="morning-card overdue-banner" id="morningOverdueCard" style="display:none;">
+              <div class="morning-card-icon warning-bg">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="morning-card-body">
+                <div class="morning-card-title" id="morningOverdueTitle">⚠️ Hindi pa isinara ang tindahan</div>
+                <div class="morning-card-desc" id="morningOverdueDesc">Binuksan noong ... · Bukas na sa loob ng N na araw</div>
+                <button class="btn btn-secondary btn-sm" id="morningOverdueReviewBtn" data-i18n="overdueReview" style="margin-top:10px;width:100%;" onclick="openOverdueReview()">Tingnan ang Benta ng Nakaraang Araw</button>
+              </div>
+            </div>
+
             <!-- Stock warnings -->
             <div class="morning-card">
               <div class="morning-card-icon warning-bg">
@@ -93,6 +105,30 @@
             <span data-i18n="startDay">Simulan ang Araw</span>
           </button>
         </div>
+
+        <!-- OVERDUE REVIEW OVERLAY (previous day's sales) -->
+        <!-- FIX (v2.36): removed inline display:none — it out-specified the
+             .overlay.open { display:flex } rule, so the review overlay never
+             appeared. z-index:55 kept. Now shown/hidden by the open class like
+             summaryOverlay/setupOverlay. -->
+        <div class="overlay" id="overdueReviewOverlay" style="z-index:55;">
+          <div class="overlay-header" style="background:var(--primary);color:white;">
+            <button class="header-btn" onclick="closeOverdueReview()" style="color:white;background:none;border:none;cursor:pointer;padding:6px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <h2 data-i18n="overdueReviewTitle" style="margin:0;">Last Day's Sales</h2>
+          </div>
+          <div class="overlay-scroll">
+            <div id="overdueReviewList"></div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-weight:700;" id="overdueReviewTotal"></div>
+            <button class="btn btn-primary btn-large" style="margin-top:16px;" onclick="closeStaleDayAndStartToday()">
+              <span data-i18n="overdueCloseStart">Isara ang dating araw at simulan ang bago</span>
+            </button>
+            <button class="btn btn-secondary btn-full" style="margin-top:8px;" onclick="closeOverdueReview()">
+              <span data-i18n="cancel">Kanselahin</span>
+            </button>
+          </div>
+        </div>
       </main>
 
       <!-- BOTTOM NAV -->
@@ -102,7 +138,7 @@
           <span class="nav-label" data-i18n="navMorning">Umaga</span>
         </a>
         <div class="nav-spacer"></div>
-        <button class="nav-item nav-fab-item" onclick="openSaleSheet()">
+        <button class="nav-item nav-fab-item" onclick="navigateToDayMode()">
           <div class="nav-fab">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </div>
@@ -133,6 +169,7 @@
         <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
         <div class="tutorial-actions">
           <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-secondary btn-sm" id="tutorialPrev" onclick="previousTutorial()" data-i18n="prev" style="display:none;">Previous</button>
           <button class="btn btn-primary btn-sm" id="tutorialNext" onclick="advanceTutorial()" data-i18n="next">Next</button>
         </div>
       </div>

@@ -1,0 +1,47 @@
+SARI-SARI SMART — MORNING CHECK TUTORIAL (5 STEPS)
+===================================================
+Config: app.js -> tutorials.morning
+Page: morning
+Launch: header tutorial button on morning.html (startTutorial('morning', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place (no page change)
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This is the Morning Check — your daily overview before opening the store."
+  Text FIL: "Ito ang Morning Check — ang iyong pang-araw-araw na pagsusuri bago buksan ang tindahan."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Stock card
+  Text EN : "Check which items are running low or out of stock so you can restock today."
+  Text FIL: "Tingnan kung aling mga item ang nauubos o wala na para mag-restock ngayong araw."
+  Target element : #morningStockTitle
+  Highlight      : Stock card title (top) -> box expected at bottom
+  Interaction    : look at card, tap Next
+----------------------------------------------------------------------
+STEP 3 — Debt card
+  Text EN : "Review outstanding customer debts to see who still needs to pay."
+  Text FIL: "Suriin ang mga natitirang utang ng kostumer upang makita kung sino ang may puwedeng magbayad."
+  Target element : #morningDebtTitle
+  Highlight      : Debt card title -> box per runtime rule
+  Interaction    : look at card, tap Next
+----------------------------------------------------------------------
+STEP 4 — Yesterday summary
+  Text EN : "Yesterday's earnings summary helps you track daily performance."
+  Text FIL: "Ang summary ng kita kahapon ay tumutulong sa iyo na subaybayan ang performance."
+  Target element : #morningYesterdayTitle
+  Highlight      : Yesterday card title -> box per runtime rule
+  Interaction    : look at card, tap Next
+----------------------------------------------------------------------
+STEP 5 — Start the Day
+  Text EN : "Tap \"Start the Day\" when you're ready to open your store and start selling!"
+  Text FIL: "I-tap ang \"Simulan ang Araw\" kapag handa ka nang buksan ang tindahan at magsimula!"
+  Target element : #btnStartDay
+  Highlight      : Start Day button (bottom) -> box expected at top
+  Interaction    : see button, tap Next (finishes tutorial in place)

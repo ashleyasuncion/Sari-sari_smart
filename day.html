@@ -17,7 +17,7 @@
       <!-- HEADER -->
       <header class="app-header">
         <div class="header-left">
-          <span class="header-greeting" id="headerGreeting">Magandang araw! 👋</span>
+          <h1 class="header-page-title" id="headerPageTitle" data-i18n="pageDay">Araw</h1>
         </div>
         <div class="header-actions">
           <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('day', true)" aria-label="Tutorial">
@@ -195,6 +195,7 @@
         <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
         <div class="tutorial-actions">
           <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-secondary btn-sm" id="tutorialPrev" onclick="previousTutorial()" data-i18n="prev" style="display:none;">Previous</button>
           <button class="btn btn-primary btn-sm" id="tutorialNext" onclick="advanceTutorial()" data-i18n="next">Next</button>
         </div>
       </div>

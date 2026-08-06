@@ -48,7 +48,7 @@
 
   function cacheDom() {
     var ids = [
-      'headerGreeting', 'appContent',
+      'headerGreeting', 'headerPageTitle', 'appContent',
       'morningGreeting', 'morningSubtitle',
       'morningStockTitle', 'morningStockDesc',
       'morningDebtTitle', 'morningDebtDesc',
@@ -75,7 +75,7 @@
       'productMarkupHint', 'editProductId',
       'headerTutorialBtn', 'tutorialOverlay', 'tutorialBackdrop', 'tutorialHighlight',
       'tutorialBox', 'tutorialText', 'tutorialCurrent', 'tutorialTotal',
-      'tutorialSkip', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
+      'tutorialSkip', 'tutorialPrev', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
       'newDebtCustomer', 'newDebtAmount', 'newDebtSuggestions',
       'settingsLanguage', 'settingsStoreName', 'settingsOwnerName',
       'setupOverlay', 'setupStoreName', 'setupOwnerName', 'setupLanguage',
@@ -93,6 +93,12 @@
     en: {
       greeting: 'Good day!',
       morningGreeting: 'Good morning!',
+      greetingMorning: 'Good morning!',
+      greetingAfternoon: 'Good afternoon!',
+      greetingEvening: 'Good evening!',
+      pageMorning: 'Morning',
+      pageDay: 'Day',
+      pageClosing: 'Close',
       morningSubtitle: 'Is your store ready for today?',
       stockOk: 'All stock is good',
       stockOkDesc: 'No items running low',
@@ -104,6 +110,16 @@
       yesterdayDesc: "Yesterday's sales",
       startDay: 'Start the Day',
       closeDay: 'Close Store \ud83c\udf19',
+      overdueTitle: 'The store wasn\'t closed',
+      overdueDesc: 'Opened {date} · Open for {n} days',
+      overdueCloseStart: 'Close Old Day & Start Today',
+      overdueReview: 'Review Last Day\'s Sales',
+      overdueReviewTitle: 'Last Day\'s Sales',
+      overdueReviewEmpty: 'No sales recorded that day.',
+      overdueReviewTotal: 'Total',
+      overdueArchivedToast: 'Previous day\'s sales saved safely. New day started!',
+      overdueRedirect: 'Please close the previous day on the Morning page.',
+      overdueDevConfirm: 'A developer date override is active. This archives the previous day\'s sales into real history — permanent if the tab is closed before clearing the override. Continue?',
       dayModeLabel: 'Today',
       payTitle: 'Pay',
       earnings: 'Earnings',
@@ -145,6 +161,10 @@
       resetData: 'Reset Data',
       exportData: 'Export Data',
       setupBtn: "Let's start!",
+      setupTitle: 'Welcome to Sari-Sari Smart!',
+      setupSubtitle: "Let's get started. Tell us about your store.",
+      setupStorePlaceholder: "e.g. Maria's Store",
+      setupOwnerPlaceholder: 'e.g. Maria Santos',
       productName: 'Product Name',
       productQty: 'Quantity',
       productCost: 'Cost Price',
@@ -168,6 +188,7 @@
       // Tutorial
       next: 'Next',
       skip: 'Skip',
+      prev: 'Previous',
       suggestedPrice: 'Suggested',
       textSize: 'Text Size',
       standard: 'Standard',
@@ -312,6 +333,12 @@
     fil: {
       greeting: 'Magandang araw!',
       morningGreeting: 'Magandang umaga!',
+      greetingMorning: 'Magandang umaga!',
+      greetingAfternoon: 'Magandang hapon!',
+      greetingEvening: 'Magandang gabi!',
+      pageMorning: 'Umaga',
+      pageDay: 'Araw',
+      pageClosing: 'Isara',
       morningSubtitle: 'Handa na ba ang tindahan ngayong araw?',
       stockOk: 'Lahat ng stock okay',
       stockOkDesc: 'Walang item na kulang',
@@ -323,6 +350,16 @@
       yesterdayDesc: 'Benta kahapon',
       startDay: 'Simulan ang Araw',
       closeDay: 'Isara ang Tindahan \ud83c\udf19',
+      overdueTitle: 'Hindi pa isinara ang tindahan',
+      overdueDesc: 'Binuksan noong {date} · Bukas na sa loob ng {n} na araw',
+      overdueCloseStart: 'Isara ang dating araw at simulan ang bago',
+      overdueReview: 'Tingnan ang Benta ng Nakaraang Araw',
+      overdueReviewTitle: 'Benta ng Nakaraang Araw',
+      overdueReviewEmpty: 'Walang naitalang benta sa araw na iyon.',
+      overdueReviewTotal: 'Kabuuan',
+      overdueArchivedToast: 'Na-save nang ligtas ang benta ng nakaraang araw. Nagsimula na ang bagong araw!',
+      overdueRedirect: 'Pakiusap, isara muna ang nakaraang araw sa pahina ng Umaga.',
+      overdueDevConfirm: 'Aktibo ang developer date override. Aarkibuhin nito ang benta ng nakaraang araw sa totoong history — permanente ito kung isasara ang tab bago i-clear ang override. Magpatuloy?',
       dayModeLabel: 'Araw na ito',
       payTitle: 'Magbayad',
       earnings: 'Kita',
@@ -364,6 +401,10 @@
       resetData: 'I-reset ang Data',
       exportData: 'I-export ang Data',
       setupBtn: 'Magsimula na!',
+      setupTitle: 'Maligayang pagdating sa Sari-Sari Smart!',
+      setupSubtitle: 'Magsimula tayo. Sabihin sa amin ang tungkol sa iyong tindahan.',
+      setupStorePlaceholder: 'Hal. Tindahan ni Maria',
+      setupOwnerPlaceholder: 'Hal. Maria Santos',
       productName: 'Pangalan ng Produkto',
       productQty: 'Dami',
       productCost: 'Presyo ng Stock',
@@ -387,6 +428,7 @@
       // Tutorial
       next: 'Susunod',
       skip: 'Laktawan',
+      prev: 'Nakaraan',
       suggestedPrice: 'Mungkahi',
       textSize: 'Laki ng Teksto',
       standard: 'Karaniwan',
@@ -540,11 +582,69 @@
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
   }
 
+  // Dev-only temporary date override (YYYY-MM-DD). Stored in sessionStorage so
+  // it survives page-to-page navigation within the tab but is cleared when the
+  // tab closes — it is NEVER written to localStorage/state and never alters
+  // real data permanently. Set via Developer Panel (Shift+N) → Day State.
+  var devDateOverride = null;
+  var devStateSnapshot = null; // pre-override business-day snapshot (restored on clear)
+  // Dev-only temporary HOUR override (0-23) for testing the time-based greeting.
+  // Same contract as devDateOverride: sessionStorage only, cleared on tab close,
+  // never written to state/localStorage. Set via Developer Panel (Shift+N).
+  var devTimeOverride = null;
+
   function todayStr() {
+    if (devDateOverride) return devDateOverride; // dev override wins (temporary)
     var d = new Date();
     return d.getFullYear() + '-' +
       String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
+  }
+
+  // ─── Dev Override Snapshot (restores business state when override is cleared) ───
+  // Captures the exact business-day state BEFORE a temporary date override is
+  // applied, so clearing the override restores the previous open day, its sales,
+  // and closing inputs — nothing is lost. Stored in sessionStorage so it survives
+  // page navigation (web reloads) but never persists beyond the tab session.
+  function captureDevSnapshot() {
+    devStateSnapshot = {
+      dayOpen: state.dayOpen,
+      dayDate: state.dayDate,
+      dayArchived: state.dayArchived,
+      todayExpenses: state.todayExpenses,
+      todayEarnings: state.todayEarnings,
+      sales: JSON.parse(JSON.stringify(state.sales)),
+      history: JSON.parse(JSON.stringify(state.history))
+    };
+    try { sessionStorage.setItem('sss_v3_devSnapshot', JSON.stringify(devStateSnapshot)); } catch(e) {}
+  }
+
+  function restoreDevSnapshot() {
+    if (!devStateSnapshot) return;
+    var snap = devStateSnapshot;
+    // Restore the EXACT pre-test business state: replace the active sales list
+    // with the snapshot's copy so any sales recorded during the test (dated to
+    // the override date) are purged — no test data leaks into real records.
+    state.sales = JSON.parse(JSON.stringify(snap.sales || []));
+    state.dayOpen = snap.dayOpen;
+    state.dayDate = snap.dayDate;
+    state.dayArchived = snap.dayArchived;
+    state.todayExpenses = snap.todayExpenses;
+    state.todayEarnings = snap.todayEarnings;
+    // Restore the exact pre-test history too, so any history entries created
+    // during the test (EOD/archive writes dated to the override date) are also
+    // purged. Newer snapshots carry the history list; older ones (pre-v2.34)
+    // fall back to removing just the archive-only sales copy for the snap day.
+    if (snap.history) {
+      state.history = JSON.parse(JSON.stringify(snap.history));
+    } else if (snap.dayOpen && snap.dayDate) {
+      state.history.forEach(function(h) {
+        if (h.date === snap.dayDate && h.archivedSales) delete h.archivedSales;
+      });
+    }
+    devStateSnapshot = null;
+    try { sessionStorage.removeItem('sss_v3_devSnapshot'); } catch(e) {}
+    saveState();
   }
 
   function formatDate(d) {
@@ -625,6 +725,25 @@
       var diff = Math.floor((now - then) / (1000 * 60 * 60 * 24));
       return diff;
     } catch(e) { return -1; }
+  }
+
+  // ─── Overdue store detection (left open across business days) ───
+  // True when the store is open but the business day it started on (dayDate)
+  // is strictly BEFORE today. Uses `<` (not `!==`) so a device clock moved
+  // backward never archives a "future" day.
+  function isStaleOpenDay() {
+    return state.dayOpen && state.dayDate && state.dayDate < todayStr();
+  }
+
+  // Whole calendar days the current open day has been open (0 = opened today).
+  function getDaysOpen() {
+    if (!state.dayDate) return 0;
+    try {
+      var then = new Date(state.dayDate + 'T00:00:00');
+      var now = devDateOverride ? new Date(devDateOverride + 'T00:00:00') : new Date();
+      var days = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+      return isNaN(days) ? 0 : Math.max(0, days);
+    } catch(e) { return 0; }
   }
 
   function calcMarkupSuggestion(cost, markup) {
@@ -950,6 +1069,8 @@
     if (dom.tutorialText) dom.tutorialText.textContent = t(step.textKey);
     if (dom.tutorialCurrent) dom.tutorialCurrent.textContent = stepIndex + 1;
     if (dom.tutorialTotal) dom.tutorialTotal.textContent = steps.length;
+    // Previous button is hidden on the first step (mobile parity)
+    if (dom.tutorialPrev) dom.tutorialPrev.style.display = stepIndex > 0 ? 'block' : 'none';
 
     if (dom.tutorialHighlight) {
       if (step.highlight) {
@@ -999,6 +1120,11 @@
     var nextStep = (_tutorialState.step || 0) + 1;
     if (nextStep >= steps.length) {
       endTutorial();
+      // After the MAIN tutorial completes, return to the Morning page (where
+      // the tutorial began) instead of leaving the user on Settings.
+      if (tutorialId === 'main' && pageName !== 'morning') {
+        window.location.href = 'morning.html';
+      }
       return;
     }
     var nextStepData = steps[nextStep];
@@ -1009,6 +1135,27 @@
       window.location.href = nextStepData.page + '.html?tutorial=true';
     } else {
       _tutorialState.step = nextStep;
+      renderTutorialStep();
+    }
+  }
+
+  // ─── Previous Step ───
+  function previousTutorial() {
+    if (!dom.tutorialOverlay) return;
+    var tutorialId = _tutorialState.id || 'main';
+    var steps = (tutorials[tutorialId] && tutorials[tutorialId].steps) || [];
+    var prevStep = (_tutorialState.step || 0) - 1;
+    if (prevStep < 0) return;
+    var prevStepData = steps[prevStep];
+    var currentPage = pageName;
+
+    // Mirror of advanceTutorial: if the previous step is on a different page,
+    // save state and navigate there; otherwise just render the previous step.
+    if (prevStepData.page && prevStepData.page !== currentPage) {
+      saveTutorialState(tutorialId, prevStep, _tutorialState.isReplay);
+      window.location.href = prevStepData.page + '.html?tutorial=true';
+    } else {
+      _tutorialState.step = prevStep;
       renderTutorialStep();
     }
   }
@@ -1187,7 +1334,24 @@
   // ============================================
   // HEADER
   // ============================================
+  // v2.37 (morning page only): time-of-day greeting helper
+  function greetingForTime() {
+    // Dev time override (0-23) shadows the real clock so the time-based
+    // greeting can be tested at any hour (Developer Panel → Day State)
+    var h = (devTimeOverride !== null) ? devTimeOverride : new Date().getHours();
+    if (h < 12) return 'greetingMorning';
+    if (h < 18) return 'greetingAfternoon';
+    return 'greetingEvening';
+  }
+
   function updateHeader() {
+    // Pages with a header page title (Morning/Day, v2.37): render the title
+    // from the element's own data-i18n key; other pages keep the greeting
+    if (dom.headerPageTitle) {
+      var titleKey = dom.headerPageTitle.getAttribute('data-i18n') || 'pageMorning';
+      dom.headerPageTitle.textContent = t(titleKey);
+      return;
+    }
     if (dom.headerGreeting) {
       var name = state.settings.ownerName || '';
       dom.headerGreeting.textContent = t('greeting') + ' ' + name + ' \ud83d\udc4b';
@@ -1200,7 +1364,7 @@
   function renderMorningCheck() {
     if (!dom.morningGreeting) return;
     var name = state.settings.ownerName || '';
-    dom.morningGreeting.textContent = t('morningGreeting') + ', ' + name + ' \ud83d\udc4b';
+    dom.morningGreeting.textContent = t(greetingForTime()) + ', ' + name + ' \ud83d\udc4b';
     if (dom.morningSubtitle) dom.morningSubtitle.textContent = t('morningSubtitle');
 
     var lowItems = getLowStockItems();
@@ -1232,8 +1396,34 @@
       dom.morningYesterdayCard.style.display = 'none';
     }
 
+    // ── Overdue store banner (store left open across business days) ──
+    var staleOpen = isStaleOpenDay();
+    var overdueCard = document.getElementById('morningOverdueCard');
+    if (overdueCard) {
+      if (staleOpen) {
+        overdueCard.style.display = '';
+        var ovTitle = document.getElementById('morningOverdueTitle');
+        var ovDesc = document.getElementById('morningOverdueDesc');
+        var ovBtn = document.getElementById('morningOverdueReviewBtn');
+        if (ovTitle) ovTitle.textContent = '\u26a0\ufe0f ' + t('overdueTitle');
+        if (ovDesc) ovDesc.textContent = t('overdueDesc', {
+          date: formatDate(new Date(state.dayDate + 'T00:00:00')),
+          n: getDaysOpen()
+        });
+        if (ovBtn) ovBtn.textContent = t('overdueReview');
+      } else {
+        overdueCard.style.display = 'none';
+      }
+    }
+
     // Determine which button to show based on state
-    if (state.dayOpen) {
+    if (staleOpen) {
+      // Previous day was never closed → offer to close it and start today
+      if (dom.btnStartDay) {
+        dom.btnStartDay.innerHTML = '<span>' + t('overdueCloseStart') + '</span>';
+        dom.btnStartDay.onclick = closeStaleDayAndStartToday;
+      }
+    } else if (state.dayOpen) {
       // Day is currently open → show Close Store
       if (dom.btnStartDay) {
         dom.btnStartDay.innerHTML = '<span>' + t('closeDay') + ' \ud83c\udf19</span>';
@@ -1277,8 +1467,9 @@
       showToast(t('dayAlreadyOpen'));
       return;
     }
-    // If starting a day on a different date than the last business day, archive old sales
-    if (state.dayDate && state.dayDate !== todayStr()) {
+    // If starting a day on an earlier date than the last business day, archive old sales.
+    // Uses `<` (not `!==`) so a device clock moved backward never archives a "future" day.
+    if (state.dayDate && state.dayDate < todayStr()) {
       archiveDaySales();
     }
     state.dayDate = todayStr();
@@ -1295,11 +1486,71 @@
   }
 
   // ============================================
+  // OVERDUE STORE (left open across business days)
+  // ============================================
+  function closeStaleDayAndStartToday() {
+    if (!isStaleOpenDay()) return;
+    // Dev-override safety: with an override active, this archives the previous
+    // day's sales into REAL persisted history. Warn that closing the tab before
+    // clearing the override makes the change permanent (no snapshot to restore).
+    if (devDateOverride && !confirm(t('overdueDevConfirm'))) return;
+    // Save the previous day's sales to history (nothing is lost)
+    archiveDaySales();
+    // Open a fresh day for today
+    state.dayDate = todayStr();
+    state.dayArchived = false;
+    state.dayOpen = true;
+    state.todayExpenses = 0;
+    state.todayEarnings = 0;
+    saveState();
+    showToast(t('overdueArchivedToast'));
+    // Small delay so the confirmation toast is visible before navigating
+    setTimeout(function() { window.location.href = 'day.html'; }, 900);
+  }
+
+  // Show the previous (stale) day's sales so the owner can see what was recorded
+  function openOverdueReview() {
+    if (!state.dayDate) return;
+    var staleDate = state.dayDate;
+    var staleSales = state.sales.filter(function(s) { return s.date === staleDate; });
+    // If the stale day was already archived (e.g. dev-panel Start New Day),
+    // fall back to the archived sales copy kept in history.
+    if (staleSales.length === 0 && state.history) {
+      var h = state.history.find(function(x) { return x.date === staleDate; });
+      if (h && h.archivedSales) staleSales = h.archivedSales;
+    }
+    var listEl = document.getElementById('overdueReviewList');
+    var totalEl = document.getElementById('overdueReviewTotal');
+    if (listEl) {
+      if (staleSales.length === 0) {
+        listEl.innerHTML = '<div class="empty-state" style="padding:12px 0;">' + t('overdueReviewEmpty') + '</div>';
+      } else {
+        listEl.innerHTML = staleSales.map(function(s) {
+          return '<div class="closing-item">' +
+            '<span class="closing-item-name">' + s.productName + ' \u00d7 ' + (s.quantity || 1) + '</span>' +
+            '<span class="closing-item-value success">' + formatCurrency(s.amount) + '</span>' +
+          '</div>';
+        }).join('');
+      }
+    }
+    var total = staleSales.reduce(function(sum, s) { return sum + (s.amount || 0); }, 0);
+    if (totalEl) totalEl.textContent = t('overdueReviewTotal') + ': ' + formatCurrency(total);
+    var ov = document.getElementById('overdueReviewOverlay');
+    if (ov) ov.classList.add('open');
+  }
+
+  function closeOverdueReview() {
+    var ov = document.getElementById('overdueReviewOverlay');
+    if (ov) ov.classList.remove('open');
+  }
+
+  // ============================================
   // DAY MODE
   // ============================================
   function renderDayMode() {
     if (!dom.dayDate) return;
-    dom.dayDate.textContent = formatDate(new Date());
+    // Show the simulated date when a dev date override is active
+    dom.dayDate.textContent = formatDate(devDateOverride ? new Date(devDateOverride + 'T00:00:00') : new Date());
 
     var earnings = getTodayEarnings() + state.todayEarnings;
     var items = getTodayItemsSold();
@@ -1592,8 +1843,8 @@
   // CLOSING SCREEN
   // ============================================
   function showClosingScreen() {
-    if (!state.dayOpen) {
-      showToast(t('dayNotOpen'));
+    if (!state.dayOpen || isStaleOpenDay()) {
+      showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
       return;
     }
     // Redirect to closing page
@@ -1602,8 +1853,8 @@
 
   /** Navigate to day mode — guards against accessing day without starting the day */
   function navigateToDayMode() {
-    if (!state.dayOpen) {
-      showToast(t('dayNotOpen'));
+    if (!state.dayOpen || isStaleOpenDay()) {
+      showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
       return;
     }
     window.location.href = 'day.html';
@@ -2380,6 +2631,10 @@
             '<button class="dev-panel-btn" onclick="handleDevAction(\'toggleDayOpen\')">Toggle Day Open/Close</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'startNewDay\')">Start New Day (Archive + Open)</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'archiveDaySales\')">Archive Today\'s Sales</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'setDateOverride\')">Set Date Override (temp)</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'clearDateOverride\')">Clear Date Override</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'setTimeOverride\')">Set Time Override (temp)</button>' +
+            '<button class="dev-panel-btn" onclick="handleDevAction(\'clearTimeOverride\')">Clear Time Override</button>' +
             '<button class="dev-panel-btn" onclick="handleDevAction(\'resetTutorial\')">Reset Tutorial State</button>' +
           '</div>' +
           '<div class="dev-panel-section">' +
@@ -2510,6 +2765,12 @@
         state.dayOpen = false; state.todayExpenses = 0; state.todayEarnings = 0;
         state.settings.hasCompletedSetup = false;
         state.settings.launchCount = 0;
+        devDateOverride = null; // factory reset also clears the temporary dev override
+        devTimeOverride = null; // ...and the temporary dev time override
+        devStateSnapshot = null;
+        try { sessionStorage.removeItem('sss_v3_devDateOverride'); } catch(e) {}
+        try { sessionStorage.removeItem('sss_v3_devSnapshot'); } catch(e) {}
+        try { sessionStorage.removeItem('sss_v3_devTimeOverride'); } catch(e) {}
         saveState();
         window.location.href = 'index.html';
         return;
@@ -2579,6 +2840,61 @@
         saveState();
         showToast('Sales archived.');
         break;
+      case 'setDateOverride':
+        var ov = prompt('Enter override date (YYYY-MM-DD), or blank to clear:', devDateOverride || '');
+        if (ov === null) break;
+        ov = (ov || '').trim();
+        if (ov && (!/^\d{4}-\d{2}-\d{2}$/.test(ov) || isNaN(new Date(ov + 'T00:00:00').getTime()))) {
+          showToast('Invalid date. Use a real YYYY-MM-DD date.', 'error');
+          return;
+        }
+        if (ov && !devStateSnapshot) captureDevSnapshot(); // snapshot pre-test business state
+        devDateOverride = ov || null;
+        try {
+          if (devDateOverride) sessionStorage.setItem('sss_v3_devDateOverride', devDateOverride);
+          else sessionStorage.removeItem('sss_v3_devDateOverride');
+        } catch(e) {}
+        if (!devDateOverride) restoreDevSnapshot(); // blank input = clear → restore state
+        showToast(devDateOverride ? 'Dev date override set to ' + devDateOverride + ' (temporary, clears on tab close).' : 'Dev date override cleared. Business state restored.');
+        toggleDevPanel();
+        if (pageName === 'morning') renderMorningCheck();
+        break;
+      case 'clearDateOverride':
+        devDateOverride = null;
+        try { sessionStorage.removeItem('sss_v3_devDateOverride'); } catch(e) {}
+        restoreDevSnapshot(); // restore the exact pre-test business state
+        showToast('Dev date override cleared. Business state restored.');
+        toggleDevPanel();
+        if (pageName === 'morning') renderMorningCheck();
+        break;
+      case 'setTimeOverride':
+        var tOv = prompt('Enter override hour (0-23), or blank to clear:', devTimeOverride !== null ? String(devTimeOverride) : '');
+        if (tOv === null) break;
+        tOv = (tOv || '').trim();
+        if (tOv) {
+          var hour = parseInt(tOv, 10);
+          if (isNaN(hour) || hour < 0 || hour > 23) {
+            showToast('Invalid hour. Use 0-23.', 'error');
+            return;
+          }
+          devTimeOverride = hour;
+          try { sessionStorage.setItem('sss_v3_devTimeOverride', String(hour)); } catch(e) {}
+          showToast('Dev time override set to ' + hour + ':00 (temporary, clears on tab close).');
+        } else {
+          devTimeOverride = null;
+          try { sessionStorage.removeItem('sss_v3_devTimeOverride'); } catch(e) {}
+          showToast('Dev time override cleared. Real clock restored.');
+        }
+        toggleDevPanel();
+        if (pageName === 'morning') renderMorningCheck();
+        break;
+      case 'clearTimeOverride':
+        devTimeOverride = null;
+        try { sessionStorage.removeItem('sss_v3_devTimeOverride'); } catch(e) {}
+        showToast('Dev time override cleared. Real clock restored.');
+        toggleDevPanel();
+        if (pageName === 'morning') renderMorningCheck();
+        break;
       case 'resetTutorial':
         state.settings.launchCount = 0;
         state.settings.hasCompletedSetup = true;
@@ -2615,7 +2931,16 @@
   // ============================================
   // EVENT WIRING
   // ============================================
+  function setupLanguageChanged() {
+    // Setup overlay: switch language instantly (web parity with mobile).
+    if (dom.setupLanguage) state.settings.language = dom.setupLanguage.value;
+    applyTranslations();
+  }
+
   function setupEvents() {
+    if (dom.setupLanguage) {
+      dom.setupLanguage.addEventListener('change', setupLanguageChanged);
+    }
     if (dom.closingActualSales) dom.closingActualSales.addEventListener('input', updateClosingTotal);
     if (dom.productCost) dom.productCost.addEventListener('input', updateMarkupHint);
     if (dom.productMarkup) dom.productMarkup.addEventListener('input', updateMarkupHint);
@@ -2679,11 +3004,29 @@
     cacheDom();
     loadState();
 
+    // Restore temporary dev date override from sessionStorage (never persisted)
+    try { devDateOverride = sessionStorage.getItem('sss_v3_devDateOverride') || null; } catch(e) {}
+    // Restore temporary dev time override from sessionStorage (never persisted)
+    try {
+      var tRaw = sessionStorage.getItem('sss_v3_devTimeOverride');
+      if (tRaw !== null && tRaw !== '') devTimeOverride = parseInt(tRaw, 10);
+      if (devTimeOverride !== null && (isNaN(devTimeOverride) || devTimeOverride < 0 || devTimeOverride > 23)) devTimeOverride = null;
+    } catch(e) {}
+    // Restore the pre-override business-day snapshot so clearing later can undo the test
+    try {
+      var snapRaw = sessionStorage.getItem('sss_v3_devSnapshot');
+      if (snapRaw) devStateSnapshot = JSON.parse(snapRaw);
+    } catch(e) {}
+
     // Handle each page type
     if (pageName === 'index') {
       // Landing page: Setup overlay only (first-time setup)
       if (!state.settings.hasCompletedSetup && dom.setupOverlay) {
         dom.setupOverlay.classList.add('open');
+        // Render the overlay in the persisted language immediately (web parity
+        // with mobile — the setup screen localizes on load and on change).
+        if (dom.setupLanguage) dom.setupLanguage.value = state.settings.language || 'fil';
+        applyTranslations();
       } else {
         // Already set up, redirect to morning
         window.location.href = 'morning.html';
@@ -2695,6 +3038,15 @@
       // Tutorial resume handled, no further page init needed
     } else if (pageName === 'morning') {
       // Morning check page
+      // ── Overdue store detection ──
+      // If the store was left open from a previous calendar day (dayOpen &&
+      // dayDate < today), do NOT silently archive and close. renderMorningCheck()
+      // surfaces an overdue banner (opened date + days open) and offers
+      // "Close Old Day & Start Today" or "Review Last Day's Sales" so the owner
+      // decides. Uses `<` so a device clock moved backward never archives a
+      // "future" day. NOTE: morning.html is the app entry point; other pages
+      // are guarded by dayOpen checks, so this single detection point covers
+      // normal flows.
       applyTranslations();
       renderMorningCheck();
       // Auto-start main tutorial on fresh app launch (cleared on tab close)
@@ -2713,8 +3065,10 @@
       }
     } else if (pageName === 'day') {
       // Day mode page
-      if (!state.dayOpen) {
-        showToast(t('dayNotOpen'));
+      // If the store is closed, or the open day belongs to a previous business
+      // day (stale), route to Morning — where the overdue banner lives.
+      if (!state.dayOpen || isStaleOpenDay()) {
+        showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
         setTimeout(function() { window.location.href = 'morning.html'; }, 1500);
         return;
       }
@@ -2722,8 +3076,10 @@
       renderDayMode();
     } else if (pageName === 'closing') {
       // Evening closing page
-      if (!state.dayOpen) {
-        showToast(t('dayNotOpen'));
+      // If the store is closed, or the open day belongs to a previous business
+      // day (stale), route to Morning — where the overdue banner lives.
+      if (!state.dayOpen || isStaleOpenDay()) {
+        showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
         setTimeout(function() { window.location.href = 'morning.html'; }, 1500);
         return;
       }
@@ -2825,9 +3181,13 @@
   window.setTextSize = setTextSize;
   window.startTutorial = startTutorial;
   window.advanceTutorial = advanceTutorial;
+  window.previousTutorial = previousTutorial;
   window.endTutorial = endTutorial;
   window.reopenClosing = reopenClosing;
   window.archiveDaySales = archiveDaySales;
+  window.closeStaleDayAndStartToday = closeStaleDayAndStartToday;
+  window.openOverdueReview = openOverdueReview;
+  window.closeOverdueReview = closeOverdueReview;
   window.historyBack = historyBack;
 
 })();

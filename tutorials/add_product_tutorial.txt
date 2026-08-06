@@ -1,0 +1,47 @@
+SARI-SARI SMART — ADD PRODUCT TUTORIAL (5 STEPS)
+=================================================
+Config: app.js -> tutorials.add_product
+Page: add_product
+Launch: header tutorial button on add_product.html (startTutorial('add_product', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This page lets you add a new product to your inventory."
+  Text FIL: "Ang page na ito ay para magdagdag ng bagong produkto sa iyong inventory."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Product fields
+  Text EN : "Enter the item name, quantity, cost price, and selling price."
+  Text FIL: "Ilagay ang pangalan ng item, dami, presyo ng stock, at presyo ng benta."
+  Target element : #productName
+  Highlight      : Product name input (top) -> box expected at bottom
+  Interaction    : look at fields, tap Next
+----------------------------------------------------------------------
+STEP 3 — Markup
+  Text EN : "Set the markup percentage. The markup helper automatically suggests the right selling price."
+  Text FIL: "Itakda ang markup percentage. Ang markup helper ay awtomatikong nagmumungkahi ng tamang selling price."
+  Target element : #productCost
+  Highlight      : Cost price input (with markup helper) -> box per runtime rule
+  Interaction    : look at markup helper, tap Next
+----------------------------------------------------------------------
+STEP 4 — Selling price
+  Text EN : "Enter the selling price or accept the suggested price from the markup helper."
+  Text FIL: "Ilagay ang presyo ng benta o tanggapin ang mungkahi mula sa markup helper."
+  Target element : #productPrice
+  Highlight      : Selling price input -> box per runtime rule
+  Interaction    : look at input, tap Next
+----------------------------------------------------------------------
+STEP 5 — Save
+  Text EN : "Tap \"Save\" to add the product to your inventory. You can edit it later from the Stock page."
+  Text FIL: "I-tap \"Save\" para idagdag ang produkto sa iyong inventory. Maaari mo itong i-edit mamaya mula sa Stock page."
+  Target element : .btn-primary.btn-full
+  Highlight      : Save button (bottom) -> box expected at top
+  Interaction    : see the button, tap Next (finishes tutorial in place)

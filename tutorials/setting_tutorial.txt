@@ -1,0 +1,47 @@
+SARI-SARI SMART — SETTINGS TUTORIAL (5 STEPS)
+==============================================
+Config: app.js -> tutorials.setting
+Page: setting
+Launch: header tutorial button on setting.html (startTutorial('setting', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This is the Settings page — customize your app experience."
+  Text FIL: "Ito ang Settings page — i-customize ang iyong app experience."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Language
+  Text EN : "Choose between English and Filipino for the app language."
+  Text FIL: "Pumili sa pagitan ng English at Filipino para sa wika ng app."
+  Target element : #settingsLanguage
+  Highlight      : Language selector (top) -> box expected at bottom
+  Interaction    : look at selector, tap Next
+----------------------------------------------------------------------
+STEP 3 — Text size
+  Text EN : "Adjust text size to Standard, Large, or Extra Large for better readability."
+  Text FIL: "Ayusin ang laki ng teksto sa Standard, Large, o Extra Large para sa mas magandang readability."
+  Target element : .text-size-options
+  Highlight      : Text size options -> box per runtime rule
+  Interaction    : look at options, tap Next
+----------------------------------------------------------------------
+STEP 4 — Store name
+  Text EN : "Enter your store name to personalize your app header."
+  Text FIL: "Ilagay ang pangalan ng iyong tindahan para i-personalize ang app header."
+  Target element : #settingsStoreName
+  Highlight      : Store name input -> box per runtime rule
+  Interaction    : look at input, tap Next
+----------------------------------------------------------------------
+STEP 5 — Owner name
+  Text EN : "Enter your owner name for a personalized greeting each day."
+  Text FIL: "Ilagay ang pangalan ng may-ari para sa personalized na pagbati araw-araw."
+  Target element : #settingsOwnerName
+  Highlight      : Owner name input -> box per runtime rule
+  Interaction    : look at input, tap Next (finishes tutorial in place)

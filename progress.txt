@@ -1983,3 +1983,758 @@ web and mobile apps.
      - style.css: .customer-suggestion-item changed to flex layout;
        .customer-suggestion-name, .customer-suggestion-balance,
        .customer-suggestion-balance.settled added
+
+=== v2.28 Sell button navigation fix — Morning page (July 31, 2026) ===
+
+Investigation (web-only bug report) found that the Sell (Benta) button on the
+Morning page was silently non-functional while the store is open. Root cause:
+the bottom-nav Sell FAB was wired to openSaleSheet(), which only opens the
+in-page sale sheet overlay (#saleSheetOverlay — DOM exists only on day.html).
+On morning.html that element is absent, so every DOM access in openSaleSheet()
+was null-guarded and the call no-oped: no sheet, no navigation, no toast, no
+console error. The identical flow worked from closing.html because its Sell
+button uses navigateToDayMode() instead.
+
+[✓] Fixed: morning.html — Sell (Benta) button now navigates to Day page
+     - Changed bottom-nav FAB onclick from openSaleSheet() to navigateToDayMode()
+     - navigateToDayMode() guards on state.dayOpen (shows "dayNotOpen" toast if
+       store is closed) then redirects to day.html — same pattern as closing.html
+       and matches the mobile app's behavior (guard + navigate to Day)
+     - day.html Sell button left unchanged — openSaleSheet() is correct there
+       because the sale sheet DOM exists on that page
+
+[✓] Verification:
+     - grep: morning.html now has 1 navigateToDayMode ref, 0 openSaleSheet refs
+     - window.navigateToDayMode confirmed exported (app.js line 2788)
+     - HTML attribute-only change; no JS modified (no syntax validation needed)
+
+[✓] Affected files:
+     - morning.html: line 105 — nav-fab-item onclick="openSaleSheet()" →
+       onclick="navigateToDayMode()"
+
+=== v2.29 Fix: stale-day reconciliation + temporary dev date override (July 31, 2026) ===
+
+Investigation result: a store left open across calendar days was never auto-closed
+(implementation gap, not a documented product decision). Added a dev-only temporary
+date override to test time-dependent features.
+
+[✓] Fix 1 — Stale-day reconciliation
+     - init() morning branch: if state.dayOpen && state.dayDate != todayStr(), archive
+       the stale day's sales via archiveDaySales() and set dayOpen=false so Morning
+       shows "Start the Day" instead of a misleading "Close Store".
+
+[✓] Fix 2 — Temporary dev date override (dev-only, session-scoped)
+     - New module var devDateOverride checked first in todayStr()
+     - Stored ONLY in sessionStorage (sss_v3_devDateOverride) — cleared when the tab
+       closes, NEVER written to localStorage/state/exported data, so it never persists
+     - Dev Panel (Shift+N) → Day State: "Set Date Override (temp)" + "Clear Date
+       Override" buttons; validates a real YYYY-MM-DD (rejects 2026-99-99)
+     - Day page header date honors the override for realistic simulation
+
+Syntax validation: PASSED (node -c app.js)
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - progress.txt: This entry
+     - Dev Panel resetAll now also clears the session override (parity with mobile)
+       resetAllData)
+
+
+=== v2.31 Fix: dev date override now snapshot/restores business state (July 31, 2026) ===
+
+Issue: clearing the temporary date override restored the date but not the
+previous business state — the open day's sales had been archived (and the
+store closed) by the stale-day reconcile while the override was active.
+
+[✓] Fix — snapshot/restore (sessionStorage, never persisted)
+     - captureDevSnapshot(): on Set Date Override, deep-copies {dayOpen,
+       dayDate, dayArchived, todayExpenses, todayEarnings, sales} into
+       sessionStorage (sss_v3_devSnapshot) before the override takes effect
+     - restoreDevSnapshot(): on Clear (or blank input), re-adds the snapshot
+       sales (dedupe by id), restores the flags + closing inputs, removes the
+       archive-only history copy, and saveState()
+     - init() reloads the snapshot from sessionStorage so it survives reloads
+     - resetAll factory reset also clears the snapshot
+
+Syntax validation: PASSED (node -c app.js)
+Code review: Go ✓ (override never persists; restore dedupes by sale id)
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - progress.txt: This entry
+
+
+=== v2.32 Overdue store handling — never silently close a day left open (July 31, 2026) ===
+
+Issue: a store left open across business days was silently auto-archived on
+Morning load (v2.29 reconcile) — the user was never told the previous day was
+still open, saw no date or days-elapsed, and the old day's closing record was
+never made (history entry had earnings:0/actualSales:0).
+
+[✓] Fix 1 — Overdue detection (clock-backward safe)
+     - isStaleOpenDay(): dayOpen && dayDate && dayDate < todayStr()
+     - Uses `<` (not `!==`) so a device clock moved backward never archives a
+       "future" day. Applied to startDay() and the init() morning detection.
+     - getDaysOpen(): whole calendar days the open day has been open (0=today),
+       honors the dev date override; isNaN-guarded.
+
+[✓] Fix 2 — Surface, don't hide: Morning overdue banner
+     - renderMorningCheck() shows #morningOverdueCard (amber warning card):
+       title "The store wasn't closed" + "Opened {date} · Open for {n} days"
+     - Primary button becomes "Close Old Day & Start Today" → closeStaleDayAndStartToday()
+       (archives the stale day's sales to history, then opens a fresh day for
+       today; 900ms delayed navigation so the confirmation toast is visible)
+     - Secondary button "Review Last Day's Sales" → openOverdueReview() modal
+       listing that day's sales + total (falls back to history[].archivedSales
+       if the day was already archived); closeOverdueReview()
+     - init() morning branch no longer auto-archives; the banner + actions give
+       the owner control.
+
+[✓] Fix 3 — Stale-day guards on Day/Closing pages
+     - day.html and closing.html init: merged guard `!dayOpen || isStaleOpenDay()`
+       redirects to Morning with toast overdueRedirect ("Please close the previous
+       day on the Morning page.") so the banner is always the entry point.
+
+[✓] i18n — 9 new EN/FIL strings: overdueTitle, overdueDesc, overdueCloseStart,
+     overdueReview, overdueReviewTitle, overdueReviewEmpty, overdueReviewTotal,
+     overdueArchivedToast, overdueRedirect
+
+Syntax validation: PASSED (node -c app.js)
+Code review: Go ✓ (2 rounds)
+Browser test: ✓ (seed harness; banner, date, days, primary button verified;
+     harness deleted after test)
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/morning.html (banner card + review overlay)
+     - git/Sari-sari_smart/style.css (.morning-card.overdue-banner styles)
+     - progress.txt: This entry
+
+
+=== v2.33 Overdue workflow refinements — nav blocking, override safety (July 31, 2026) ===
+
+Follow-up to v2.32 per investigation: (1) block navigation at the source so
+Morning never round-trips through Day/Closing, (2) harden the dev-date-override
+safety net against permanent data changes, (3) make the review button label
+i18n-robust.
+
+[✓] Fix 1 — Block navigation at the source (no page round-trip)
+     - navigateToDayMode() and showClosingScreen() now check
+       `!dayOpen || isStaleOpenDay()` and show the overdueRedirect toast
+       directly on Morning — the user is never navigated to day.html/closing.html
+       and bounced back. Previously the bottom-nav FAB/Isara only checked
+       !dayOpen, so a stale day (dayOpen=true) navigated then got redirected.
+
+[✓] Fix 2 — Dev override can never permanently destroy business data
+     - closeStaleDayAndStartToday(): if a dev date override is active, shows a
+       confirm() warning (overdueDevConfirm EN/FIL): archiving writes to REAL
+       persisted history and becomes permanent if the tab is closed before the
+       override is cleared.
+     - restoreDevSnapshot(): now REPLACES state.sales with the exact pre-test
+       snapshot list instead of merging, so sales recorded during the test
+       (dated to the override date) are purged on clear — no test data leaks
+       into real records.
+
+[✓] Fix 2b — History restored exactly too (no test EOD/archive leaks)
+     - captureDevSnapshot() also deep-copies state.history into the snapshot.
+     - restoreDevSnapshot() restores the exact pre-test history list, purging
+       any history entries created during the test (e.g. an EOD or zeroed
+       archive entry dated to the override date). Older pre-v2.34 snapshots
+       fall back to removing only the archive-only sales copy for the snap day.
+
+[✓] Fix 3 — Review button i18n robustness
+     - morning.html #morningOverdueReviewBtn gains data-i18n="overdueReview"
+       so applyTranslations() also localizes it (JS still overrides per render).
+
+Dev date override contract (documented):
+     - Override + snapshot live only in sessionStorage — never persisted to
+       localStorage/settings, cleared with the tab.
+     - Actions taken while the override is active (archives, new day, sales)
+       write to REAL persisted state; clearing the override restores the exact
+       pre-test state ONLY if the snapshot is still present.
+     - Closing the tab / clearing sessionStorage before clearing the override
+       makes any archiving permanent — hence the confirm() guard.
+     - Edge case: if the override is set to the REAL current date, sales
+       recorded during the test are dated to the real day and are purged on
+       clear too (they are treated as test data). Use a distinct simulated
+       date when you want to keep real-day records untouched.
+
+Syntax validation: PASSED (node -c app.js)
+Code review: Go ✓
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/morning.html (data-i18n on review button)
+     - progress.txt: This entry
+
+
+=== v2.35 Overdue store workflow — complete (July 31, 2026) ===
+
+The overdue store workflow (investigation → v2.32 banner → v2.33 nav blocking →
+v2.34 override safety) is now complete in the web app:
+
+[✓] Overdue detection — isStaleOpenDay() (dayOpen && dayDate < today,
+    clock-backward safe) + getDaysOpen() (isNaN-guarded)
+[✓] Morning overdue banner — opened date + "Open for N days" + primary
+    "Close Old Day & Start Today" + secondary "Review Last Day's Sales" modal
+[✓] Navigation blocked at source — Morning FAB/Isara + Day/Closing page
+    guards (`!dayOpen || isStaleOpenDay()`), no page round-trip
+[✓] Dev date override safety — confirm() guard before archiving + exact
+    snapshot/restore of sales AND history (test-period data purged on clear)
+[✓] EN/FIL i18n for all overdue strings; data-i18n on the review button
+[✓] Dev override contract documented (see v2.33 entry)
+
+⏳ NOT YET PORTED: the mobile app (git/app/Sari-sari_smart_APP and the
+    standalone Sari-sari_smart copy) still silently auto-archives stale days
+    via reconcileStaleDay() — the overdue banner, nav blocking, and override
+    safety net have not been ported. See the PENDING PORT note in the mobile
+    progress.txt.
+
+Syntax validation: PASSED (node -c app.js)
+Code review: Go ✓
+Affected files:
+     - git/Sari-sari_smart/app.js, morning.html, style.css (v2.32-2.34)
+     - progress.txt: This entry
+
+================================================================================
+v2.36 — Overdue review overlay fix (July 31, 2026)
+================================================================================
+
+Bug: clicking "Review Last Day's Sales" (morningOverdueReviewBtn) on the overdue
+banner did nothing — the review overlay never appeared.
+
+Root cause: CSS specificity. The overlay element (#overdueReviewOverlay) carried
+an inline style="display:none;z-index:55;" while openOverdueReview() shows it by
+adding the .open class (.overlay.open { display:flex }, style.css). Inline styles
+out-specify any stylesheet class rule, so the inline display:none always won and
+the overlay stayed hidden — even though the JS ran (list + total were populated
+behind the scenes). Every other overlay either has no inline display (summary,
+setup — class-based) or is opened by setting style.display directly (debt detail),
+so only this overlay was broken.
+
+Fix: removed the inline display:none from morning.html (kept z-index:55), so the
+.open class now controls visibility — same pattern as summaryOverlay/setupOverlay.
+
+Validation: node -c app.js ✓ (no JS change needed); CSS cascade verified
+statically — base .overlay{display:none} still hides by default, .overlay.open
+{display:flex} now wins (inline display removed), so the overlay shows when
+openOverdueReview() adds the 'open' class. (Live browser automation was
+attempted but unavailable in the dev environment; the cascade logic is
+deterministic.)
+Affected files:
+     - git/Sari-sari_smart/morning.html
+     - progress.txt: This entry
+
+================================================================================
+v2.36b — Cross-platform sync note (July 31, 2026)
+================================================================================
+
+Follow-up to the v2.35 "⏳ NOT YET PORTED" note above: that note is now
+RESOLVED. The overdue store workflow was fully ported to BOTH mobile copies
+earlier today:
+
+  [✓] git/app/Sari-sari_smart_APP  → Phase 29 (git copy)
+  [✓] Sari-sari_smart (standalone) → Phase 29
+
+Both mobile copies now have: overdue detection (isStaleOpenDay/getDaysOpen),
+Morning overdue banner, "Review Last Day's Sales" modal, navigation blocked at
+source, dev-override confirm + snapshot REPLACE safety, and all overdue EN/FIL
+strings — matching web v2.32-2.35.
+
+v2.36 (this file, above) is a WEB-ONLY CSS fix: the overdue review overlay's
+inline display:none out-specified the .overlay.open class rule, so the review
+modal never appeared in the web app. Mobile was never affected (its review modal
+is a Compose AlertDialog, not CSS-driven). No mobile change was required for
+v2.36; both copies remain in parity.
+
+Validation: node -c app.js ✓ (web), compileDebugKotlin ✓ (both mobile copies),
+code review ✓. Unit tests: 2 pre-existing AppViewModelTest failures in both
+mobile copies (profit = actual-cost asserted vs per-sale profit in production —
+unrelated to the overdue workflow, tracked separately).
+Affected files:
+     - progress.txt: This entry (documentation only)
+
+================================================================================
+v2.37 — ⏳ UNFINISHED: Greeting & header consistency fixes (July 31, 2026)
+================================================================================
+  Status: PENDING — fully implemented as v2.37, then REVERTED on request
+  ("undo"). No code from this task is currently applied.
+
+  Investigation findings it addresses (web + mobile, web = reference):
+  1. Greeting is always "Good morning!" — no time-of-day awareness.
+  2. Mobile Morning body greeting omits the owner name (web already shows it).
+  3. Duplicate greeting — header AND Morning body both greet.
+  4. Closing page header block is left-aligned on mobile (web already centers).
+
+  Approved approach (per issue: 1=A, 2=A, 3=C, 4=A):
+  - Dynamic time greeting (morning/afternoon/evening, EN + FIL).
+  - Header page titles on Morning/Day/Closing (data-i18n) with the personalized
+    greeting moved into the page bodies (added to Day & Closing bodies).
+  - Closing centering = web-only reference, no web change needed.
+
+  Implemented then reverted (web app): app.js (+4 i18n keys per lang,
+  greetingForTime()/renderGreeting() helpers, updateHeader() removed),
+  morning.html/day.html/closing.html (header-greeting span → h1 page titles,
+  day & closing gained .moment-greeting body blocks), style.css
+  (.header-page-title, .moment-greeting). ALL REVERTED — verified back to
+  pre-v2.37 state (node -c ✓, zero v2.37 artifacts, updateHeader() +
+  headerGreeting restored everywhere, progress.txt entry removed).
+
+  Remaining to do when approved:
+  - Re-apply the web changes above.
+  - Port to mobile (git copy + standalone): issues 1, 2, and 4 are mobile-side
+    gaps (3 affects both).
+
+Affected files: (none — reverted) / progress.txt: This entry (documentation only)
+
+================================================================================
+v2.37 — Greeting & header consistency (MORNING PAGE ONLY re-apply) (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Applied — WEB MORNING PAGE ONLY (per request).
+
+  Follow-up to the v2.37 entry above (which was fully implemented then REVERTED
+  on request). The user approved re-applying v2.37 — but for now ONLY on the
+  web app's Morning page. Day/Closing pages and both mobile copies are
+  intentionally untouched.
+
+  What was applied (web app):
+  [✓] app.js — +4 i18n keys per language (EN + FIL):
+        greetingMorning / greetingAfternoon / greetingEvening / pageMorning
+  [✓] app.js — new greetingForTime() helper: h<12 → greetingMorning,
+      h<18 → greetingAfternoon, else greetingEvening (time-of-day greeting)
+  [✓] app.js — updateHeader() is now page-aware: when dom.headerPageTitle
+      exists (morning page) it renders the page title (t('pageMorning')) and
+      returns; otherwise it falls back to the original greeting behavior
+      (t('greeting') + owner name + 👋) for all other pages (index/day/closing
+      keep the header greeting as-is — no change there).
+  [✓] app.js — renderMorningCheck() body greeting now uses
+      t(greetingForTime()) instead of t('morningGreeting'), so the Morning
+      body greeting changes with the time of day.
+  [✓] morning.html — header greeting span (#headerGreeting) replaced with
+      <h1 class="header-page-title" id="headerPageTitle" data-i18n="pageMorning">Umaga</h1>
+      (fixes the duplicate-greeting issue #3 on the Morning page).
+  [✓] style.css — new .header-page-title rule (text-base, 700 weight, white,
+      no margin, ellipsis overflow) alongside .header-greeting.
+
+  Validation:
+  - node -c app.js ✓
+  - Browser (Chrome) verification of morning.html ✓: header shows "Umaga"
+    (page title, NOT a greeting); body greeting shows time-based text
+    ("Magandang umaga!, May-ari 👋"); zero console errors.
+  - Code review ✓ (tutorial step targets checked — no step references
+    #headerGreeting, so removing the span on Morning breaks nothing).
+
+  NOT applied (deferred, per request):
+  - Day page & Closing page changes (their headers still show the greeting;
+    body greeting blocks not added yet)
+  - Mobile port (git copy + standalone): issues 1, 2, 4 remain mobile-side
+    gaps (owner name in Morning body, time-aware greeting, closing centering)
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/morning.html
+     - git/Sari-sari_smart/style.css
+     - progress.txt: This entry
+
+================================================================================
+v2.37 — Greeting & header consistency (DAY PAGE re-apply) (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Applied — WEB DAY PAGE ONLY (per request).
+
+  Continuation of the v2.37 morning-only re-apply. The user approved extending
+  v2.37 to the web app's Day page. Closing page and both mobile copies remain
+  intentionally untouched.
+
+  What was applied (web app):
+  [✓] app.js — +2 i18n keys per language (EN + FIL): pageDay
+        (EN 'Day' / FIL 'Araw')
+  [✓] app.js — updateHeader() now renders the header page title from the
+      element's OWN data-i18n attribute (titleKey = getAttribute('data-i18n')
+      || 'pageMorning'), so any page with #headerPageTitle gets the right
+      title automatically (morning=pageMorning, day=pageDay, future
+      closing=pageClosing). Greeting fallback unchanged for other pages.
+  [✓] app.js — 'dayGreeting' added to cacheDom ids list
+  [✓] app.js — renderDayMode() sets the Day body greeting to a time-based
+      personalized greeting: t(greetingForTime()) + ', ' + ownerName + ' 👋'
+  [✓] day.html — header greeting span (#headerGreeting) replaced with
+      <h1 class="header-page-title" id="headerPageTitle" data-i18n="pageDay">Araw</h1>
+  [✓] day.html — new .moment-greeting body block added above the day summary:
+      <div class="moment-greeting" id="dayGreeting"></div>
+  [✓] style.css — new .moment-greeting rule (mirrors .morning-greeting,
+      text-2xl / 800 / var(--text), plus margin-bottom: 12px)
+
+  Validation:
+  - node -c app.js ✓
+  - Browser (Chrome) verification of day.html ✓: header shows "Araw" (page
+    title, NOT a greeting); greeting block above the summary shows
+    "Magandang umaga!, May-ari 👋"; no redirect; zero console errors (only a
+    pre-existing form-label accessibility warning)
+  - Code review ✓ (tutorial step targets on day page reference #daySummary /
+    #navSale — none reference #headerGreeting; updateHeader fallback for
+    index/closing unaffected)
+
+  NOT applied (deferred, per request):
+  - Closing page changes (header still shows greeting; body greeting block not
+    added yet)
+  - Mobile port (git copy + standalone): issues 1, 2, 4 remain mobile-side
+    gaps (owner name in Morning body, time-aware greeting, closing centering)
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/day.html
+     - git/Sari-sari_smart/style.css
+     - progress.txt: This entry
+
+================================================================================
+v2.37 — Day page changes REVERTED (Aug 1, 2026)
+================================================================================
+  Status: Reverted — Day page v2.37 changes undone on request ("undo changes
+  in day page"). The approved Morning page v2.37 changes remain APPLIED.
+
+  Reverted (web app):
+  [×] app.js — pageDay i18n keys (EN 'Day' / FIL 'Araw') removed
+  [×] app.js — updateHeader() restored to the morning-only version
+      (hardcoded t('pageMorning') for #headerPageTitle; greeting fallback
+      for other pages). The data-i18n-driven titleKey version was removed.
+  [×] app.js — 'dayGreeting' removed from cacheDom ids list
+  [×] app.js — renderDayMode() time-based greeting block removed
+  [×] day.html — header page title h1 reverted to the original
+      <span class="header-greeting" id="headerGreeting">Magandang araw! 👋</span>
+  [×] day.html — .moment-greeting#dayGreeting body block removed
+  [×] style.css — .moment-greeting rule removed
+
+  KEPT (approved, still applied):
+  [✓] Morning page v2.37: greetingForTime()/greetingMorning|Afternoon|
+      Evening/pageMorning keys, page-aware updateHeader() (morning title
+      branch), renderMorningCheck() time-based greeting, morning.html
+      #headerPageTitle h1, style.css .header-page-title rule
+
+  Validation: node -c app.js ✓; grep confirms zero Day artifacts
+  (pageDay/dayGreeting/titleKey all gone); day.html greeting span restored.
+  Code review ✓.
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/day.html
+     - git/Sari-sari_smart/style.css
+     - progress.txt: This entry
+
+================================================================================
+v2.37 — Day page HEADER-TITLE ONLY re-apply (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Applied — WEB DAY PAGE ONLY, HEADER ONLY (per request).
+
+  The user clarified the Day page v2.37 scope: ONLY the header should change
+  (greeting → page title). NO body greeting on the Day page.
+
+  What was applied (web app):
+  [✓] app.js — +1 i18n key per language: pageDay (EN 'Day' / FIL 'Araw')
+  [✓] app.js — updateHeader() restored to the data-i18n-driven version:
+      titleKey = headerPageTitle.getAttribute('data-i18n') || 'pageMorning',
+      so Morning renders pageMorning and Day renders pageDay; index/closing
+      keep the headerGreeting fallback (no #headerPageTitle there)
+  [✓] day.html — header greeting span (#headerGreeting) replaced with
+      <h1 class="header-page-title" id="headerPageTitle" data-i18n="pageDay">Araw</h1>
+  [ ] NO body greeting added (dayGreeting / .moment-greeting / renderDayMode
+      change deliberately omitted per request)
+
+  style.css needed no change (.header-page-title already exists from Morning).
+
+  Validation: node -c app.js ✓; browser (Chrome) verification of day.html ✓:
+  header shows "Araw" (page title, NOT a greeting); NO greeting block above
+  the day summary; no redirect; zero console errors. Code review ✓.
+
+  NOT applied (deferred, per request):
+  - Closing page changes
+  - Mobile port (git copy + standalone)
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/day.html
+     - progress.txt: This entry
+
+================================================================================
+v2.37 — Closing page HEADER-TITLE ONLY re-apply (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Applied — WEB CLOSING PAGE ONLY, HEADER ONLY (per request).
+
+  Completes the v2.37 web scope for the three moment pages (Morning/Day/
+  Closing), all with the same header-title-only pattern: the header shows a
+  page title instead of a greeting, and NO body greeting block.
+
+  What was applied (web app):
+  [✓] app.js — +1 i18n key per language: pageClosing (EN 'Close' /
+      FIL 'Isara')
+  [✓] closing.html — header greeting span (#headerGreeting) replaced with
+      <h1 class="header-page-title" id="headerPageTitle" data-i18n="pageClosing">Isara</h1>
+  [✓] updateHeader() — no change needed; it already renders the title from
+      the element's own data-i18n key (titleKey fallback pageMorning), so
+      closing=pageClosing is covered automatically
+  [ ] NO body greeting added (deliberately omitted per request)
+
+  style.css needed no change (.header-page-title already exists).
+
+  Validation: node -c app.js ✓; browser (Chrome) verification of closing.html
+  ✓: header shows "Isara" (page title, NOT a greeting); no greeting block in
+  the body; no redirect; zero console errors. Code review ✓.
+
+  Now consistent across all three web moment pages:
+  - Morning: header "Umaga"/"Morning" + time-based body greeting
+  - Day: header "Araw"/"Day" (no body greeting)
+  - Closing: header "Isara"/"Close" (no body greeting)
+
+  NOT applied (deferred): mobile port (git copy + standalone).
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/closing.html
+     - progress.txt: This entry
+
+================================================================================
+v2.38 — Dev Time Override (temporary hour for greeting tests) (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Applied — WEB APP ONLY.
+
+  Adds a dev-only temporary HOUR override (0-23) to test the v2.37 time-based
+  greeting without changing the device clock. Mirrors the devDateOverride
+  contract exactly: sessionStorage only, cleared on tab close, never written
+  to state/localStorage, never alters real data.
+
+  What was added (app.js):
+  [✓] var devTimeOverride = null (0-23 or null)
+  [✓] greetingForTime() — h = devTimeOverride !== null ? devTimeOverride
+      : new Date().getHours(); only consumer, so the override cannot leak
+      into dates, day state, or transaction time-ago labels
+  [✓] Dev panel (Shift+N → Day State): 'Set Time Override (temp)' +
+      'Clear Time Override' buttons
+  [✓] handleDevAction('setTimeOverride') — prompt hour 0-23 (blank = clear),
+      parseInt + range validation (invalid → error toast, panel stays open),
+      sessionStorage set/remove, toast confirm, re-renders morning page
+  [✓] handleDevAction('clearTimeOverride') — resets to real clock
+  [✓] resetAll — clears var + sessionStorage key
+  [✓] init() — restores from sessionStorage with parseInt + NaN/range guard
+
+  Validation: node -c app.js ✓; browser (Chrome) verification ✓ — hour 7 →
+  "Magandang umaga", 15 → "Magandang hapon", 21 → "Magandang gabi", clear →
+  real clock; zero console errors. Code review ✓.
+
+  Note: interaction style is prompt-based (consistent with setDateOverride).
+  One-tap quick slots (Morning/Afternoon/Evening) remain a possible
+  enhancement if desired.
+
+  NOT applied (deferred): mobile port.
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - progress.txt: This entry
+
+================================================================================
+v2.39 — STATUS UPDATE: v2.37 + v2.38 ported to mobile (git copy) (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Documentation sync.
+
+  Supersedes the "NOT applied (deferred): mobile port" notes in the v2.37
+  (Closing page header-title) and v2.38 (Dev Time Override) entries below —
+  the mobile port WAS completed after those entries were written, as
+  PHASE 30 on the git mobile copy (git/app/Sari-sari_smart_APP).
+
+  What the mobile port delivered (Phase 30, git copy only):
+  [✓] v2.37 — pageMorning/pageDay/pageClosing header titles on the
+      Morning/Day/Closing screens; time-based Morning body greeting
+      (greetingMorning/Afternoon/Evening, EN+FIL) including the owner name
+      (fixes the mobile gap where Morning body omitted it)
+  [✓] v2.38 — Dev Time Override: DeveloperPanel.kt gained a "Dev Time
+      Override (temporary)" row (hour 0-23 + Set/Clear with toasts);
+      AppViewModel gained devTimeOverride state + greetingForTimeKey()
+      (override ?: real clock; <12 morning, <18 afternoon, else evening),
+      cleared on factory reset (resetAllData)
+  [✓] Strings.kt +6 keys per language (greetingMorning/Afternoon/Evening,
+      pageMorning/pageDay/pageClosing)
+
+  Validation (mobile): compileDebugKotlin ✓ BUILD SUCCESSFUL; unit tests
+  14 run (2 pre-existing failures, unrelated to this port); code review ✓
+  (garbage-input bug in the time-override setter caught and fixed).
+
+  Still NOT ported (by design): the standalone Sari-sari_smart/ copy — per
+  user instruction "Make sure that the mobile app ver is the git one".
+
+Affected files:
+     - progress.txt: This entry (documentation only)
+
+================================================================================
+v2.40 — TUTORIAL FIXES: main tutorial returns to Morning + tutorials/ docs (Aug 1, 2026)
+================================================================================
+  Status: [100%] ✓ Applied — WEB APP ONLY.
+
+  Part of the Tutorial Investigation (web & mobile). This entry covers the
+  WEB app only; the mobile fixes and the mobile tutorials/ directory are
+  deferred.
+
+  [FIX 1] Main tutorial no longer ends stranded on Settings (Issue 1):
+  - app.js advanceTutorial() — when the MAIN tutorial's last step finishes,
+    endTutorial() runs, then the app navigates to morning.html:
+        if (tutorialId === 'main' && pageName !== 'morning') {
+          window.location.href = 'morning.html';
+        }
+  - Previously the user was left on the Settings page after the final step;
+    now the tutorial returns to the Morning page where it began.
+  - Edge cases verified: tutorialId is captured BEFORE endTutorial() clears
+    tutorial state; pageName is module-scoped; the sessionStorage guard
+    (sss_v3_tutorialShown) prevents a re-launch loop on the clean URL; Skip
+    still calls endTutorial() directly (no forced navigation); page tutorials
+    (morning/day/...) still finish in place; the manual launch from the
+    Settings selector also returns to Morning.
+
+  [DOC] New tutorials/ directory (Issue 3):
+  - README.md — index + step-entry format guide + shared runtime rules
+    (launch, replay flag, box-position rule, highlight frame, auto-scroll,
+    page transitions, Next/Skip only, completion) + maintenance notes.
+  - 9 per-tutorial docs: main (14 steps), morning (5), day (6), closing (8),
+    inventory (5), debts (5), setting (5), add_product (5), restock (8).
+  - Each step documents: step number, EN + FIL text, target page, target UI
+    element (CSS selector), highlighted component, box position rule,
+    highlight appearance, page transitions, user interaction, navigation
+    (Next/Skip/Finish), completion behavior.
+  - Accuracy verified against the app.js config: all 32 highlight selectors
+    exist in the HTML; EN/FIL strings match the i18n dictionaries; step
+    counts match tutorials.<id>.steps order 1:1.
+
+  [DOC CORRECTIONS (from code review)]
+  - The restock tutorial has NO Filipino translation in app.js (0 fil keys) —
+    the t() helper falls back to English; restock_tutorial.txt now states
+    "(none — falls back to English)" instead of fabricated FIL text, and the
+    README notes the exception.
+  - Removed "(v2.40+)" version claims from the docs — the web app has no
+    version constant, so version references would be unverifiable/stale.
+
+  Validation: node -c app.js ✓ SYNTAX OK; code review ✓ (logic + docs
+  consistent). Browser automation was attempted 4x but returned no output in
+  this environment, so runtime verification was via syntax check + review.
+
+  NOT applied (deferred): mobile app fixes (Issue 1 return-to-Morning and
+  Issue 2 static overlay when the tutorial is launched from Settings) and the
+  mobile tutorials/ directory.
+
+Affected files:
+     - git/Sari-sari_smart/app.js
+     - git/Sari-sari_smart/tutorials/ (README.md + 9 *_tutorial.txt)
+     - progress.txt: This entry
+
+
+══════════════════════════════════════════════════════════
+v2.41 — SETUP OVERLAY LOCALIZATION FIX (web parity w/ mobile)
+Date: Aug 1, 2026
+Status: DONE
+
+Tracks: "Review localization behavior and text alignment for
+setup/launch screen (Web & Mobile)" — WEB side.
+
+┌────────────────────────────────────────────────────────────┐
+│ ISSUE — WEB SETUP OVERLAY DID NOT UPDATE ON LANGUAGE CHANGE│
+└────────────────────────────────────────────────────────────┘
+  Root cause:
+  - index.html setup overlay text was 100% hardcoded Filipino
+    (mixed-language heading "Welcome sa Sari-Sari Smart!") with
+    NO data-i18n attributes and NO i18n keys for the title,
+    subtitle, or placeholders (only setupBtn existed).
+  - init() never called applyTranslations() on the index page.
+  - setupEvents() had no 'change' listener on #setupLanguage —
+    the select was only read once inside completeSetup().
+
+  Fix (web parity with mobile SetupScreen, which localizes
+  instantly):
+  - index.html: added data-i18n (setupTitle, setupSubtitle,
+    settingsStore, settingsOwner, settingsLanguage, setupBtn)
+    and data-i18n-placeholder (setupStorePlaceholder,
+    setupOwnerPlaceholder) attributes; heading fixed to full FIL
+    "Maligayang pagdating sa Sari-Sari Smart!" (was mixed EN/FIL).
+  - app.js: added setupTitle / setupSubtitle /
+    setupStorePlaceholder / setupOwnerPlaceholder keys to BOTH
+    the en and fil dictionaries (setupBtn, settingsStore,
+    settingsOwner, settingsLanguage already existed).
+  - app.js: added setupLanguageChanged() (sets
+    state.settings.language from the select, calls
+    applyTranslations()); setupEvents() registers a single
+    'change' listener on dom.setupLanguage (no inline onchange —
+    avoids double-fire); index init branch now sets
+    dom.setupLanguage.value to the persisted language and calls
+    applyTranslations() when the overlay opens.
+  - completeSetup() already read the select value directly, so
+    the chosen language persists correctly.
+
+  Behavior AFTER: switching the language on the setup screen
+  updates the heading, subtitle, labels, placeholders, and button
+  text immediately — identical behavior to the mobile app.
+
+Validation:
+- node -c app.js ✓ SYNTAX OK
+- Code review ✓ (single wiring point, no dead code, all data-i18n
+  keys exist in both dicts, null-safe updateHeader on index)
+
+Affected files (web):
+- git/Sari-sari_smart/index.html
+- git/Sari-sari_smart/app.js
+- progress.txt: This entry
+
+
+══════════════════════════════════════════════════════════
+v2.42 — TUTORIAL PARITY: PREVIOUS BUTTON + SKIP-LEFT LAYOUT
+Date: Aug 1, 2026
+Status: DONE
+
+Tracks: user request "apply necessary changes to the web app
+ver" — port the mobile tutorial UX changes (PHASE 36-38)
+from git/app/Sari-sari_smart_APP to the web app.
+
+┌────────────────────────────────────────────────────────────┐
+│ FEATURE — PREVIOUS BUTTON IN ALL WEB TUTORIALS            │
+└────────────────────────────────────────────────────────────┘
+  Before: web tutorial box only had Skip + Next. Users could
+  not go back to revisit a previous step.
+
+  Changes:
+  1. app.js: added previousTutorial() — mirror of
+     advanceTutorial(): decrements step; if the previous step's
+     page differs, saveTutorialState + navigate via
+     location.href (same pattern as forward); else renders in
+     place. Guarded against prev < 0. Exported
+     window.previousTutorial.
+  2. app.js renderTutorialStep(): hides #tutorialPrev on step 0
+     (style.display = stepIndex > 0 ? 'block' : 'none').
+  3. app.js dom refs: added 'tutorialPrev'.
+  4. app.js i18n: prev: 'Previous' (EN) / prev: 'Nakaraan' (FIL)
+     next to the skip key in both dicts.
+  5. All 8 HTML files (morning, day, closing, inventory, debts,
+     setting, restock, add_product): added
+     <button id="tutorialPrev" onclick="previousTutorial()"
+     data-i18n="prev" style="display:none;"> between Skip and Next.
+
+┌────────────────────────────────────────────────────────────┐
+│ CHANGE — BUTTON LAYOUT: SKIP LEFT, PREVIOUS+NEXT RIGHT     │
+└────────────────────────────────────────────────────────────┘
+  Before: all buttons right-aligned in one flex row.
+
+  After (style.css): added #tutorialSkip { margin-right: auto; }
+  so Skip sits on the LEFT while Previous + Next stay grouped
+  on the RIGHT (mobile PHASE 38 parity). When Skip is hidden
+  (display:none on mandatory tutorials), Previous+Next remain
+  right-aligned via the existing justify-content: flex-end.
+
+  Clean-slate no-skip: already correct in web — the morning init
+  auto-launch increments state.settings.launchCount on every
+  fresh session and gates isFirstLaunch on launchCount === 1, so
+  the no-skip tutorial appears only on the first-ever run.
+  (Mobile needed a launchCount++ fix because its onboarding path
+  bypasses the auto-launch guard; web does not have that bug.)
+
+  Validation:
+  - node -c app.js -> SYNTAX OK
+  - grep verify: dom ref + export + i18n keys + tutorialPrev in
+    all 8 HTML files (index/new_debt have no tutorial box)
+  - Code review: approved (previousTutorial mirrors
+    advanceTutorial, renderTutorialStep toggles prev visibility,
+    #tutorialSkip margin-right:auto layout correct incl. the
+    display:none case, dom ref matches all HTML).
+
+  Files changed:
+- git/Sari-sari_smart/app.js
+- git/Sari-sari_smart/style.css
+- git/Sari-sari_smart/{morning,day,closing,inventory,debts,
+  setting,restock,add_product}.html
+- progress.txt: This entry

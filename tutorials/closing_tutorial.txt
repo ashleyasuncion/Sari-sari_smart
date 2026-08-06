@@ -1,0 +1,68 @@
+SARI-SARI SMART — CLOSING TUTORIAL (8 STEPS)
+=============================================
+Config: app.js -> tutorials.closing
+Page: closing
+Launch: header tutorial button on closing.html (startTutorial('closing', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This is the Closing screen — finalize your day with a complete summary."
+  Text FIL: "Ito ang Closing screen — tapusin ang iyong araw na may kumpletong summary."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Actual Sales input
+  Text EN : "Enter the actual cash you counted at the end of the day (actual sales)."
+  Text FIL: "Ilagay ang aktwal na perang nabilang mo sa pagtatapos ng araw (aktwal na benta)."
+  Target element : #closingActualSales
+  Highlight      : Actual Sales Today input -> box per runtime rule
+  Interaction    : look at input, tap Next
+----------------------------------------------------------------------
+STEP 3 — Actual Sales input (re-emphasis)
+  Text EN : "Enter the actual total sales counted at the end of the day (actual sales)."
+  Text FIL: "Ilagay ang aktwal na kabuuang benta na nabilang mo sa pagtatapos ng araw."
+  Target element : #closingActualSales
+  Highlight      : Actual Sales Today input -> box per runtime rule
+  Interaction    : look at input, tap Next
+----------------------------------------------------------------------
+STEP 4 — Profit
+  Text EN : "Your profit is calculated from each item - selling price minus cost price."
+  Text FIL: "Ang kita ay kinakwenta mula sa bawat item - presyo ng benta minus presyo ng stock."
+  Target element : #closingTotalToday
+  Highlight      : Profit from Items Sold value -> box per runtime rule
+  Interaction    : look at profit, tap Next
+----------------------------------------------------------------------
+STEP 5 — Sold items
+  Text EN : "All items sold today are listed here with quantities and amounts."
+  Text FIL: "Lahat ng items na naibenta ngayong araw ay nakalista dito kasama ang dami at halaga."
+  Target element : #closingSoldItems
+  Highlight      : Sold items section -> box per runtime rule
+  Interaction    : look at list, tap Next
+----------------------------------------------------------------------
+STEP 6 — Low stock
+  Text EN : "Items running low are shown here so you know what to restock tomorrow."
+  Text FIL: "Ang mga item na nauubos ay ipinapakita dito para malaman mo ang kailangan i-restock bukas."
+  Target element : #closingLowStock
+  Highlight      : Low stock section -> box per runtime rule
+  Interaction    : look at list, tap Next
+----------------------------------------------------------------------
+STEP 7 — Debts
+  Text EN : "Outstanding debts are listed here — follow up with customers who still owe."
+  Text FIL: "Ang mga natitirang utang ay nakalista dito — kausapin ang mga kostumer na may utang pa."
+  Target element : #closingDebts
+  Highlight      : Debts section -> box per runtime rule
+  Interaction    : look at list, tap Next
+----------------------------------------------------------------------
+STEP 8 — Day Complete
+  Text EN : "Tap \"Day Complete\" to finalize. Your daily data will be saved to history."
+  Text FIL: "I-tap ang \"Tapos Na ang Araw\" para tapusin. Ang iyong daily data ay mase-save sa history."
+  Target element : #btnCompleteDay
+  Highlight      : Day Complete button (bottom) -> box expected at top
+  Interaction    : see button, tap Next (finishes tutorial in place)

@@ -1,0 +1,54 @@
+SARI-SARI SMART — DAY MODE TUTORIAL (6 STEPS)
+==============================================
+Config: app.js -> tutorials.day
+Page: day
+Launch: header tutorial button on day.html (startTutorial('day', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This is Day Mode — record sales as they happen throughout your business day."
+  Text FIL: "Ito ang Day Mode — itala ang mga benta habang nangyayari ang mga ito sa buong araw."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Earnings
+  Text EN : "Your cash earnings update in real-time as you record sales."
+  Text FIL: "Ang iyong cash earnings ay nag-a-update sa real-time habang nagtatala ka ng benta."
+  Target element : #dayEarnings
+  Highlight      : Earnings stat card (top) -> box expected at bottom
+  Interaction    : look at earnings, tap Next
+----------------------------------------------------------------------
+STEP 3 — Items sold
+  Text EN : "Track how many items you've sold today with the sold counter."
+  Text FIL: "Subaybayan kung ilang items ang naibenta ngayong araw gamit ang sold counter."
+  Target element : #dayItemsSold
+  Highlight      : Items sold stat card (top) -> box expected at bottom
+  Interaction    : look at counter, tap Next
+----------------------------------------------------------------------
+STEP 4 — Utang today
+  Text EN : "Utang (credit) sales are tracked separately so you know what's still owed."
+  Text FIL: "Ang utang (credit) sales ay hiwalay na sinusubaybayan para malaman mo kung ano ang hindi pa bayad."
+  Target element : #dayUtang
+  Highlight      : Utang stat card (top) -> box expected at bottom
+  Interaction    : look at utang, tap Next
+----------------------------------------------------------------------
+STEP 5 — Transactions list
+  Text EN : "All today's transactions appear here with time, product, and amount details."
+  Text FIL: "Lahat ng transaksyon ngayong araw ay lilitaw dito kasama ang oras, produkto, at halaga."
+  Target element : #dayTransactionList
+  Highlight      : Transaction feed -> box per runtime rule
+  Interaction    : look at list, tap Next
+----------------------------------------------------------------------
+STEP 6 — Close Store
+  Text EN : "When your store day is done, tap \"Close Store\" to view the closing summary."
+  Text FIL: "Kapag tapos na ang araw ng tindahan, i-tap ang \"Isara ang Tindahan\" para makita ang closing summary."
+  Target element : #btnCloseDay
+  Highlight      : Close Store button (bottom) -> box expected at top
+  Interaction    : see button, tap Next (finishes tutorial in place)

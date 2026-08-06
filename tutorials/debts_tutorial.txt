@@ -1,0 +1,47 @@
+SARI-SARI SMART — DEBTS TUTORIAL (5 STEPS)
+===========================================
+Config: app.js -> tutorials.debts
+Page: debts
+Launch: header tutorial button on debts.html (startTutorial('debts', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This is the Debts page — track all customer debts and record payments."
+  Text FIL: "Ito ang Debts page — subaybayan ang lahat ng utang ng kostumer at magtala ng bayad."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Total debt
+  Text EN : "The total outstanding debt across all customers is shown here."
+  Text FIL: "Ang kabuuang natitirang utang ng lahat ng kostumer ay ipinapakita dito."
+  Target element : #manageTotalDebt
+  Highlight      : Total debt summary (top) -> box expected at bottom
+  Interaction    : look at total, tap Next
+----------------------------------------------------------------------
+STEP 3 — Settings link
+  Text EN : "Tap the settings icon to customize your app experience."
+  Text FIL: "I-tap ang settings icon para i-customize ang iyong app experience."
+  Target element : a[href="setting.html"]
+  Highlight      : Settings link/icon -> box per runtime rule
+  Interaction    : see the link, tap Next
+----------------------------------------------------------------------
+STEP 4 — Debt list
+  Text EN : "Customer debts are listed with name, last activity, and balance."
+  Text FIL: "Ang mga utang ng kostumer ay nakalista na may pangalan, huling aktibidad, at balanse."
+  Target element : #manageDebtsList
+  Highlight      : Debt list -> box per runtime rule
+  Interaction    : look at list, tap Next
+----------------------------------------------------------------------
+STEP 5 — Pay button
+  Text EN : "Tap \"Pay\" on any customer to record a payment and reduce their balance."
+  Text FIL: "I-tap ang \"Bayad\" sa sinumang kostumer para magtala ng bayad at bawasan ang kanilang balanse."
+  Target element : .debt-manage-item:first-child .debt-manage-pay-btn
+  Highlight      : First customer's Pay button -> box per runtime rule
+  Interaction    : see the button, tap Next (finishes tutorial in place)

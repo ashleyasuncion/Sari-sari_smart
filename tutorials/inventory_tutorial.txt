@@ -1,0 +1,47 @@
+SARI-SARI SMART — INVENTORY/STOCK TUTORIAL (5 STEPS)
+=====================================================
+Config: app.js -> tutorials.inventory
+Page: inventory
+Launch: header tutorial button on inventory.html (startTutorial('inventory', true)) or Settings selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This is the Inventory page — manage all your stock items in one place."
+  Text FIL: "Ito ang Inventory page — pamahalaan ang lahat ng iyong stock item sa isang lugar."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Search bar
+  Text EN : "Use the search bar to quickly find any product by name."
+  Text FIL: "Gamitin ang search bar para mabilis na makahanap ng produkto sa pangalan."
+  Target element : #manageStockSearch
+  Highlight      : Search bar (top) -> box expected at bottom
+  Interaction    : look at search bar, tap Next
+----------------------------------------------------------------------
+STEP 3 — Add Stock button
+  Text EN : "Tap \"Add Stock\" to add new products or restock existing ones."
+  Text FIL: "I-tap ang \"Magdagdag ng Stock\" para magdagdag ng bagong produkto o mag-restock."
+  Target element : a[href="add_product.html"].btn-primary
+  Highlight      : Add Stock button -> box per runtime rule
+  Interaction    : see the button, tap Next
+----------------------------------------------------------------------
+STEP 4 — Inventory list
+  Text EN : "All your inventory is listed with stock quantity, profit margin, and sell buttons."
+  Text FIL: "Ang lahat ng iyong inventory ay nakalista na may stock quantity at profit margin."
+  Target element : #manageInventoryList
+  Highlight      : Inventory list -> box per runtime rule
+  Interaction    : look at list, tap Next
+----------------------------------------------------------------------
+STEP 5 — First item
+  Text EN : "Each item shows stock level and color-coded status. Tap the edit button to modify."
+  Text FIL: "Ang bawat item ay nagpapakita ng stock level at color-coded status. I-tap ang edit button para baguhin."
+  Target element : .inv-manage-item:first-child
+  Highlight      : First inventory item -> box per runtime rule
+  Interaction    : look at item, tap Next (finishes tutorial in place)

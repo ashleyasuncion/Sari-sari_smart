@@ -2,11 +2,11 @@ SARI-SARI SMART — INVENTORY/STOCK TUTORIAL (5 STEPS)
 =====================================================
 Config: app.js -> tutorials.inventory
 Page: inventory
-Launch: header tutorial button on inventory.html (startTutorial('inventory', true)) or Settings selector
+Launch: header tutorial button on inventory.html (startTutorial('inventory', true)) or Settings/Help selector
 
 SHARED STEP FIELDS
 - Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
-- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
 - Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
 
 ----------------------------------------------------------------------

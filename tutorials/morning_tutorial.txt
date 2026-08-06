@@ -2,11 +2,11 @@ SARI-SARI SMART — MORNING CHECK TUTORIAL (5 STEPS)
 ===================================================
 Config: app.js -> tutorials.morning
 Page: morning
-Launch: header tutorial button on morning.html (startTutorial('morning', true)) or Settings selector
+Launch: header tutorial button on morning.html (startTutorial('morning', true)) or Settings/Help selector
 
 SHARED STEP FIELDS
 - Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
-- Navigation: Next advances; Skip visible (replay); last step Next finishes in place (no page change)
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place (no page change)
 - Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
 
 ----------------------------------------------------------------------

@@ -2,7 +2,7 @@ SARI-SARI SMART — RESTOCK DAY TUTORIAL (8 STEPS)
 =================================================
 Config: app.js -> tutorials.restock
 Page: restock
-Launch: header tutorial button on restock.html (startTutorial('restock', true)) or Settings selector
+Launch: header tutorial button on restock.html (startTutorial('restock', true)) or Settings/Help selector
 
 NOTE ON TRANSLATION: The `restockTutorial1..8` keys exist ONLY in the English
 (en) dictionary of app.js — there is NO Filipino (fil) translation. When the
@@ -12,7 +12,7 @@ English text below in both languages.
 
 SHARED STEP FIELDS
 - Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
-- Navigation: Next advances; Skip visible (replay); last step Next finishes in place
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
 - Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
 
 ----------------------------------------------------------------------

@@ -2,11 +2,11 @@ SARI-SARI SMART — MAIN TUTORIAL (14 STEPS, MULTI-PAGE)
 =======================================================
 Config: app.js -> tutorials.main
 Pages: morning -> day -> closing -> inventory -> debts -> setting
-Launch: auto on morning.html first visit per tab; also from Settings -> Tutorial selector ("Main Tutorial")
+Launch: auto on morning.html first visit per tab; also from Settings -> Tutorial selector and Help -> Tutorial selector ("Main Tutorial")
 
 SHARED STEP FIELDS
 - Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, pointer-events none, RAF-tracked, target+8px with 4px offset
-- Navigation: Next advances; Skip only on replay; on step 14 Next finishes and returns to morning.html
+- Navigation: Previous (from step 2); Next advances; Skip only on replay; on step 14 Next finishes and returns to morning.html
 - Box position rule: target in top 40% of viewport -> box at bottom; else box at top; no highlight -> centered
 
 ----------------------------------------------------------------------

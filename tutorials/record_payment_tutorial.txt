@@ -1,0 +1,40 @@
+SARI-SARI SMART — RECORD PAYMENT TUTORIAL (4 STEPS)
+===================================================
+Config: app.js -> tutorials.record_payment
+Page: record_payment
+Launch: header tutorial button on record_payment.html (startTutorial('record_payment', true)) or Settings/Help selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Amount field
+  Text EN : "Enter how much the customer is paying against their current balance."
+  Text FIL: "Ilagay kung magkano ang ibabayad ng customer sa kanyang current balance."
+  Target element : #rpAmountField
+  Highlight      : the payment amount input (top) -> box expected at bottom
+  Interaction    : look at the amount field, tap Next
+----------------------------------------------------------------------
+STEP 2 — Remaining balance preview
+  Text EN : "The remaining balance preview updates instantly as you type."
+  Text FIL: "Agad na nag-a-update ang preview ng natitirang balance habang nagta-type ka."
+  Target element : #rpRemainingPreview
+  Highlight      : the live remaining-balance preview (renders once an amount is typed)
+  Interaction    : look at the preview, tap Next
+----------------------------------------------------------------------
+STEP 3 — Note field
+  Text EN : "Add an optional note, like \"paid in cash\" or \"partial payment\"."
+  Text FIL: "Magdagdag ng opsyonal na note, tulad ng \"cash na binayad\" o \"partial payment\"."
+  Target element : #rpNoteField
+  Highlight      : the optional note input
+  Interaction    : look at the note field, tap Next
+----------------------------------------------------------------------
+STEP 4 — Pay button
+  Text EN : "Tap Pay to save the payment. The balance and history update automatically."
+  Text FIL: "I-tap ang Pay para i-save ang bayad. Awtomatikong mag-a-update ang balance at history."
+  Target element : #rpPayBtn
+  Highlight      : the Pay button (bottom) -> box expected at top
+  Interaction    : see the button, tap Next (finishes tutorial in place)
+----------------------------------------------------------------------

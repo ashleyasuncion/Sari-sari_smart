@@ -1,0 +1,56 @@
+SARI-SARI SMART — HELP TUTORIAL (6 STEPS)
+=========================================
+Config: app.js -> tutorials.help
+Page: help
+Launch: header tutorial button on help.html (startTutorial('help', true)) or Settings/Help selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Help page intro
+  Text EN : "This is the Help page — your guide to using Sari-Sari Smart effectively."
+  Text FIL: "Ito ang Help page — ang iyong gabay sa paggamit ng Sari-Sari Smart nang epektibo."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Tutorial selector
+  Text EN : "The Tutorial Selector lets you choose from different tutorials. Select a tutorial from the dropdown and tap \"Launch\" to start a guided tour of any page."
+  Text FIL: "Ang Tutorial Selector ay nagbibigay-daan sa iyo na pumili ng iba't ibang tutorial. Pumili ng tutorial mula sa dropdown at i-tap ang \"Launch\" para magsimula ng guided tour."
+  Target element : #helpTutSelector
+  Highlight      : the tutorial selector card (top) -> box expected at bottom
+  Interaction    : look at the selector, tap Next
+----------------------------------------------------------------------
+STEP 3 — How to Use
+  Text EN : "The \"How to Use\" button opens a detailed guide with step-by-step instructions for recording sales, adding stock, tracking debts, viewing reports, and customizing settings."
+  Text FIL: "Ang \"How to Use\" button ay nagbubukas ng detalyadong gabay na may step-by-step na tagubilin para sa pag-record ng benta, pagdagdag ng stock, pagsubaybay ng utang, at iba pa."
+  Target element : #helpHowTo
+  Highlight      : the How to Use section
+  Interaction    : look at the section, tap Next
+----------------------------------------------------------------------
+STEP 4 — Contact
+  Text EN : "The Contact section shows how to reach support for questions or feedback about the app."
+  Text FIL: "Ang Contact section ay nagpapakita kung paano makipag-ugnayan sa support para sa mga tanong o feedback."
+  Target element : #helpContact
+  Highlight      : the Contact section
+  Interaction    : look at the section, tap Next
+----------------------------------------------------------------------
+STEP 5 — About
+  Text EN : "The About section tells you about the app version and its purpose."
+  Text FIL: "Ang About section ay nagsasabi tungkol sa bersyon ng app at layunin nito."
+  Target element : #helpAbout
+  Highlight      : the About section
+  Interaction    : look at the section, tap Next
+----------------------------------------------------------------------
+STEP 6 — Page-specific tutorials
+  Text EN : "You can also access page-specific tutorials from any page by tapping the (?) Help button in the top-right corner of the header."
+  Text FIL: "Maaari ka ring mag-access ng page-specific tutorial mula sa kahit anong page sa pamamagitan ng pag-tap sa (?) Help button sa kanang bahagi ng header."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next (finishes tutorial in place)
+----------------------------------------------------------------------

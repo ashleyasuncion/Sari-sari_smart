@@ -21,6 +21,12 @@ step by step. It serves as:
 | [setting_tutorial.txt](setting_tutorial.txt) | `setting` | setting | 5 |
 | [add_product_tutorial.txt](add_product_tutorial.txt) | `add_product` | add_product | 5 |
 | [restock_tutorial.txt](restock_tutorial.txt) | `restock` | restock | 8 |
+| [new_debt_tutorial.txt](new_debt_tutorial.txt) | `new_debt` | new_debt | 4 |
+| [product_detail_tutorial.txt](product_detail_tutorial.txt) | `product_detail` | product_detail | 4 |
+| [debtor_detail_tutorial.txt](debtor_detail_tutorial.txt) | `debtor_detail` | debtor_detail | 5 |
+| [record_payment_tutorial.txt](record_payment_tutorial.txt) | `record_payment` | record_payment | 4 |
+| [report_tutorial.txt](report_tutorial.txt) | `report` | reports | 6 |
+| [help_tutorial.txt](help_tutorial.txt) | `help` | help | 6 |
 
 ## How to Read a Step Entry
 
@@ -58,7 +64,7 @@ Each step documents:
 1. **Launch:** auto-starts on `morning.html` on first visit per tab session
    (`sessionStorage 'sss_v3_tutorialShown'`); re-launchable from the header
    tutorial button (`startTutorial('id', true)`) and from Settings →
-   Tutorial selector (`launchTutorial()`).
+   Tutorial selector or Help → Tutorial selector (`launchTutorial()`).
 2. **Replay flag (`isReplay`):** first-ever launch → no Skip button; any replay
    → Skip button visible.
 3. **Box positioning rule** (`getTutorialBoxAlignment`):
@@ -75,8 +81,11 @@ Each step documents:
    page, state is saved to `localStorage` and the app navigates to
    `page.html?tutorial=true`; the target page's init calls `checkTutorialResume()`
    → `resumeTutorial()`.
-7. **Navigation buttons:** web has **Next** and **Skip** only (no Previous).
-   Next advances; on the last step, Next finishes the tutorial (`endTutorial()`).
+7. **Navigation buttons:** **Next** advances; **Previous** (visible from step 2
+   onward) walks back a step. Both navigate across pages when the next/previous
+   step's `page` differs, via `saveTutorialState()` + `checkTutorialResume()`.
+   **Skip** appears on replay; on the last step, Next finishes the tutorial
+   (`endTutorial()`).
 8. **Completion:** `endTutorial()` hides the overlay and clears tutorial state.
    Completing the **main** tutorial also returns the user to the Morning page
    (`morning.html`).

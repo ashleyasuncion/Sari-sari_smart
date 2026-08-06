@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sari-Sari Smart - Settings</title>
+  <title>Sari-Sari Smart - Help</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,22 +15,21 @@
     <div class="app-container" id="app">
       <!-- HEADER -->
       <header class="app-header" style="background:var(--primary);color:white;">
-        <button class="header-btn" onclick="historyBack()" style="color:white;background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:6px;">
+        <a class="header-btn" href="morning.html" style="text-decoration:none;color:white;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </a>
+        <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="helpTitle">Help</h1>
+        <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('help', true)" aria-label="Tutorial" style="color:white;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
-        <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="settingsTitle">Settings</h1>
-        <div class="header-actions">
-          <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('setting', true)" aria-label="Tutorial" style="color:white;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </button>
-        </div>
       </header>
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <!-- Tutorial Selector -->
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="tutSection">Tutorials</div>
+        <button class="btn btn-secondary btn-full" onclick="startTutorial('main', true)" data-i18n="replayTutorial" style="margin-bottom:16px;">Replay Tutorial</button>
+
+        <div id="helpTutSelector" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-radius:12px;padding:14px;margin-bottom:16px;">
+          <div style="font-weight:700;color:var(--primary,#16a34a);margin-bottom:8px;" data-i18n="tutSelector">Select a tutorial...</div>
           <div class="tutorial-selector-row">
             <select id="tutorialSelector" class="form-input">
               <option value="" data-i18n="tutSelector">Select a tutorial...</option>
@@ -50,48 +49,27 @@
               <option value="report" data-i18n="tutReport">Reports Tutorial</option>
               <option value="help" data-i18n="tutHelp">Help Tutorial</option>
             </select>
-            <button class="btn btn-primary" onclick="launchTutorial()" data-i18n="tutLaunch">Launch</button>
+            <button class="btn btn-primary" onclick="launchTutorial()" data-i18n="tutLaunch" style="margin-top:8px;width:100%;">Launch</button>
           </div>
         </div>
 
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="moreSection">More</div>
-          <a href="reports.html" class="btn btn-outline btn-full" data-i18n="reportsTitle" style="text-decoration:none;margin-bottom:8px;">Ulat</a>
-          <a href="help.html" class="btn btn-outline btn-full" data-i18n="helpTitle" style="text-decoration:none;">Help</a>
+        <div id="helpHowTo" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-radius:12px;padding:14px;margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:8px;" data-i18n="howToUse">How to Use</div>
+          <div id="howToList"></div>
         </div>
 
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="settingsLanguage">Wika</div>
-          <select id="settingsLanguage" class="form-input" onchange="saveSettings()">
-            <option value="en">English</option>
-            <option value="fil">Filipino</option>
-          </select>
+        <div id="helpContact" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-radius:12px;padding:14px;margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:6px;" data-i18n="contactInfo">Contact</div>
+          <div style="font-size:var(--text-sm);color:var(--text-secondary,#64748b);" data-i18n="contactText">For questions or feedback, email support@sarisarismart.com</div>
         </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="textSize">Text Size</div>
-          <div class="text-size-options">
-            <button class="text-size-btn active" data-size="standard" onclick="setTextSize('standard')" data-i18n="standard">Standard</button>
-            <button class="text-size-btn" data-size="large" onclick="setTextSize('large')" data-i18n="large">Large</button>
-            <button class="text-size-btn" data-size="extra-large" onclick="setTextSize('extra-large')" data-i18n="extraLarge">Extra Large</button>
-          </div>
+
+        <div id="helpAbout" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-radius:12px;padding:14px;margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:6px;" data-i18n="aboutApp">About App</div>
+          <div style="font-size:var(--text-sm);color:var(--text-secondary,#64748b);" data-i18n="aboutText">Sari-Sari Smart v3.0 — a store management app for sari-sari store owners.</div>
         </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="settingsStore">Pangalan ng Tindahan</div>
-          <input type="text" id="settingsStoreName" class="form-input" onchange="saveSettings()">
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="settingsOwner">Pangalan ng May-ari</div>
-          <input type="text" id="settingsOwnerName" class="form-input" onchange="saveSettings()">
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="dataMgmt">Data Management</div>
-          <button class="btn btn-secondary btn-full" onclick="resetData()" style="margin-bottom:8px;">
-            <span data-i18n="resetDataBtn">I-reset ang Data</span>
-          </button>
-          <button class="btn btn-secondary btn-full" onclick="exportData()">
-            <span data-i18n="exportDataBtn">I-export ang Data</span>
-          </button>
-        </div>
+
+        <a href="reports.html" class="btn btn-outline btn-full" data-i18n="reportsTitle" style="text-decoration:none;margin-bottom:8px;">Ulat</a>
+        <a href="setting.html" class="btn btn-outline btn-full" data-i18n="settingsTitle" style="text-decoration:none;">Settings</a>
       </main>
 
       <div class="toast-container" id="toastContainer"></div>
@@ -106,7 +84,7 @@
       <div class="tutorial-highlight" id="tutorialHighlight"></div>
       <div class="tutorial-box" id="tutorialBox">
         <div class="tutorial-step-indicator">
-          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
+          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">6</span>
         </div>
         <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
         <div class="tutorial-actions">

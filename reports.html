@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sari-Sari Smart - Bagong Utang</title>
+  <title>Sari-Sari Smart - Reports</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,27 +15,26 @@
     <div class="app-container" id="app">
       <!-- HEADER -->
       <header class="app-header" style="background:var(--primary);color:white;">
-        <a class="header-btn" href="debts.html" style="text-decoration:none;color:white;">
+        <a class="header-btn" href="morning.html" style="text-decoration:none;color:white;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         </a>
-        <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="newDebtTitle">Bagong Utang</h1>
-        <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('new_debt', true)" aria-label="Tutorial" style="color:white;">
+        <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="reportsTitle">Ulat</h1>
+        <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('report', true)" aria-label="Tutorial" style="color:white;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
       </header>
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <div class="form-group" style="position:relative;">
-          <label data-i18n="newDebtCustomer">Pangalan ng Kostumer</label>
-          <input type="text" id="newDebtCustomer" class="form-input" placeholder="Ilagay ang pangalan" autocomplete="off" oninput="onNewDebtCustomerSearch()" data-i18n-placeholder="enterCustomerNameDebt">
-          <div class="customer-suggestions" id="newDebtSuggestions"></div>
-        </div>
-        <div class="form-group">
-          <label data-i18n="newDebtAmount">Halaga ng Utang (₱)</label>
-          <input type="number" id="newDebtAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01">
-        </div>
-        <button class="btn btn-primary btn-full" onclick="saveNewDebt()" data-i18n="saveDebt">I-save ang Utang</button>
+        <div id="reportPeriodToggle" style="display:flex;"></div>
+        <div style="height:16px;"></div>
+        <div id="reportSummaryCards"></div>
+        <div style="height:16px;"></div>
+        <div id="reportBestSellers"></div>
+        <div style="height:12px;"></div>
+        <div id="reportRecentTx"></div>
+        <div style="height:12px;"></div>
+        <div id="reportLowStock"></div>
       </main>
 
       <div class="toast-container" id="toastContainer"></div>
@@ -50,7 +49,7 @@
       <div class="tutorial-highlight" id="tutorialHighlight"></div>
       <div class="tutorial-box" id="tutorialBox">
         <div class="tutorial-step-indicator">
-          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">4</span>
+          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">6</span>
         </div>
         <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
         <div class="tutorial-actions">

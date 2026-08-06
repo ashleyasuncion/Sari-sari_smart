@@ -1,0 +1,55 @@
+SARI-SARI SMART — REPORTS TUTORIAL (6 STEPS)
+============================================
+Config: app.js -> tutorials.report
+Page: reports
+Launch: header tutorial button on reports.html (startTutorial('report', true)) or Settings/Help selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Reports intro
+  Text EN : "The Reports page shows your store's sales performance over time."
+  Text FIL: "Ang Reports page ay nagpapakita ng performance ng iyong tindahan sa paglipas ng panahon."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Period toggle
+  Text EN : "Use the toggle buttons to switch between Daily, Weekly, and Monthly views."
+  Text FIL: "Gamitin ang toggle buttons para lumipat sa Daily, Weekly, o Monthly views."
+  Target element : #reportPeriodToggle
+  Highlight      : the period toggle (top) -> box expected at bottom
+  Interaction    : look at the toggles, tap Next
+----------------------------------------------------------------------
+STEP 3 — Summary cards
+  Text EN : "The summary cards show total sales and profit for the selected period."
+  Text FIL: "Ang summary cards ay nagpapakita ng total sales at profit para sa napiling panahon."
+  Target element : #reportSummaryCards
+  Highlight      : the summary cards section
+  Interaction    : look at the cards, tap Next
+----------------------------------------------------------------------
+STEP 4 — Recent transactions
+  Text EN : "Recent transactions appear here with details on each sale. Scroll to see more."
+  Text FIL: "Ang mga recent transactions ay lumalabas dito na may detalye ng bawat benta."
+  Target element : #reportRecentTx
+  Highlight      : the recent-transactions card
+  Interaction    : look at the section, tap Next
+----------------------------------------------------------------------
+STEP 5 — Best-Selling Products
+  Text EN : "The Best-Selling Products section shows your top-performing items."
+  Text FIL: "Ang Best-Selling Products section ay nagpapakita ng iyong mga top-performing items."
+  Target element : #reportBestSellers
+  Highlight      : the best-selling products card
+  Interaction    : look at the section, tap Next
+----------------------------------------------------------------------
+STEP 6 — Low-stock items
+  Text EN : "Low-stock items are listed here so you know what needs restocking."
+  Text FIL: "Ang low-stock items ay nakalista dito para malaman mo kung ano ang kailangan i-restock."
+  Target element : #reportLowStock
+  Highlight      : the low-stock items card
+  Interaction    : look at the section, tap Next (finishes tutorial in place)
+----------------------------------------------------------------------

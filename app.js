@@ -77,6 +77,11 @@
       'tutorialBox', 'tutorialText', 'tutorialCurrent', 'tutorialTotal',
       'tutorialSkip', 'tutorialPrev', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
       'newDebtCustomer', 'newDebtAmount', 'newDebtSuggestions',
+      'pdProductTitle', 'pdContainer', 'pdDeductQty',
+      'cddBalanceCard', 'cddRecordPaymentBtn', 'cddLedger', 'debtorDetailName',
+      'rpAmountField', 'rpRemainingPreview', 'rpNoteField', 'rpPayBtn', 'rpCustomerCard',
+      'reportPeriodToggle', 'reportSummaryCards', 'reportBestSellers', 'reportRecentTx', 'reportLowStock',
+      'helpTutSelector', 'helpHowTo', 'helpContact', 'helpAbout', 'howToList', 'tutorialSelector',
       'settingsLanguage', 'settingsStoreName', 'settingsOwnerName',
       'setupOverlay', 'setupStoreName', 'setupOwnerName', 'setupLanguage',
       'toastContainer'
@@ -173,10 +178,15 @@
       markupHint: 'At {pct}% markup, sell at {price}',
       newDebtCustomer: 'Customer Name',
       newDebtAmount: 'Debt Amount',
+      newDebtTitle: 'New Debt',
+      saveDebt: 'Save Debt',
+      enterCustomerNameDebt: 'Enter customer name',
       saved: 'Saved!',
       saleSaved: 'Sale recorded!',
       debtSaved: 'Debt recorded!',
       paymentSaved: 'Payment recorded!',
+      currentBalance: 'Current Balance',
+      recordPayment: 'Record Payment',
       productSaved: 'Product saved!',
       dataReset: 'Data has been reset.',
       noProducts: 'No products yet.',
@@ -314,6 +324,94 @@
       restockTutorial6: 'Step 2: Search for a product, enter cost per unit and quantity, tap Add Item.',
       restockTutorial7: 'Review your purchases. Total cost is shown at the bottom.',
       restockTutorial8: 'Tap Done to save. Your inventory is updated. Find the reminder on Morning page.',
+      // New Debt tutorial
+      tutNewDebt: 'New Debt Tutorial',
+      newDebtTutorial1: 'This page lets you manually record a new debt for a customer.',
+      newDebtTutorial2: 'Enter the customer\'s name. If they\'re a new customer, they\'ll be added automatically.',
+      newDebtTutorial3: 'Enter the debt amount. This will be added to the customer\'s existing balance.',
+      newDebtTutorial4: 'Tap "Save Debt" to record it. You can view all debts on the Debts page.',
+      // v3.0 parity pages (Product Detail / Debtor Detail / Record Payment / Reports / Help)
+      tutProductDetail: 'Product Detail Tutorial',
+      tutDebtorDetail: 'Customer Debt Detail Tutorial',
+      tutRecordPayment: 'Record Payment Tutorial',
+      tutReport: 'Reports Tutorial',
+      tutHelp: 'Help Tutorial',
+      productDetailTutorial1: 'This page shows everything about a product: name, unit, stock quantity, cost price, selling price, and profit margin.',
+      productDetailTutorial2: 'A color-coded alert appears when stock is running low or out of stock.',
+      productDetailTutorial3: 'Deduct sold or damaged stock, restock, or edit the product details from this page.',
+      productDetailTutorial4: 'Use Delete to permanently remove the product — with a confirmation first.',
+      customerDebtDetailTutorial1: 'This page shows a customer\'s utang: current balance, total debt, and total collected.',
+      customerDebtDetailTutorial2: 'The ledger below lists every debt addition and payment with its date and running balance.',
+      customerDebtDetailTutorial3: 'Green rows are debt added to the customer; orange rows are payments received.',
+      customerDebtDetailTutorial4: 'Tap Record Payment to accept a payment against this debt.',
+      customerDebtDetailTutorial5: 'When the balance reaches zero, the debt is marked fully settled.',
+      recordPaymentTutorial1: 'Enter how much the customer is paying against their current balance.',
+      recordPaymentTutorial2: 'The remaining balance preview updates instantly as you type.',
+      recordPaymentTutorial3: 'Add an optional note, like "paid in cash" or "partial payment".',
+      recordPaymentTutorial4: 'Tap Pay to save the payment. The balance and history update automatically.',
+      reportTutorial1: 'The Reports page shows your store\'s sales performance over time.',
+      reportTutorial2: 'Use the toggle buttons to switch between Daily, Weekly, and Monthly views.',
+      reportTutorial3: 'The summary cards show total sales and profit for the selected period.',
+      reportTutorial4: 'Recent transactions appear here with details on each sale. Scroll to see more.',
+      reportTutorial5: 'The Best-Selling Products section shows your top-performing items.',
+      reportTutorial6: 'Low-stock items are listed here so you know what needs restocking.',
+      helpTutorial1: 'This is the Help page — your guide to using Sari-Sari Smart effectively.',
+      helpTutorial2: 'The Tutorial Selector lets you choose from different tutorials. Select a tutorial from the dropdown and tap "Launch" to start a guided tour of any page.',
+      helpTutorial3: 'The "How to Use" button opens a detailed guide with step-by-step instructions for recording sales, adding stock, tracking debts, viewing reports, and customizing settings.',
+      helpTutorial4: 'The Contact section shows how to reach support for questions or feedback about the app.',
+      helpTutorial5: 'The About section tells you about the app version and its purpose.',
+      helpTutorial6: 'You can also access page-specific tutorials from any page by tapping the (?) Help button in the top-right corner of the header.',
+      pdTitle: 'Product Detail',
+      criticalStockAlert: '⚠️ Critical Stock Alert',
+      criticalAlertDesc: 'This item is out of stock. Restock soon.',
+      stockLabel: 'Stock',
+      sellPrice: 'Selling Price',
+      profitMargin: 'Profit Margin',
+      deductStock: 'Deduct Stock',
+      deductBtn: 'Deduct',
+      restockBtn: 'Restock',
+      editBtn: 'Edit',
+      deleteBtn: 'Delete',
+      confirmDeleteProduct: 'Delete this product from your inventory?',
+      productNotFound: 'Product not found',
+      fullySettled: '✅ Fully Settled',
+      lastActivity: 'Last activity:',
+      debtHistory: 'Debt History',
+      descHeader: 'Description',
+      amountHeader: 'Amount',
+      balanceHeader: 'Balance',
+      initialDebt: 'Initial',
+      totalCollected: 'Total Collected',
+      customerNotFound: 'Customer not found',
+      paymentAmount: 'Payment Amount',
+      paymentExceeds: 'Amount exceeds the balance',
+      enterAmount: 'Enter a valid amount.',
+      note: 'Note',
+      paymentNotePlaceholder: 'e.g. paid in cash',
+      savePayment: 'Save Payment',
+      reportsTitle: 'Reports',
+      periodDay: 'Day',
+      periodWeek: 'Week',
+      periodMonth: 'Month',
+      totalSales: 'Total Sales',
+      reportsProfit: 'Profit',
+      bestSelling: 'Best-Selling Products',
+      recentTransactions: 'Recent Transactions',
+      lowStockItems: 'Low Stock Items',
+      noData: 'No data yet',
+      helpTitle: 'Help',
+      replayTutorial: 'Replay Tutorial',
+      howToUse: 'How to Use',
+      contactInfo: 'Contact',
+      aboutApp: 'About App',
+      contactText: 'For questions or feedback, email support@sarisarismart.com',
+      aboutText: 'Sari-Sari Smart v3.0 — a store management app for sari-sari store owners.',
+      howToSales: 'Record your daily cash sales and specific item sales on the Sales page.',
+      howToStock: 'Add products, restock, and track inventory levels on the Stocks page.',
+      howToDebts: 'Track customer debts and record payments on the Debts page.',
+      howToReports: 'View your store\'s performance on the Reports page.',
+      howToSettings: 'Customize language, text size, store and owner name in Settings.',
+      moreSection: 'More',
       // Debts
       debtsTitle: 'Debts',
       debtsTotalLabel: 'Total Debt',
@@ -413,10 +511,15 @@
       markupHint: 'Sa {pct}% markup, ibenta sa {price}',
       newDebtCustomer: 'Pangalan ng Kostumer',
       newDebtAmount: 'Halaga ng Utang',
+      newDebtTitle: 'Bagong Utang',
+      saveDebt: 'I-save ang Utang',
+      enterCustomerNameDebt: 'Ilagay ang pangalan ng kostumer',
       saved: 'Na-save!',
       saleSaved: 'Naitala ang benta!',
       debtSaved: 'Naitala ang utang!',
       paymentSaved: 'Naitala ang bayad!',
+      currentBalance: 'Kasalukuyang Balanse',
+      recordPayment: 'Magtala ng Bayad',
       productSaved: 'Na-save ang produkto!',
       dataReset: 'Na-reset ang data.',
       noProducts: 'Wala pang produkto.',
@@ -548,6 +651,94 @@
       debtsTitle: 'Utang',
       debtsTotalLabel: 'Kabuuang Utang',
       newDebtBtn: 'Bagong Utang',
+      // New Debt tutorial
+      tutNewDebt: 'New Debt na Tutorial',
+      newDebtTutorial1: 'Ang page na ito ay para manu-manong magtala ng bagong utang para sa isang kostumer.',
+      newDebtTutorial2: 'Ilagay ang pangalan ng kostumer. Kung sila ay bagong kostumer, awtomatiko silang idadagdag.',
+      newDebtTutorial3: 'Ilagay ang halaga ng utang. Ito ay idadagdag sa existing balance ng kostumer.',
+      newDebtTutorial4: 'I-tap ang "Save Debt" para itala ito. Maaari mong tingnan ang lahat ng utang sa Debts page.',
+      // v3.0 parity pages (Product Detail / Debtor Detail / Record Payment / Reports / Help)
+      tutProductDetail: 'Product Detail na Tutorial',
+      tutDebtorDetail: 'Customer Debt Detail na Tutorial',
+      tutRecordPayment: 'Record Payment na Tutorial',
+      tutReport: 'Reports na Tutorial',
+      tutHelp: 'Help na Tutorial',
+      productDetailTutorial1: 'Ang page na ito ay nagpapakita ng lahat tungkol sa produkto: pangalan, unit, stock quantity, presyo ng stock, presyo ng benta, at profit margin.',
+      productDetailTutorial2: 'May color-coded na alert kapag mababa na o ubos na ang stock.',
+      productDetailTutorial3: 'Ibawas ang nabentang stock, mag-restock, o i-edit ang detalye ng produkto dito.',
+      productDetailTutorial4: 'Gamitin ang Delete para permanenteng alisin ang produkto — may kumpirmasyon muna.',
+      customerDebtDetailTutorial1: 'Ang page na ito ay nagpapakita ng utang ng customer: current balance, kabuuang utang, at kabuuang nakolekta.',
+      customerDebtDetailTutorial2: 'Ang ledger sa ibaba ay nagpapakita ng bawat idinagdag na utang at bayad kasama ang petsa at running balance.',
+      customerDebtDetailTutorial3: 'Ang berdeng row ay dagdag na utang; ang orange na row ay mga bayad na natanggap.',
+      customerDebtDetailTutorial4: 'I-tap ang Record Payment para tumanggap ng bayad sa utang na ito.',
+      customerDebtDetailTutorial5: 'Kapag zero na ang balance, mamarkahan ang utang bilang fully settled.',
+      recordPaymentTutorial1: 'Ilagay kung magkano ang ibabayad ng customer sa kanyang current balance.',
+      recordPaymentTutorial2: 'Agad na nag-a-update ang preview ng natitirang balance habang nagta-type ka.',
+      recordPaymentTutorial3: 'Magdagdag ng opsyonal na note, tulad ng "cash na binayad" o "partial payment".',
+      recordPaymentTutorial4: 'I-tap ang Pay para i-save ang bayad. Awtomatikong mag-a-update ang balance at history.',
+      reportTutorial1: 'Ang Reports page ay nagpapakita ng performance ng iyong tindahan sa paglipas ng panahon.',
+      reportTutorial2: 'Gamitin ang toggle buttons para lumipat sa Daily, Weekly, o Monthly views.',
+      reportTutorial3: 'Ang summary cards ay nagpapakita ng total sales at profit para sa napiling panahon.',
+      reportTutorial4: 'Ang mga recent transactions ay lumalabas dito na may detalye ng bawat benta.',
+      reportTutorial5: 'Ang Best-Selling Products section ay nagpapakita ng iyong mga top-performing items.',
+      reportTutorial6: 'Ang low-stock items ay nakalista dito para malaman mo kung ano ang kailangan i-restock.',
+      helpTutorial1: 'Ito ang Help page — ang iyong gabay sa paggamit ng Sari-Sari Smart nang epektibo.',
+      helpTutorial2: 'Ang Tutorial Selector ay nagbibigay-daan sa iyo na pumili ng iba\'t ibang tutorial. Pumili ng tutorial mula sa dropdown at i-tap ang "Launch" para magsimula ng guided tour.',
+      helpTutorial3: 'Ang "How to Use" button ay nagbubukas ng detalyadong gabay na may step-by-step na tagubilin para sa pag-record ng benta, pagdagdag ng stock, pagsubaybay ng utang, at iba pa.',
+      helpTutorial4: 'Ang Contact section ay nagpapakita kung paano makipag-ugnayan sa support para sa mga tanong o feedback.',
+      helpTutorial5: 'Ang About section ay nagsasabi tungkol sa bersyon ng app at layunin nito.',
+      helpTutorial6: 'Maaari ka ring mag-access ng page-specific tutorial mula sa kahit anong page sa pamamagitan ng pag-tap sa (?) Help button sa kanang bahagi ng header.',
+      pdTitle: 'Detalye ng Produkto',
+      criticalStockAlert: '⚠️ Kritikal na Stock Alert',
+      criticalAlertDesc: 'Wala nang stock ang item na ito. Mag-restock agad.',
+      stockLabel: 'Stock',
+      sellPrice: 'Presyo ng Benta',
+      profitMargin: 'Profit Margin',
+      deductStock: 'Ibawas ang Stock',
+      deductBtn: 'Ibawas',
+      restockBtn: 'Mag-restock',
+      editBtn: 'I-edit',
+      deleteBtn: 'Tanggalin',
+      confirmDeleteProduct: 'Tanggalin ang produktong ito sa iyong inventory?',
+      productNotFound: 'Hindi nakita ang produkto',
+      fullySettled: '✅ Bayad na Lahat',
+      lastActivity: 'Huling aktibidad:',
+      debtHistory: 'Kasaysayan ng Utang',
+      descHeader: 'Paglalarawan',
+      amountHeader: 'Halaga',
+      balanceHeader: 'Balanse',
+      initialDebt: 'Unang Utang',
+      totalCollected: 'Kabuuang Nakolekta',
+      customerNotFound: 'Hindi nakita ang kostumer',
+      paymentAmount: 'Halaga ng Bayad',
+      paymentExceeds: 'Lumampas ang halaga sa balanse',
+      enterAmount: 'Ilagay ang tamang halaga.',
+      note: 'Tala',
+      paymentNotePlaceholder: 'hal. cash na binayad',
+      savePayment: 'I-save ang Bayad',
+      reportsTitle: 'Ulat',
+      periodDay: 'Araw',
+      periodWeek: 'Linggo',
+      periodMonth: 'Buwan',
+      totalSales: 'Kabuuang Benta',
+      reportsProfit: 'Kita',
+      bestSelling: 'Mga Paboritong Produkto',
+      recentTransactions: 'Mga Kamakailang Transaksyon',
+      lowStockItems: 'Mga Item na Kulang na',
+      noData: 'Wala pang data',
+      helpTitle: 'Tulong',
+      replayTutorial: 'Balik-aral sa Tutorial',
+      howToUse: 'Paano Gamitin',
+      contactInfo: 'Makipag-ugnayan',
+      aboutApp: 'Tungkol sa App',
+      contactText: 'Para sa mga tanong o feedback, mag-email sa support@sarisarismart.com',
+      aboutText: 'Sari-Sari Smart v3.0 — isang store management app para sa mga may-ari ng sari-sari store.',
+      howToSales: 'Itala ang iyong araw-araw na cash sales at specific item sales sa Sales page.',
+      howToStock: 'Magdagdag ng produkto, mag-restock, at subaybayan ang inventory sa Stocks page.',
+      howToDebts: 'Subaybayan ang mga utang ng kostumer at magtala ng bayad sa Debts page.',
+      howToReports: 'Tingnan ang performance ng iyong tindahan sa Reports page.',
+      howToSettings: 'I-customize ang wika, laki ng text, pangalan ng tindahan at may-ari sa Settings.',
+      moreSection: 'Higit Pa',
       stocksLink: 'Stock',
       debtsLink: 'Utang',
       // Add product
@@ -937,6 +1128,71 @@
         { textKey: 'restockTutorial6', highlight: '#restockPurchaseProduct' },
         { textKey: 'restockTutorial7', highlight: '#restockPurchaseList' },
         { textKey: 'restockTutorial8', highlight: '#restockDoneBtn' }
+      ]
+    },
+    new_debt: {
+      label: 'tutNewDebt',
+      page: 'new_debt',
+      steps: [
+        { textKey: 'newDebtTutorial1', highlight: null },
+        { textKey: 'newDebtTutorial2', highlight: '#newDebtCustomer' },
+        { textKey: 'newDebtTutorial3', highlight: '#newDebtAmount' },
+        { textKey: 'newDebtTutorial4', highlight: '.btn-primary.btn-full' }
+      ]
+    },
+    product_detail: {
+      label: 'tutProductDetail',
+      page: 'product_detail',
+      steps: [
+        { textKey: 'productDetailTutorial1', highlight: null },
+        { textKey: 'productDetailTutorial2', highlight: '#pdStockAlert' },
+        { textKey: 'productDetailTutorial3', highlight: '#pdActions' },
+        { textKey: 'productDetailTutorial4', highlight: '#pdDeleteBtn' }
+      ]
+    },
+    debtor_detail: {
+      label: 'tutDebtorDetail',
+      page: 'debtor_detail',
+      steps: [
+        { textKey: 'customerDebtDetailTutorial1', highlight: null },
+        { textKey: 'customerDebtDetailTutorial2', highlight: '#cddBalanceCard' },
+        { textKey: 'customerDebtDetailTutorial3', highlight: '#cddLedger' },
+        { textKey: 'customerDebtDetailTutorial4', highlight: '#cddRecordPaymentBtn' },
+        { textKey: 'customerDebtDetailTutorial5', highlight: null }
+      ]
+    },
+    record_payment: {
+      label: 'tutRecordPayment',
+      page: 'record_payment',
+      steps: [
+        { textKey: 'recordPaymentTutorial1', highlight: '#rpAmountField' },
+        { textKey: 'recordPaymentTutorial2', highlight: '#rpRemainingPreview' },
+        { textKey: 'recordPaymentTutorial3', highlight: '#rpNoteField' },
+        { textKey: 'recordPaymentTutorial4', highlight: '#rpPayBtn' }
+      ]
+    },
+    report: {
+      label: 'tutReport',
+      page: 'reports',
+      steps: [
+        { textKey: 'reportTutorial1', highlight: null },
+        { textKey: 'reportTutorial2', highlight: '#reportPeriodToggle' },
+        { textKey: 'reportTutorial3', highlight: '#reportSummaryCards' },
+        { textKey: 'reportTutorial4', highlight: '#reportRecentTx' },
+        { textKey: 'reportTutorial5', highlight: '#reportBestSellers' },
+        { textKey: 'reportTutorial6', highlight: '#reportLowStock' }
+      ]
+    },
+    help: {
+      label: 'tutHelp',
+      page: 'help',
+      steps: [
+        { textKey: 'helpTutorial1', highlight: null },
+        { textKey: 'helpTutorial2', highlight: '#helpTutSelector' },
+        { textKey: 'helpTutorial3', highlight: '#helpHowTo' },
+        { textKey: 'helpTutorial4', highlight: '#helpContact' },
+        { textKey: 'helpTutorial5', highlight: '#helpAbout' },
+        { textKey: 'helpTutorial6', highlight: null }
       ]
     }
   };
@@ -2095,7 +2351,7 @@
       var status = getStockStatus(p);
       var icon = status === 'plenty' ? '\u2705' : (status === 'low' ? '\u26a0\ufe0f' : '\ud83d\udd34');
       var margin = p.costPrice > 0 ? Math.round(((p.sellingPrice - p.costPrice) / p.costPrice) * 100) : 0;
-      return '<div class="inv-manage-item">' +
+      return '<div class="inv-manage-item" onclick="location.href=\'product_detail.html?id=' + p.id + '\'" style="cursor:pointer;">' +
         '<div class="inv-manage-icon ' + status + '">' + icon + '</div>' +
         '<div class="inv-manage-info">' +
           '<div class="inv-manage-name">' + p.name + '</div>' +
@@ -2222,13 +2478,13 @@
           var formatted = formatDateSafe(d.updatedAt);
           if (formatted) activityLabel = 'Last: ' + formatted;
         }
-        return '<div class="debt-manage-item" onclick="openDebtDetail(\'' + d.id + '\')" style="cursor:pointer;">' +
+        return '<div class="debt-manage-item" onclick="location.href=\'debtor_detail.html?id=' + d.id + '\'" style="cursor:pointer;">' +
           '<div class="debt-manage-info">' +
             '<div class="debt-manage-name">' + d.customerName + '</div>' +
             '<div class="debt-manage-meta">' + activityLabel + '</div>' +
           '</div>' +
           '<div class="debt-manage-amount">' + formatCurrency(d.remainingBalance) + '</div>' +
-          '<button class="debt-manage-pay-btn" onclick="event.stopPropagation(); openPaymentSheet(\'' + d.id + '\')">' + t('payBtnLabel') + '</button>' +
+          '<button class="debt-manage-pay-btn" onclick="event.stopPropagation(); location.href=\'record_payment.html?id=' + d.id + '\'">' + t('payBtnLabel') + '</button>' +
         '</div>';
       }).join('');
     }
@@ -3000,6 +3256,316 @@
     }
   }
 
+  // ============================================
+  // PRODUCT DETAIL PAGE (product_detail.html)
+  // ============================================
+  function renderProductDetail() {
+    var container = document.getElementById('pdContainer');
+    if (!container) return;
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var product = state.products.find(function(p) { return p.id === id; });
+    if (!product) {
+      container.innerHTML = '<div class="empty-state">' + t('productNotFound') + '</div>';
+      return;
+    }
+    var titleEl = document.getElementById('pdProductTitle');
+    if (titleEl) titleEl.textContent = product.name;
+
+    var status = getStockStatus(product);
+    var statusColor = status === 'plenty' ? '#16a34a' : (status === 'low' ? '#d97706' : '#dc2626');
+    var statusBg = status === 'plenty' ? '#f0fdf4' : (status === 'low' ? '#fffbeb' : '#fef2f2');
+    var margin = product.costPrice > 0 ? Math.round(((product.sellingPrice - product.costPrice) / product.costPrice) * 100) : 0;
+
+    var alertHtml = '';
+    if (status === 'out') {
+      alertHtml = '<div id="pdStockAlert" style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:14px;margin-bottom:16px;">' +
+        '<div style="font-weight:700;color:#b91c1c;">' + t('criticalStockAlert') + '</div>' +
+        '<div style="font-size:var(--text-sm);color:#dc2626;">' + t('criticalAlertDesc') + '</div></div>';
+    }
+
+    container.innerHTML =
+      alertHtml +
+      '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:16px;">' +
+        '<div style="display:flex;align-items:center;gap:14px;">' +
+          '<div style="width:56px;height:56px;border-radius:10px;background:' + statusBg + ';display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:' + statusColor + ';">' + product.quantity + '</div>' +
+          '<div><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('stockLabel') + '</div>' +
+          '<div style="font-weight:700;color:#1e293b;">' + product.name + '</div></div>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #f1f5f9;">' +
+          '<div style="text-align:center;flex:1;"><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('costPrice') + '</div><div style="font-weight:700;">' + formatCurrency(product.costPrice) + '</div></div>' +
+          '<div style="text-align:center;flex:1;"><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('sellPrice') + '</div><div style="font-weight:700;color:#16a34a;">' + formatCurrency(product.sellingPrice) + '</div></div>' +
+          '<div style="text-align:center;flex:1;"><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('profitMargin') + '</div><div style="font-weight:700;color:' + (margin >= 15 ? '#16a34a' : (margin > 0 ? '#d97706' : '#94a3b8')) + ';">' + (margin > 0 ? '+' + margin + '%' : '--') + '</div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div id="pdActions" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:16px;">' +
+        '<div style="font-weight:700;color:#1e293b;margin-bottom:10px;">' + t('deductStock') + '</div>' +
+        '<div style="display:flex;gap:8px;">' +
+          '<input type="number" id="pdDeductQty" class="form-input" placeholder="1" min="1" style="flex:1;">' +
+          '<button class="btn btn-primary" onclick="deductWebStock(\'' + product.id + '\')">' + t('deductBtn') + '</button>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-top:12px;">' +
+          '<a href="restock.html" class="btn btn-outline" style="flex:1;text-decoration:none;">' + t('restockBtn') + '</a>' +
+          '<button class="btn btn-outline" style="flex:1;" onclick="window.editProduct(\'' + product.id + '\')">' + t('editBtn') + '</button>' +
+        '</div>' +
+      '</div>' +
+      '<button id="pdDeleteBtn" class="btn btn-secondary btn-full" style="border:1px solid #fca5a5;color:#dc2626;" onclick="deleteWebProduct(\'' + product.id + '\')">🗑️ ' + t('deleteBtn') + '</button>';
+  }
+
+  function deductWebStock(id) {
+    var product = state.products.find(function(p) { return p.id === id; });
+    if (!product) return;
+    var qty = parseInt(document.getElementById('pdDeductQty') ? document.getElementById('pdDeductQty').value : '1') || 1;
+    if (qty <= 0 || qty > product.quantity) { showToast(t('enterAmount'), 'error'); return; }
+    product.quantity -= qty;
+    saveState();
+    renderProductDetail();
+    showToast(t('saved'));
+  }
+
+  function deleteWebProduct(id) {
+    var product = state.products.find(function(p) { return p.id === id; });
+    if (!product) return;
+    if (!confirm(t('confirmDeleteProduct'))) return;
+    state.products = state.products.filter(function(p) { return p.id !== id; });
+    saveState();
+    window.location.href = 'inventory.html';
+  }
+
+  // ============================================
+  // DEBTOR DETAIL PAGE (debtor_detail.html)
+  // ============================================
+  function renderDebtorDetail() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var debt = state.debts.find(function(d) { return d.id === id; });
+    var nameEl = document.getElementById('debtorDetailName');
+    var balanceCard = document.getElementById('cddBalanceCard');
+    var payBtnEl = document.getElementById('cddRecordPaymentBtn');
+    var ledgerEl = document.getElementById('cddLedger');
+    if (!debt) {
+      if (nameEl) nameEl.textContent = t('customerNotFound');
+      if (balanceCard) balanceCard.innerHTML = '<div class="empty-state">' + t('customerNotFound') + '</div>';
+      if (payBtnEl) payBtnEl.innerHTML = '';
+      if (ledgerEl) ledgerEl.innerHTML = '';
+      return;
+    }
+    if (nameEl) nameEl.textContent = debt.customerName;
+
+    if (!debt.transactions) {
+      debt.transactions = [{ id: genId(), date: debt.createdAt || new Date().toISOString(), type: 'debt', description: 'Initial', amount: debt.amount }];
+    }
+
+    var settled = debt.remainingBalance <= 0;
+    var collected = (debt.amount || 0) - debt.remainingBalance;
+
+    balanceCard.innerHTML =
+      '<div style="background:' + (settled ? '#f0fdf4' : '#fffbeb') + ';border-radius:12px;padding:24px;text-align:center;">' +
+        '<div style="font-size:var(--text-sm);color:' + (settled ? '#16a34a' : '#b45309') + ';">' + t('currentBalance') + '</div>' +
+        '<div style="font-size:34px;font-weight:700;color:' + (settled ? '#16a34a' : '#d97706') + ';">' + formatCurrency(debt.remainingBalance) + '</div>' +
+        (settled
+          ? '<div style="font-size:var(--text-sm);color:#16a34a;margin-top:4px;">' + t('fullySettled') + '</div>'
+          : '<div style="font-size:var(--text-sm);color:#64748b;margin-top:4px;">' + t('lastActivity') + ' ' + formatDateSafe(debt.updatedAt) + '</div>') +
+      '</div>';
+
+    payBtnEl.innerHTML =
+      '<button class="btn btn-primary btn-large" style="width:100%;" onclick="location.href=\'record_payment.html?id=' + debt.id + '\'">' + t('recordPayment') + '</button>';
+
+    var rows = [];
+    var running = 0;
+    (debt.transactions || []).forEach(function(tx) {
+      if (tx.type === 'payment') {
+        running -= tx.amount;
+        rows.push({ date: tx.date, desc: tx.description || t('note'), amount: tx.amount, running: running, isPos: false });
+      } else {
+        running += tx.amount;
+        rows.push({ date: tx.date, desc: tx.description || t('initialDebt'), amount: tx.amount, running: running, isPos: true });
+      }
+    });
+    rows.sort(function(a, b) { return new Date(a.date) - new Date(b.date); });
+    var html = rows.map(function(r) {
+      return '<div class="debt-history-row" style="display:flex;align-items:center;gap:8px;padding:8px 0;">' +
+        '<span style="color:' + (r.isPos ? '#16a34a' : '#f97316') + ';font-size:16px;">' + (r.isPos ? '＋' : '－') + '</span>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-size:var(--text-sm);font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + r.desc + '</div>' +
+          '<div style="font-size:12px;color:#94a3b8;">' + formatDateSafe(r.date) + '</div>' +
+        '</div>' +
+        '<div style="text-align:right;width:70px;"><div style="font-size:var(--text-sm);color:' + (r.isPos ? '#16a34a' : '#f97316') + ';">' + (r.isPos ? '+' : '-') + formatCurrency(r.amount) + '</div></div>' +
+        '<div style="text-align:right;width:80px;font-weight:600;font-size:var(--text-sm);color:#1e293b;">' + formatCurrency(r.running) + '</div>' +
+      '</div>';
+    }).join('');
+
+    ledgerEl.innerHTML =
+      '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">' +
+        '<div style="font-weight:700;color:#1e293b;margin-bottom:12px;">' + t('debtHistory') + '</div>' +
+        '<div style="display:flex;gap:8px;font-size:12px;color:#94a3b8;font-weight:600;padding-bottom:8px;border-bottom:1px solid #f1f5f9;">' +
+          '<div style="width:24px;"></div><div style="flex:1;">' + t('descHeader') + '</div>' +
+          '<div style="text-align:right;width:70px;">' + t('amountHeader') + '</div>' +
+          '<div style="text-align:right;width:80px;">' + t('balanceHeader') + '</div>' +
+        '</div>' +
+        (html || '<div class="empty-state">' + t('noData') + '</div>') +
+        '<div style="display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid #f1f5f9;">' +
+          '<div><div style="font-size:12px;color:#94a3b8;">' + t('debtsTotalLabel') + '</div><div style="font-weight:700;">' + formatCurrency(debt.amount) + '</div></div>' +
+          '<div style="text-align:right;"><div style="font-size:12px;color:#94a3b8;">' + t('totalCollected') + '</div><div style="font-weight:700;color:#16a34a;">' + formatCurrency(collected) + '</div></div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // ============================================
+  // RECORD PAYMENT PAGE (record_payment.html)
+  // ============================================
+  function renderRecordPayment() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var debt = state.debts.find(function(d) { return d.id === id; });
+    var backBtn = document.getElementById('rpBackBtn');
+    if (backBtn) backBtn.href = 'debtor_detail.html?id=' + id;
+    var card = document.getElementById('rpCustomerCard');
+    if (!card) return;
+    if (!debt) {
+      card.innerHTML = '<div class="empty-state">' + t('customerNotFound') + '</div>';
+      return;
+    }
+    card.innerHTML =
+      '<div style="background:#fffbeb;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;">' +
+        '<div style="width:48px;height:48px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>' +
+        '<div><div style="font-weight:700;color:#1e293b;">' + debt.customerName + '</div>' +
+        '<div style="font-size:var(--text-sm);color:#b45309;">' + t('currentBalance') + ': ' + formatCurrency(debt.remainingBalance) + '</div></div>' +
+      '</div>';
+    updatePaymentPreview();
+  }
+
+  function updatePaymentPreview() {
+    var preview = document.getElementById('rpRemainingPreview');
+    if (!preview) return;
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var debt = state.debts.find(function(d) { return d.id === id; });
+    var amount = parseFloat(document.getElementById('rpAmountField') ? document.getElementById('rpAmountField').value : 0) || 0;
+    var remaining = debt ? (debt.remainingBalance - amount) : 0;
+    var over = debt ? amount > debt.remainingBalance : false;
+    if (amount <= 0 || !debt) { preview.innerHTML = ''; return; }
+    preview.innerHTML =
+      '<div style="background:' + (over ? '#fef2f2' : '#f0fdf4') + ';border-radius:12px;padding:16px;text-align:center;">' +
+        '<div style="font-size:var(--text-sm);color:' + (over ? '#dc2626' : '#15803d') + ';">' + t('payPreview') + '</div>' +
+        '<div style="font-size:30px;font-weight:700;color:' + (over ? '#dc2626' : (remaining <= 0 ? '#16a34a' : '#d97706')) + ';">' + formatCurrency(Math.max(remaining, 0)) + '</div>' +
+        (remaining <= 0 && !over ? '<div style="font-size:var(--text-sm);color:#16a34a;">' + t('fullySettled') + '</div>' : '') +
+        (over ? '<div style="font-size:var(--text-sm);color:#dc2626;">' + t('paymentExceeds') + '</div>' : '') +
+      '</div>';
+  }
+
+  function saveRecordPayment() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var debt = state.debts.find(function(d) { return d.id === id; });
+    if (!debt) return;
+    var amount = parseFloat(document.getElementById('rpAmountField') ? document.getElementById('rpAmountField').value : 0) || 0;
+    var note = document.getElementById('rpNoteField') ? document.getElementById('rpNoteField').value.trim() : '';
+    if (amount <= 0) { showToast(t('enterAmount'), 'error'); return; }
+    if (amount > debt.remainingBalance) { showToast(t('paymentExceeds'), 'error'); return; }
+    if (!debt.transactions) debt.transactions = [];
+    debt.transactions.push({ id: genId(), date: new Date().toISOString(), type: 'payment', description: note || null, amount: amount });
+    debt.remainingBalance -= amount;
+    debt.updatedAt = new Date().toISOString();
+    saveState();
+    showToast(t('paymentSaved'));
+    window.location.href = 'debtor_detail.html?id=' + debt.id;
+  }
+
+  // ============================================
+  // REPORTS PAGE (reports.html)
+  // ============================================
+  var _reportPeriod = 'day';
+
+  function reportCard(title, bodyHtml) {
+    return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">' +
+      '<div style="font-weight:700;color:#1e293b;margin-bottom:8px;">' + title + '</div>' + bodyHtml + '</div>';
+  }
+
+  function renderReports() {
+    var toggle = document.getElementById('reportPeriodToggle');
+    var summary = document.getElementById('reportSummaryCards');
+    var best = document.getElementById('reportBestSellers');
+    var recent = document.getElementById('reportRecentTx');
+    var low = document.getElementById('reportLowStock');
+    if (!toggle || !summary) return;
+
+    var sales = state.sales || [];
+    var now = new Date();
+    var weekAgo = now.getTime() - 7 * 24 * 60 * 60 * 1000;
+    var monthAgo = now.getTime() - 30 * 24 * 60 * 60 * 1000;
+    var filtered = sales.filter(function(s) {
+      var d = new Date(s.date + 'T00:00:00');
+      var ts = d.getTime();
+      if (_reportPeriod === 'week') return ts >= weekAgo;
+      if (_reportPeriod === 'month') return ts >= monthAgo;
+      return s.date === todayStr();
+    });
+    var totalSales = filtered.reduce(function(sum, s) { return sum + (s.amount || 0); }, 0);
+    var totalProfit = filtered.reduce(function(sum, s) { return sum + (s.profit || 0); }, 0);
+
+    toggle.innerHTML = ['day', 'week', 'month'].map(function(p) {
+      var label = p === 'day' ? t('periodDay') : (p === 'week' ? t('periodWeek') : t('periodMonth'));
+      var sel = _reportPeriod === p;
+      return '<button class="btn btn-sm ' + (sel ? 'btn-primary' : 'btn-secondary') + '" style="flex:1;margin-right:6px;" onclick="setReportPeriod(\'' + p + '\')">' + label + '</button>';
+    }).join('');
+
+    summary.innerHTML =
+      '<div style="display:flex;gap:8px;">' +
+        '<div style="flex:1;background:#f0fdf4;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:var(--text-sm);color:#64748b;">' + t('totalSales') + '</div><div style="font-weight:700;color:#16a34a;">' + formatCurrency(totalSales) + '</div></div>' +
+        '<div style="flex:1;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:var(--text-sm);color:#64748b;">' + t('reportsProfit') + '</div><div style="font-weight:700;color:#2563eb;">' + formatCurrency(totalProfit) + '</div></div>' +
+      '</div>';
+
+    var counts = {};
+    filtered.forEach(function(s) { counts[s.productName] = (counts[s.productName] || 0) + (s.quantity || 1); });
+    var sorted = Object.keys(counts).map(function(n) { return { name: n, qty: counts[n] }; }).sort(function(a, b) { return b.qty - a.qty; }).slice(0, 5);
+    best.innerHTML = reportCard(t('bestSelling'), sorted.length === 0
+      ? '<div style="color:#94a3b8;font-size:var(--text-sm);padding:8px 0;">' + t('noData') + '</div>'
+      : sorted.map(function(ps, i) {
+          return '<div style="display:flex;justify-content:space-between;padding:6px 0;"><div><span style="font-weight:700;color:#b45309;">#' + (i + 1) + '</span> ' + ps.name + '</div><div style="font-weight:600;color:#16a34a;">x' + ps.qty + '</div></div>';
+        }).join(''));
+
+    var recentSales = filtered.slice().sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); }).slice(0, 15);
+    recent.innerHTML = reportCard(t('recentTransactions'), recentSales.length === 0
+      ? '<div style="color:#94a3b8;font-size:var(--text-sm);padding:8px 0;">' + t('noTransactions') + '</div>'
+      : recentSales.map(function(s) {
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f1f5f9;">' +
+            '<div><div style="font-size:var(--text-sm);color:#1e293b;">' + s.productName + (s.customerName ? ' <span style="color:#16a34a;">(' + s.customerName + ')</span>' : '') + '</div>' +
+            '<div style="font-size:12px;color:#94a3b8;">' + formatDateSafe(s.createdAt) + '</div></div>' +
+            '<div style="font-weight:600;font-size:var(--text-sm);">' + formatCurrency(s.amount) + '</div></div>';
+        }).join(''));
+
+    var lowItems = state.products.filter(function(p) { return getStockStatus(p) !== 'plenty'; });
+    low.innerHTML = reportCard(t('lowStockItems'), lowItems.length === 0
+      ? '<div style="color:#94a3b8;font-size:var(--text-sm);padding:8px 0;">' + t('noData') + '</div>'
+      : lowItems.map(function(p) {
+          var st = getStockStatus(p);
+          return '<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>' + p.name + '</span><span style="color:' + (st === 'out' ? '#dc2626' : '#d97706') + ';font-weight:600;">' + p.quantity + ' left</span></div>';
+        }).join(''));
+  }
+
+  function setReportPeriod(p) { _reportPeriod = p; renderReports(); }
+
+  // ============================================
+  // HELP PAGE (help.html)
+  // ============================================
+  function renderHelp() {
+    var list = document.getElementById('howToList');
+    if (!list) return;
+    var items = [
+      { icon: '💰', text: t('howToSales') },
+      { icon: '📦', text: t('howToStock') },
+      { icon: '📒', text: t('howToDebts') },
+      { icon: '📊', text: t('howToReports') },
+      { icon: '⚙️', text: t('howToSettings') }
+    ];
+    list.innerHTML = items.map(function(it) {
+      return '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;">' +
+        '<span style="font-size:18px;">' + it.icon + '</span>' +
+        '<div style="font-size:var(--text-sm);color:#334155;">' + it.text + '</div></div>';
+    }).join('');
+  }
+
   function init() {
     cacheDom();
     loadState();
@@ -3087,6 +3653,10 @@
       renderClosingScreen();
     } else if (pageName === 'inventory') {
       // Inventory management page
+      // Clear any stale edit ID from a previous session (e.g. an edit left
+      // unfinished) so the "Add Stock" button always opens a blank form
+      // instead of silently entering edit mode for an old product.
+      try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
       applyTranslations();
       renderManageInventory();
     } else if (pageName === 'debts') {
@@ -3107,16 +3677,48 @@
       // Set default markup
       if (dom.productMarkup && !dom.productMarkup.value) dom.productMarkup.value = '20';
       if (editId) {
-        state.editProductId = editId;
         var product = state.products.find(function(p) { return p.id === editId; });
         if (product) {
+          state.editProductId = editId;
           if (dom.addProductTitle) dom.addProductTitle.textContent = 'Edit Stock';
           if (dom.productName) dom.productName.value = product.name;
           if (dom.productQty) dom.productQty.value = product.quantity;
           if (dom.productCost) dom.productCost.value = product.costPrice;
           if (dom.productPrice) dom.productPrice.value = product.sellingPrice;
+        } else {
+          // Stale edit ID (product no longer exists) — treat as a fresh add
+          try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
         }
       }
+      // Leaving this page without saving (back button, nav) must clear any
+      // pending edit ID so the next "Add Stock" opens a blank form instead
+      // of re-entering edit mode for the abandoned product.
+      window.addEventListener('pagehide', function() {
+        try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
+      });
+    } else if (pageName === 'new_debt') {
+      // New Debt page
+      applyTranslations();
+    } else if (pageName === 'product_detail') {
+      // Product Detail page
+      applyTranslations();
+      renderProductDetail();
+    } else if (pageName === 'debtor_detail') {
+      // Debtor Detail page
+      applyTranslations();
+      renderDebtorDetail();
+    } else if (pageName === 'record_payment') {
+      // Record Payment page
+      applyTranslations();
+      renderRecordPayment();
+    } else if (pageName === 'reports') {
+      // Reports page
+      applyTranslations();
+      renderReports();
+    } else if (pageName === 'help') {
+      // Help page
+      applyTranslations();
+      renderHelp();
     }
 
     // Apply text size on every page
@@ -3136,6 +3738,16 @@
   // ============================================
   window.toggleDayTransactions = toggleDayTransactions;
   window.launchTutorial = launchTutorial;
+  window.renderProductDetail = renderProductDetail;
+  window.deductWebStock = deductWebStock;
+  window.deleteWebProduct = deleteWebProduct;
+  window.renderDebtorDetail = renderDebtorDetail;
+  window.renderRecordPayment = renderRecordPayment;
+  window.updatePaymentPreview = updatePaymentPreview;
+  window.saveRecordPayment = saveRecordPayment;
+  window.renderReports = renderReports;
+  window.setReportPeriod = setReportPeriod;
+  window.renderHelp = renderHelp;
   window.completeSetup = completeSetup;
   window.showMorningCheck = showMorningCheck;
   window.startDay = startDay;

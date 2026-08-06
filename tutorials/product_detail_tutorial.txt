@@ -1,0 +1,41 @@
+SARI-SARI SMART — PRODUCT DETAIL TUTORIAL (4 STEPS)
+===================================================
+Config: app.js -> tutorials.product_detail
+Page: product_detail
+Launch: header tutorial button on product_detail.html (startTutorial('product_detail', true)) or Settings/Help selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This page shows everything about a product: name, unit, stock quantity, cost price, selling price, and profit margin."
+  Text FIL: "Ang page na ito ay nagpapakita ng lahat tungkol sa produkto: pangalan, unit, stock quantity, presyo ng stock, presyo ng benta, at profit margin."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Stock alert
+  Text EN : "A color-coded alert appears when stock is running low or out of stock."
+  Text FIL: "May color-coded na alert kapag mababa na o ubos na ang stock."
+  Target element : #pdStockAlert
+  Highlight      : the stock alert banner (only rendered when the product is out of stock)
+  Interaction    : look at the alert (if present), tap Next
+----------------------------------------------------------------------
+STEP 3 — Actions
+  Text EN : "Deduct sold or damaged stock, restock, or edit the product details from this page."
+  Text FIL: "Ibawas ang nabentang stock, mag-restock, o i-edit ang detalye ng produkto dito."
+  Target element : #pdActions
+  Highlight      : the deduct / restock / edit actions card
+  Interaction    : look at the actions, tap Next
+----------------------------------------------------------------------
+STEP 4 — Delete
+  Text EN : "Use Delete to permanently remove the product — with a confirmation first."
+  Text FIL: "Gamitin ang Delete para permanenteng alisin ang produkto — may kumpirmasyon muna."
+  Target element : #pdDeleteBtn
+  Highlight      : the Delete button (bottom) -> box expected at top
+  Interaction    : see the button, tap Next (finishes tutorial in place)
+----------------------------------------------------------------------

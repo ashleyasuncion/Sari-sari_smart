@@ -1,0 +1,41 @@
+SARI-SARI SMART — NEW DEBT TUTORIAL (4 STEPS)
+=============================================
+Config: app.js -> tutorials.new_debt
+Page: new_debt
+Launch: header tutorial button on new_debt.html (startTutorial('new_debt', true)) or Settings/Help selector
+
+SHARED STEP FIELDS
+- Highlight appearance: fixed frame, z-index 151, white 2px + green 4px rings, RAF-tracked
+- Navigation: Previous (from step 2); Next advances; Skip visible (replay); last step Next finishes in place
+- Box position rule: target in top 40% -> box bottom; else top; no highlight -> centered
+
+----------------------------------------------------------------------
+STEP 1 — Intro
+  Text EN : "This page lets you manually record a new debt for a customer."
+  Text FIL: "Ang page na ito ay para manu-manong magtala ng bagong utang para sa isang kostumer."
+  Target element : none
+  Highlight      : none
+  Box position   : centered
+  Interaction    : read text, tap Next
+----------------------------------------------------------------------
+STEP 2 — Customer name
+  Text EN : "Enter the customer's name. If they're a new customer, they'll be added automatically."
+  Text FIL: "Ilagay ang pangalan ng kostumer. Kung sila ay bagong kostumer, awtomatiko silang idadagdag."
+  Target element : #newDebtCustomer
+  Highlight      : Customer name input with suggestions (top) -> box expected at bottom
+  Interaction    : look at the name field, tap Next
+----------------------------------------------------------------------
+STEP 3 — Debt amount
+  Text EN : "Enter the debt amount. This will be added to the customer's existing balance."
+  Text FIL: "Ilagay ang halaga ng utang. Ito ay idadagdag sa existing balance ng kostumer."
+  Target element : #newDebtAmount
+  Highlight      : Debt amount input -> box per runtime rule
+  Interaction    : look at the amount field, tap Next
+----------------------------------------------------------------------
+STEP 4 — Save Debt
+  Text EN : "Tap \"Save Debt\" to record it. You can view all debts on the Debts page."
+  Text FIL: "I-tap ang \"Save Debt\" para itala ito. Maaari mong tingnan ang lahat ng utang sa Debts page."
+  Target element : .btn-primary.btn-full
+  Highlight      : Save Debt button (bottom) -> box expected at top
+  Interaction    : see the button, tap Next (finishes tutorial in place)
+----------------------------------------------------------------------

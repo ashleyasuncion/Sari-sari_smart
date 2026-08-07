@@ -15,9 +15,9 @@
     <div class="app-container" id="app">
       <!-- HEADER -->
       <header class="app-header" style="background:var(--primary);color:white;">
-        <a class="header-btn" href="morning.html" style="text-decoration:none;color:white;">
+        <button class="header-btn" onclick="historyBack()" style="color:white;background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:6px;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        </a>
+        </button>
         <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="helpTitle">Help</h1>
         <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('help', true)" aria-label="Tutorial" style="color:white;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -49,7 +49,7 @@
               <option value="report" data-i18n="tutReport">Reports Tutorial</option>
               <option value="help" data-i18n="tutHelp">Help Tutorial</option>
             </select>
-            <button class="btn btn-primary" onclick="launchTutorial()" data-i18n="tutLaunch" style="margin-top:8px;width:100%;">Launch</button>
+            <button class="btn btn-primary" onclick="launchTutorial()" data-i18n="tutLaunch">Launch</button>
           </div>
         </div>
 
@@ -68,8 +68,6 @@
           <div style="font-size:var(--text-sm);color:var(--text-secondary,#64748b);" data-i18n="aboutText">Sari-Sari Smart v3.0 — a store management app for sari-sari store owners.</div>
         </div>
 
-        <a href="reports.html" class="btn btn-outline btn-full" data-i18n="reportsTitle" style="text-decoration:none;margin-bottom:8px;">Ulat</a>
-        <a href="setting.html" class="btn btn-outline btn-full" data-i18n="settingsTitle" style="text-decoration:none;">Settings</a>
       </main>
 
       <div class="toast-container" id="toastContainer"></div>

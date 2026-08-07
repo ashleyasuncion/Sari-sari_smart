@@ -2799,8 +2799,9 @@
     saveState();
     closeNewDebt();
     showToast(t('debtSaved'));
-    // Redirect back to debts page
-    window.location.href = 'debts.html';
+    // Redirect back to debts page. replace() so Back after saving skips the
+    // just-exited form instead of revisiting it (v2.51 history unification).
+    window.location.replace('debts.html');
   }
 
   // ============================================
@@ -3249,7 +3250,14 @@
    */
   function historyBack() {
     var referrer = document.referrer || '';
-    if (referrer.indexOf(window.location.origin) === 0) {
+    // Same-origin referrer covers the normal http-served flow. When the
+    // referrer is empty (file:// / fresh-tab opens), history.length > 1 means
+    // in-app history still exists, so pop it. We deliberately do NOT pop on a
+    // non-empty external referrer even if history.length > 1 — that would
+    // navigate OUT of the app (v2.23 guard preserved). Falls back to
+    // morning.html only when there is genuinely nowhere to go back to.
+    if (referrer.indexOf(window.location.origin) === 0 ||
+        (!referrer && window.history.length > 1)) {
       window.history.back();
     } else {
       window.location.href = 'morning.html';
@@ -3418,8 +3426,9 @@
     var params = new URLSearchParams(window.location.search);
     var id = params.get('id');
     var debt = state.debts.find(function(d) { return d.id === id; });
-    var backBtn = document.getElementById('rpBackBtn');
-    if (backBtn) backBtn.href = 'debtor_detail.html?id=' + id;
+    // (Back arrow is now a historyBack() button — v2.51: uniform history
+    // navigation across all pages. Coming from debtor_detail pops back to it;
+    // coming from the debts list pops back to debts.)
     var card = document.getElementById('rpCustomerCard');
     if (!card) return;
     if (!debt) {
@@ -3469,7 +3478,9 @@
     debt.updatedAt = new Date().toISOString();
     saveState();
     showToast(t('paymentSaved'));
-    window.location.href = 'debtor_detail.html?id=' + debt.id;
+    // replace() so Back after paying skips the just-exited payment form
+    // (v2.51 history unification; matches mobile popBackStack semantics).
+    window.location.replace('debtor_detail.html?id=' + debt.id);
   }
 
   // ============================================

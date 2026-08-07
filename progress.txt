@@ -3160,3 +3160,152 @@ Files changed (mobile):
 - git/app/Sari-sari_smart_APP/.../ReportsScreen.kt
 - git/app/Sari-sari_smart_APP/.../SettingsScreen.kt
 - git/app/Sari-sari_smart_APP/progress.txt: This entry
+
+
+══════════════════════════════════════════════════════════
+v2.49 — HELP PAGE LAUNCH BUTTON OVERFLOW FIX
+Date: Aug 7, 2026
+Status: DONE
+
+Tracks: user reported the help page Launch button
+(btn btn-primary, onclick=launchTutorial()) spills past the
+right edge of the #helpTutSelector card.
+
+Root cause:
+- help.html's Launch button carried an inline
+  style="margin-top:8px;width:100%;". .tutorial-selector-row is a
+  HORIZONTAL flex row (select flex:1 + .btn with flex-shrink:0 /
+  white-space:nowrap per style.css), so the inline width:100%
+  made the button claim the full row width as its flex-basis on
+  top of the select's flex share + the 8px gap -> combined width
+  exceeded the card. Measured in Chrome: card clientWidth 359px,
+  button right edge 422px -> 45px overflow. setting.html has the
+  identical button WITHOUT the inline style and fits exactly
+  (0px diff) — proof the inline style was the culprit. The
+  margin-top:8px was also meaningless in a centered row flex.
+
+Fix:
+- help.html: removed style="margin-top:8px;width:100%;" from the
+  Launch button. It now renders exactly like setting.html — select
+  on the left, green Launch button to its right on the same line.
+
+Validation:
+- Chrome after fix: button right edge 1110px vs card right edge
+  1125px -> inside card, no overflow, zero console errors.
+
+Files changed:
+- git/Sari-sari_smart/help.html
+- progress.txt: This entry
+
+
+══════════════════════════════════════════════════════════
+v2.50 — HELP PAGE REDIRECT BUTTONS REMOVED (REPORTS + SETTINGS)
+Date: Aug 7, 2026
+Status: DONE
+
+Tracks: user asked to investigate the Settings/Reports redirect
+buttons at the bottom of the help page. Investigation confirmed
+they were intentional (v2.45 reachability work — the new
+reports/help pages previously only existed as tutorial targets),
+but they floated below the About card with no "More" section
+header, unlike setting.html's labeled section. User chose:
+remove them.
+
+Changes:
+- help.html: removed the two full-width outlined redirect links
+  (<a href="reports.html" data-i18n="reportsTitle"> and
+  <a href="setting.html" data-i18n="settingsTitle">) from the
+  bottom of the page. The page now ends at the About card.
+- No JS changes: renderHelp() only populates #howToList; the help
+  tutorial (6 steps) highlights none of the removed links; the
+  only a[href="setting.html"] tutorial highlight lives on
+  debts.html (header gear), untouched.
+
+Reachability after removal:
+- Reports still reachable via the Settings "More" section.
+- Settings still reachable via the header gear on debts.html and
+  inventory.html.
+
+Validation:
+- Chrome: page loads with zero console errors, header intact,
+  About card is the last content element, no redirect buttons
+  remain.
+
+Files changed:
+- git/Sari-sari_smart/help.html
+- progress.txt: This entry
+
+
+══════════════════════════════════════════════════════════
+v2.51 — BACK BUTTON NAVIGATION FLOW FIX (HISTORY UNIFICATION)
+Date: Aug 7, 2026
+Status: DONE
+
+Tracks: user reported the in-app back arrows don't follow
+browser history: Inventory → Debts → New Debt, Back from New
+Debt → Debts, but Back again → New Debt (loop) instead of
+Inventory. Mobile was unaffected (NavController.popBackStack
+on every screen). Investigation report delivered; user chose
+"fix".
+
+Root cause:
+- Two conflicting back-arrow strategies. v2.23 (July 28)
+  introduced historyBack() (referrer-checked history.back())
+  but wired it to only 3 pages: debts.html, inventory.html,
+  setting.html. The other 8 subpages kept hardcoded forward
+  links (<a class="header-btn" href="X.html">): new_debt→debts,
+  add_product→inventory, product_detail→inventory, restock→
+  inventory, debtor_detail→debts, record_payment→debtor_detail
+  (href set dynamically in renderRecordPayment), reports→morning,
+  help→morning.
+- A hardcoded back arrow PUSHES a new history entry; the page it
+  lands on then POPS via historyBack() — so New Debt ↔ Debts
+  bounced forever. (Trace: [inv,debts,new_debt] +link→
+  [..,new_debt,debts] +pop→ [..,new_debt] → loop.)
+- Secondary: historyBack() relied solely on document.referrer,
+  which is empty on file:// / fresh-tab opens, sending those
+  pages' back arrows to morning.html instead of the previous page.
+
+Fix:
+- 8 HTML files converted their hardcoded back-arrow <a href>
+  links to <button class="header-btn" onclick="historyBack()">
+  (same arrow SVG + button styling already used by debts/
+  inventory/setting): new_debt, add_product, product_detail,
+  restock, debtor_detail, record_payment, reports, help.
+- record_payment.html: dropped id="rpBackBtn"; renderRecordPayment()
+  no longer rewrites its href — back now always pops history
+  (arriving from debtor_detail still returns to that debtor;
+  arriving from the debts list returns to debts).
+- app.js historyBack(): pops when the referrer is same-origin, OR
+  the referrer is empty AND window.history.length > 1 (file:// /
+  fresh-tab opens with in-app history). An external non-empty
+  referrer never pops, preserving the v2.23 "don't leave the app"
+  guard. morning.html fallback only when nowhere to go back to.
+- app.js: saveNewDebt() and saveRecordPayment() now use
+  window.location.replace() for their post-save redirects so Back
+  after saving skips the just-exited form (matches mobile
+  popBackStack semantics; no more revisiting an exited page).
+- All 11 back-arrow pages now use one uniform strategy.
+
+Validation:
+- node -c app.js -> SYNTAX OK
+- grep: zero hardcoded back-arrow hrefs remain; rpBackBtn removed
+- Node simulation of the exact reported flow: OLD -> loop
+  (2nd back = new_debt); NEW -> debts → inventory → morning
+  fallback, no loop; record_payment back -> debtor_detail
+  (specific-debtor behavior preserved)
+- Browser click-through deferred (browser-use tooling unavailable
+  during this session) — recommended as a manual smoke test.
+
+Files changed:
+- git/Sari-sari_smart/app.js (historyBack hardening, rpBackBtn
+  removal in renderRecordPayment)
+- git/Sari-sari_smart/new_debt.html
+- git/Sari-sari_smart/add_product.html
+- git/Sari-sari_smart/product_detail.html
+- git/Sari-sari_smart/restock.html
+- git/Sari-sari_smart/debtor_detail.html
+- git/Sari-sari_smart/record_payment.html
+- git/Sari-sari_smart/reports.html
+- git/Sari-sari_smart/help.html
+- progress.txt: This entry

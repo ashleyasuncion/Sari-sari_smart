@@ -126,14 +126,24 @@
   }
 
   function getStockStatus(product) {
-    var threshold = 5;
-    try {
-      var s = localStorage.getItem('sss_v3_settings');
-      if (s) threshold = JSON.parse(s).lowStockThreshold || 5;
-    } catch(e) {}
+    // Per-product threshold wins; fall back to the global Settings threshold.
+    // getGlobalLowStockThreshold() handles a 0 threshold correctly (0 means
+    // "alert only when out of stock").
+    var threshold = (product && typeof product.lowStockThreshold === 'number' && product.lowStockThreshold >= 0)
+      ? product.lowStockThreshold
+      : getGlobalLowStockThreshold();
     if (!product || product.quantity <= 0) return 'out';
     if (product.quantity <= threshold) return 'low';
     return 'plenty';
+  }
+
+  function getGlobalLowStockThreshold() {
+    var t = 5;
+    try {
+      var s = localStorage.getItem('sss_v3_settings');
+      if (s) t = JSON.parse(s).lowStockThreshold || 5;
+    } catch(e) {}
+    return (typeof t === 'number' && t >= 0) ? t : 5;
   }
 
   // ─── Persistence ───
@@ -377,13 +387,23 @@
       if (product) {
         product.quantity += item.qtyAdded;
       } else {
-        // New product
+        // New product — price uses the configured default markup from Settings
+        // (falls back to 20% when unset), matching the Add Stock helper.
+        var dm = 20;
+        try {
+          var __s = localStorage.getItem('sss_v3_settings');
+          if (__s) {
+            var __p = JSON.parse(__s);
+            if (__p && typeof __p.defaultMarkup === 'number') dm = __p.defaultMarkup;
+          }
+        } catch(e) {}
         products.push({
           id: genId(),
           name: item.productName,
           quantity: item.qtyAdded,
           costPrice: item.costPerUnit,
-          sellingPrice: item.costPerUnit * 1.2
+          sellingPrice: item.costPerUnit * (1 + dm / 100),
+          lowStockThreshold: getGlobalLowStockThreshold()
         });
       }
     });

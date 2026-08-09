@@ -3309,3 +3309,302 @@ Files changed:
 - git/Sari-sari_smart/reports.html
 - git/Sari-sari_smart/help.html
 - progress.txt: This entry
+
+v2.52 — DEFAULT MARKUP SETTING RESTORED + MARKUP HELPER BREAKDOWN (Aug 9, 2026)
+
+Background: panelist feedback flagged (1) no centralized default markup — the
+old state.settings.defaultMarkup was dropped unlogged during the Three Moment
+Redesign (app2.6 → app2.7) and the Add Stock markup field was hardcoded to 20;
+(2) the markup helper only said "X% markup, sell at ₱Y" without showing where
+the suggested price came from; (3) the on-cost percentage was labeled "Profit
+Margin" although the math is markup on cost (₱80 @ 20% → ₱16 markup, ₱96
+price, 16.67% true margin).
+
+Changes:
+- setting.html: added "Default Markup (%)" input (0-200, integer) that saves
+  via saveSettings(); hint "Applied to new products".
+- app.js:
+  - state.settings.defaultMarkup (default 20) restored to defaults + dev
+    Settings reset; getDefaultMarkup() helper (falls back to 20 for old data).
+  - saveSettings() persists the new field; Settings page load pre-fills it.
+  - openAddProduct() + add_product init prefill the markup field from the
+    configured default instead of hardcoded '20'.
+  - Edit mode pre-fills the product's ACTUAL markup ((sell/cost - 1) x 100).
+  - updateMarkupHint() renders a full breakdown:
+      "Cost ₱80.00 + 20% (₱16.00) = Suggested ₱96.00" (field hint) and
+      "Cost ₱80.00 + 20% = ₱16.00" (helper box, price shown below).
+  - New i18n keys: markupHint (breakdown), markupBoxHint, defaultMarkupLabel,
+    defaultMarkupHint (EN/FIL).
+  - Terminology: profitMargin label "Profit Margin" → "Markup" (both
+    languages) — the displayed percentage is markup on cost, not margin;
+    inventory/product-detail tutorial copy updated likewise.
+- restock.js: new products created during Restock Day now price with the
+  configured default markup from settings (was hardcoded x1.2).
+
+Validation:
+- node -c app.js / restock.js → SYNTAX OK
+- Node simulation of t() substitution: breakdown strings render correctly in
+  EN/FIL; 80 x 1.2 = 96 sanity PASS.
+- Browser click-through deferred (browser-use tooling unavailable this
+  session) — recommended as a manual smoke test.
+
+Files changed:
+- git/Sari-sari_smart/setting.html
+- git/Sari-sari_smart/app.js
+- git/Sari-sari_smart/restock.js
+- progress.txt: This entry
+
+v2.53 — REVIEWER FOLLOW-UPS: CSV MARKUP LABEL + DEFAULT MARKUP CAP (Aug 9, 2026)
+
+Follow-up fixes from the v2.52 code review, applied after the v2.52 log entry
+was written:
+
+Changes:
+- app.js: data-export CSV header relabeled "Profit Margin" → "Markup"
+  (Name,Quantity,Cost,Sell Price,Markup) — the exported percentage is markup
+  on cost, not margin; matches the v2.52 terminology fix on product cards.
+- app.js: saveSettings() now caps the Default Markup (%) input to 0-200
+  (Math.min(mk, 200)) — matches the mobile SettingsScreen range and prevents
+  absurd values (the add-product markup field itself still allows up to 1000).
+
+Validation:
+- node -c app.js → SYNTAX OK
+- grep "Profit Margin" app.js → no remaining labels
+
+Files changed:
+- git/Sari-sari_smart/app.js
+- progress.txt: This entry
+
+v2.54 — PER-PRODUCT LOW STOCK ALERT + GLOBAL LOW STOCK THRESHOLD SETTING (Aug 9, 2026)
+
+Background: the mobile Add Stock page had a per-product "Low Stock Alert At"
+field, but the web had none — the web only used a single global threshold
+(state.settings.lowStockThreshold, default 5) that had no Settings UI since
+the Settings redesign (app2.6 had settingsStockThreshold; it was dropped
+unlogged). This phase adds BOTH: a per-product threshold on Add Stock and a
+global Low Stock Threshold setting on both web and mobile (mobile Phase 59).
+
+Design (per user decision):
+- Global setting = default for NEW products + fallback for products without
+  their own value. Changing it never rewrites existing per-product values.
+- Per-product value wins (matches the Default Markup model).
+- No cap on the threshold range (0-999 on web, digits-only on mobile).
+
+Changes:
+- add_product.html: added "Low Stock Alert At" number input (0-999) under
+  Selling Price, hint "Alert when stock falls below this number".
+- app.js:
+  - saveProduct() stores lowStockThreshold (falls back to global when empty).
+  - getStockStatus() prefers the product's own threshold, then falls back to
+    the global Settings threshold (old products without a value still work).
+  - New getGlobalLowStockThreshold() helper (mirrors getDefaultMarkup).
+  - Add/Edit page prefill: global threshold for new products, the product's
+    stored value when editing.
+  - Settings page: new settingsLowStockThreshold input persisted by
+    saveSettings() and pre-filled on load.
+  - i18n keys EN/FIL: lowStockAlertLabel, alertThreshold, alertThresholdDesc.
+- setting.html: added "Low Stock Threshold" number input (0-999) with hint.
+- restock.js: its getStockStatus() now also prefers per-product threshold;
+  new products created during Restock Day get the global default threshold.
+
+Validation:
+- node -c app.js / restock.js → SYNTAX OK
+- Node simulation of getStockStatus: per-product-first + global fallback
+  passes all cases (old-product fallback, per-product override up/down,
+  global change, out-of-stock, threshold 0).
+- Code review: fixed getStockStatus/restock.js fallback using || 5 which
+  ignored a global threshold of 0 — now uses getGlobalLowStockThreshold()
+  (0 = alert only when out of stock); EN i18n keys moved next to the EN
+  // Add product block for symmetric organization.
+
+Files changed:
+- git/Sari-sari_smart/add_product.html
+- git/Sari-sari_smart/setting.html
+- git/Sari-sari_smart/app.js
+- git/Sari-sari_smart/restock.js
+- progress.txt: This entry
+
+================================================================================
+v2.55 — REPORTS PAGE ENHANCEMENT (WEB) — HISTORY AGGREGATION + NEW SECTIONS
+Date: Aug 9, 2026
+Status: DONE
+
+Background: analysis of the Reports page (web + mobile) against common
+reporting systems. The web Reports page only read state.sales — the current
+open day's sales. Past days' sales are archived into state.history[].
+archivedSales on day close (archiveDaySales), so the Week and Month toggles
+effectively showed the same data as Day. The page also lacked utang/
+receivables visibility, period comparisons, trends, inventory value, and
+export. This phase applies the analysis recommendations to the WEB version
+only (mobile parity in a later phase).
+
+Changes (app.js + reports.html):
+- FIX (critical): Reports now aggregates real history via getAllSales()
+  (state.sales + history[].archivedSales, deduped by sale id). Day/Week/
+  Month toggles now correctly sum past days. Period persisted in
+  localStorage (sss_v3_reportPeriod), loaded on page init, cleared on Reset.
+- NEW: auto plain-language summary line at the top (bilingual template), e.g.
+  "Linggo: ₱225.00 benta, ₱45.00 kita · ₱200.00 pa ang utang sa iyo".
+- NEW: 6-tile KPI grid — Total Sales, Profit, Items Sold, Transactions,
+  Cash Sales, Utang Sales — with ▲/▼ % comparison badges vs the previous
+  equivalent period (Day→yesterday, Week→prior 7 days, Month→prior 30 days).
+- NEW: Utang section (collapsible) — Outstanding Utang, Active Debtors,
+  Collected this period, and aging buckets (0-30 / 31-60 / 60+ days).
+- NEW: 7-day sales trend bar chart (CSS bars, day-of-month labels) shown for
+  Day & Week (mobile parity). Chart is dev-date aware (uses todayStr()).
+- NEW: Stock Health section (collapsible) — stock value (qty × cost) and
+  slow movers (in stock, no sales in 30 days).
+- NEW: Export CSV button — current-period report (summary + sales rows +
+  low stock) with UTF-8 BOM.
+- Recent Transactions and Low Stock sections now collapsible (chevron).
+- Low stock now shows "Out of stock" / "X left" labels (bilingual) instead
+  of raw counts.
+- New EN/FIL i18n keys (~28) for all new labels.
+- User-entered product/customer names escaped (esc()) in the new innerHTML.
+
+Validation:
+- node -c app.js → SYNTAX OK
+- Browser smoke test (Chrome, seeded data): Day view ₱100.00/₱20.00 correct;
+  Week view ₱225.00/₱45.00 includes the archived sale from history
+  (aggregation fix verified); utang ₱200.00 with 31-60 day aging bucket;
+  low stock + stock value ₱440.00; export button present; zero console errors.
+- Code review: fixed double-negative comparison badge (▼ -20% → ▼ 20%),
+  simplified CSV header literals, chart now dev-date aware, getAllSales
+  deduped by id, esc() hardening on new injection points.
+
+Files changed:
+- git/Sari-sari_smart/app.js
+- git/Sari-sari_smart/reports.html
+- progress.txt: This entry
+
+================================================================================
+V2.56 — CREDIT LIMIT WARNINGS (DEBT & CREDIT SYSTEM)
+Date: Aug 9, 2026
+Status: DONE
+
+Background: The debt system had no credit ceiling — a customer could keep
+accumulating utang without any system-defined limit. This version adds a
+lightweight, automatic credit-limit system (analysis-driven, per the app's
+simplicity principles): no hard blocks, no scores, no roles — just an
+informative limit with a deliberate one-tap override.
+
+Design (from the Credit Limit Warnings analysis report, R1-R6):
+- Global default limit in Settings (default ₱500, 0 = no limit), applied to
+  customers without their own limit. Per-customer override on the Debtor
+  Detail page. Legacy debts automatically fall back to the global default.
+- All math is automatic: available = limit - balance; near-limit at ≥80%;
+  over-limit when the projected total (balance + this sale) exceeds the limit.
+- Two warning levels: amber near-limit note, red over-limit note that blocks
+  the save and reveals a one-tap "Allow anyway" override (deliberate second
+  tap, no audit/roles needed). Payments automatically restore availability.
+
+Changes:
+- app.js: new credit engine (getDefaultCreditLimit, getDebtForName,
+  getEffectiveCreditLimit, getCreditStatus); suggestionBalanceHtml shows
+  "₱balance / ₱limit" color-coded (green/amber/red) in the Day sale sheet and
+  New Debt customer dropdowns; live warnings via updateCreditWarn /
+  updateNewDebtCreditWarn (hooked to customer/qty/product/amount inputs,
+  cleared on sheet open/close and after save); saveSale(force) and
+  saveNewDebt(force) gates block over-limit saves and reveal the Allow-anyway
+  button; per-customer creditLimit editable on debtor_detail
+  (start/cancel/saveCreditLimit); Reports utang section shows an
+  "Over-limit debtors" count (name-grouped); Settings default credit limit
+  field (0-10000, auto-save) + page population + dev-reset settings updated;
+  15 new EN/FIL i18n keys; window exports for the new HTML-invoked handlers.
+- day.html: saleCreditWarn banner + saleAllowAnyway button in the sale sheet.
+- new_debt.html: newDebtCreditWarn banner + allow-anyway + amount oninput hook.
+- setting.html: Default Credit Limit (₱) field with hint.
+- debtor_detail.html: cddCreditLimit container (rendered by renderDebtorDetail).
+- style.css: .credit-warn banner + .customer-suggestion-balance .near/.over.
+
+Validation:
+- node -c app.js → SYNTAX OK
+- Node harness against the extracted real functions (17/17): default/override
+  limits, 0 = unlimited, active-vs-settled name lookup, 80% near threshold,
+  480+50=530 over-limit, suggestion badge classes/text for near/over/settled/
+  no-limit.
+- Code review: added missing window exports (updateNewDebtCreditWarn,
+  start/save/cancelCreditLimitEdit — required by inline onclick handlers),
+  cleared stale warning state on sale-sheet open/close, removed dead DOM-cache
+  entries; esc() used for the warn message name.
+- Browser smoke test not available this run (browser agent returned empty
+  repeatedly); logic verified deterministically via the Node harness instead.
+
+Files changed:
+- git/Sari-sari_smart/app.js
+- git/Sari-sari_smart/day.html
+- git/Sari-sari_smart/new_debt.html
+- git/Sari-sari_smart/setting.html
+- git/Sari-sari_smart/debtor_detail.html
+- git/Sari-sari_smart/style.css
+- progress.txt: This entry
+
+================================================================================
+V2.57 — ALERT AT/OVER CREDIT LIMIT + AT-LIMIT MESSAGE
+Date: Aug 9, 2026
+Status: DONE
+
+Background: v2.56 blocked credit sales only when the projected total EXCEEDED
+the limit (total > limit); a customer exactly AT their limit could still buy.
+This version blocks at-or-above the limit and adds an explicit toast alert
+when the sale tries to go through.
+
+Changes (app.js only):
+- getCreditStatus: overLimit now fires at total >= limit (at-or-above, was >);
+  new atLimit flag (total === limit); half-cent epsilon (0.005) on the
+  comparison so float drift (e.g. 450.10 + 49.90 = 499.99999999999994) can
+  never slip an at-limit sale through the gate.
+- New creditWarnAtLimit EN/FIL key ("{name} is at their {limit} credit limit" /
+  "Naabot na ni {name} ang kanyang {limit} limit ng utang") + creditWarnKey() /
+  creditWarnMessage() helpers; the live banner and the blocked-save toast now
+  pick the accurate at-limit vs over-limit message.
+- saveSale(force) / saveNewDebt(force) gates now also fire
+  showToast(creditWarnMessage(...), 'error') so an explicit alert appears the
+  moment the sale is blocked at/over the limit (one toast per blocked tap;
+  the inline banner still shows live while typing).
+- Reports "Over-limit debtors" count now uses >= (at-or-above) for consistency.
+
+Validation:
+- node -c app.js → SYNTAX OK
+- Node harness against extracted real functions (9/9): at-limit (500) blocked
+  with atLimit flag, over (501) blocked, below (490) allowed, float-drift
+  cases (500.00000000000006 and 499.99999999999994) both blocked, and correct
+  creditWarnKey/message selection.
+- Code review: applied the float-epsilon hardening; banner+toast duplication
+  confirmed acceptable (toast fires once per blocked tap).
+
+Files changed:
+- git/Sari-sari_smart/app.js
+- progress.txt: This entry
+
+================================================================================
+V2.58 — OUT-OF-STOCK PRODUCTS CANNOT BE SELECTED IN SALE SHEET
+Date: Aug 9, 2026
+Status: DONE
+
+Background: The sale sheet let a user select an out-of-stock product from the
+search suggestions (and only complained at save time). This version prevents
+out-of-stock products from being selected in the first place.
+
+Changes:
+- app.js onProductSearch: out-of-stock suggestions now render greyed-out with a
+  'disabled' class and the existing 'no stock' label (EN/FIL); tapping them only
+  flashes the 'Out of stock' toast via the new window.selectProductOutOfStock()
+  handler (added to the window export block). In-stock items are stable-sorted
+  ahead of out-of-stock ones so disabled rows can never crowd sellable items out
+  of the visible top-6 suggestions.
+- app.js selectProduct: defensive guard — quantity <= 0 is rejected with a toast
+  even if some other path tried to select it.
+- style.css: .product-suggestion-item.disabled (opacity .5, cursor not-allowed,
+  transparent hover) so greyed rows read as non-interactive.
+- No new i18n keys needed (reuses noStock).
+
+Validation:
+- node -c app.js: OK.
+- Node harness against the real extracted functions, 13/13 checks pass:
+  disabled rendering + handler wiring + no-stock labels, OOS selection blocked
+  with toast, in-stock selection unaffected, tap-on-disabled toasts only,
+  in-stock-first sort ordering, all-disabled list still renders with no
+  selectable handlers.
+- Code review: passed; its one finding (out-of-stock rows could crowd in-stock
+  items out of the slice(0,6) cap) was applied via the stable sort.

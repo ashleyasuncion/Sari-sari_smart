@@ -84,6 +84,21 @@
           <input type="text" id="settingsOwnerName" class="form-input" onchange="saveSettings()">
         </div>
         <div class="settings-section">
+          <div class="settings-section-title" data-i18n="defaultMarkupLabel">Default na Markup (%)</div>
+          <input type="number" id="settingsDefaultMarkup" class="form-input" min="0" max="200" step="1" onchange="saveSettings()">
+          <div class="markup-hint" data-i18n="defaultMarkupHint">Gagamitin sa mga bagong produkto</div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="alertThreshold">Low Stock Threshold</div>
+          <input type="number" id="settingsLowStockThreshold" class="form-input" min="0" max="999" step="1" onchange="saveSettings()">
+          <div class="markup-hint" data-i18n="alertThresholdDesc">Alert when stock falls below this number</div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="defaultCreditLimitLabel">Default na Limit ng Utang (₱)</div>
+          <input type="number" id="settingsDefaultCreditLimit" class="form-input" min="0" max="10000" step="1" onchange="saveSettings()">
+          <div class="markup-hint" data-i18n="defaultCreditLimitHint">Gagamitin sa mga bagong kostumer. Maglagay ng 0 kung walang limit.</div>
+        </div>
+        <div class="settings-section">
           <div class="settings-section-title" data-i18n="dataMgmt">Data Management</div>
           <button class="btn btn-secondary btn-full" onclick="resetData()" style="margin-bottom:8px;">
             <span data-i18n="resetDataBtn">I-reset ang Data</span>

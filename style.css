@@ -427,6 +427,8 @@ body {
   transition: background var(--transition);
 }
 .product-suggestion-item:hover { background: var(--primary-bg); }
+.product-suggestion-item.disabled { opacity: 0.5; cursor: not-allowed; }
+.product-suggestion-item.disabled:hover { background: transparent; }
 .product-suggestion-item:not(:last-child) { border-bottom: 1px solid var(--border-light); }
 .product-suggestion-name { font-weight: 500; }
 .product-suggestion-price { color: var(--primary); font-weight: 600; font-size: var(--text-sm); }
@@ -457,6 +459,34 @@ body {
 .customer-suggestion-balance.settled {
   color: var(--primary);
   font-weight: 500;
+}
+.customer-suggestion-balance.near {
+  color: var(--warning, #d97706);
+  background: #fffbeb;
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.customer-suggestion-balance.over {
+  color: var(--danger);
+  background: #fef2f2;
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-weight: 700;
+}
+
+/* Credit-limit warnings (v2.56) */
+.credit-warn {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+#saleCreditWarn, #newDebtCreditWarn {
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
 }
 
 /* ─── Qty Selector ─── */

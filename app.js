@@ -25,7 +25,9 @@
       ownerName: 'May-ari',
       hasCompletedSetup: false,
       launchCount: 0,
-      lowStockThreshold: 5
+      defaultMarkup: 20,
+      lowStockThreshold: 5,
+      defaultCreditLimit: 500
     },
     products: [],
     sales: [],
@@ -72,7 +74,7 @@
       'manageTotalDebt', 'manageStockSearch',
       'addProductTitle',
       'productName', 'productQty', 'productCost', 'productPrice', 'productMarkup',
-      'productMarkupHint', 'editProductId',
+      'productLowStock', 'productMarkupHint', 'editProductId',
       'headerTutorialBtn', 'tutorialOverlay', 'tutorialBackdrop', 'tutorialHighlight',
       'tutorialBox', 'tutorialText', 'tutorialCurrent', 'tutorialTotal',
       'tutorialSkip', 'tutorialPrev', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
@@ -82,7 +84,10 @@
       'rpAmountField', 'rpRemainingPreview', 'rpNoteField', 'rpPayBtn', 'rpCustomerCard',
       'reportPeriodToggle', 'reportSummaryCards', 'reportBestSellers', 'reportRecentTx', 'reportLowStock',
       'helpTutSelector', 'helpHowTo', 'helpContact', 'helpAbout', 'howToList', 'tutorialSelector',
-      'settingsLanguage', 'settingsStoreName', 'settingsOwnerName',
+      'settingsLanguage', 'settingsStoreName', 'settingsOwnerName', 'settingsDefaultMarkup',
+      'settingsLowStockThreshold', 'settingsDefaultCreditLimit',
+      'saleCreditWarn', 'saleAllowAnyway', 'newDebtCreditWarn', 'newDebtAllowAnyway',
+      'cddCreditLimit',
       'setupOverlay', 'setupStoreName', 'setupOwnerName', 'setupLanguage',
       'toastContainer'
     ];
@@ -175,7 +180,24 @@
       productCost: 'Cost Price',
       productPrice: 'Selling Price',
       productMarkup: 'Markup (%)',
-      markupHint: 'At {pct}% markup, sell at {price}',
+      markupHint: 'Cost {cost} + {pct}% ({amount}) = Suggested {price}',
+      markupBoxHint: 'Cost {cost} + {pct}% = {amount}',
+      defaultMarkupLabel: 'Default Markup (%)',
+      defaultMarkupHint: 'Applied to new products',
+      defaultCreditLimitLabel: 'Default Credit Limit (₱)',
+      defaultCreditLimitHint: 'Applied to new customers. Set 0 for no limit.',
+      creditLimitLabel: 'Credit Limit',
+      creditLimitNone: 'No limit',
+      creditLimitUsesDefault: 'Uses default',
+      creditLimitEdit: 'Edit',
+      creditLimitCancel: 'Cancel',
+      creditLimitSave: 'Save',
+      creditLimitSaved: 'Credit limit saved.',
+      creditWarnNear: '⚠ Getting close to their {limit} credit limit',
+      creditWarnOver: '⛔ This would put {name} at {total} — over their {limit} credit limit',
+      creditWarnAtLimit: '⛔ {name} is at their {limit} credit limit',
+      creditAllowAnyway: 'Allow anyway',
+      overLimitDebtors: 'Over-limit debtors',
       newDebtCustomer: 'Customer Name',
       newDebtAmount: 'Debt Amount',
       newDebtTitle: 'New Debt',
@@ -245,7 +267,7 @@
       inventoryTutorial1: 'This is the Inventory page — manage all your stock items in one place.',
       inventoryTutorial2: 'Use the search bar to quickly find any product by name.',
       inventoryTutorial3: 'Tap "Add Stock" to add new products or restock existing ones.',
-      inventoryTutorial4: 'All your inventory is listed with stock quantity, profit margin, and sell buttons.',
+      inventoryTutorial4: 'All your inventory is listed with stock quantity, markup, and sell buttons.',
       inventoryTutorial5: 'Each item shows stock level and color-coded status. Tap the edit button to modify.',
       // Debts Tutorial
       debtsTutorial1: 'This is the Debts page — track all customer debts and record payments.',
@@ -336,7 +358,7 @@
       tutRecordPayment: 'Record Payment Tutorial',
       tutReport: 'Reports Tutorial',
       tutHelp: 'Help Tutorial',
-      productDetailTutorial1: 'This page shows everything about a product: name, unit, stock quantity, cost price, selling price, and profit margin.',
+      productDetailTutorial1: 'This page shows everything about a product: name, unit, stock quantity, cost price, selling price, and markup.',
       productDetailTutorial2: 'A color-coded alert appears when stock is running low or out of stock.',
       productDetailTutorial3: 'Deduct sold or damaged stock, restock, or edit the product details from this page.',
       productDetailTutorial4: 'Use Delete to permanently remove the product — with a confirmation first.',
@@ -366,7 +388,7 @@
       criticalAlertDesc: 'This item is out of stock. Restock soon.',
       stockLabel: 'Stock',
       sellPrice: 'Selling Price',
-      profitMargin: 'Profit Margin',
+      profitMargin: 'Markup',
       deductStock: 'Deduct Stock',
       deductBtn: 'Deduct',
       restockBtn: 'Restock',
@@ -398,6 +420,33 @@
       bestSelling: 'Best-Selling Products',
       recentTransactions: 'Recent Transactions',
       lowStockItems: 'Low Stock Items',
+      transactions: 'Transactions',
+      reportItemsSold: 'Items Sold',
+      cashSales: 'Cash Sales',
+      utangSales: 'Utang Sales',
+      utangReport: 'Utang / Receivables',
+      outstandingUtang: 'Outstanding Utang',
+      activeDebtors: 'Active Debtors',
+      collected: 'Collected',
+      debtAging: 'Age of unpaid debts',
+      debtAge30: '0-30 days',
+      debtAge60: '31-60 days',
+      debtAge60Plus: '60+ days',
+      weeklyTrend: 'Weekly Sales Trend',
+      stockHealth: 'Stock Health',
+      stockValue: 'Stock Value',
+      slowMovers: 'Slow Movers (no sales in 30 days)',
+      noSlowMovers: 'All items are selling well.',
+      noSales30: 'No sales in 30 days',
+      leftLabel: 'left',
+      outOfStockLabel: 'Out of stock',
+      exportReport: 'Export CSV',
+      exportReportDone: 'Report exported.',
+      exportReportError: 'Export failed.',
+      reportSummaryLine: '{period}: {sales} sales, {profit} profit{vs}{owed}',
+      reportVsUp: ' \u25b2 +{pct}% vs previous',
+      reportVsDown: ' \u25bc {pct}% vs previous',
+      reportOwed: ' \u00b7 {owed} still owed to you',
       noData: 'No data yet',
       helpTitle: 'Help',
       replayTutorial: 'Replay Tutorial',
@@ -426,6 +475,9 @@
       costLabel: 'Cost Price (\u20b1)',
       priceLabel: 'Selling Price (\u20b1)',
       markupLabel: 'Markup (%)',
+      lowStockAlertLabel: 'Low Stock Alert At',
+      alertThreshold: 'Low Stock Threshold',
+      alertThresholdDesc: 'Alert when stock falls below this number',
       saveBtn: 'Save'
     },
     fil: {
@@ -508,7 +560,24 @@
       productCost: 'Presyo ng Stock',
       productPrice: 'Presyo ng Benta',
       productMarkup: 'Markup (%)',
-      markupHint: 'Sa {pct}% markup, ibenta sa {price}',
+      markupHint: 'Halaga {cost} + {pct}% ({amount}) = Mungkahing {price}',
+      markupBoxHint: 'Halaga {cost} + {pct}% = {amount}',
+      defaultMarkupLabel: 'Default na Markup (%)',
+      defaultMarkupHint: 'Gagamitin sa mga bagong produkto',
+      defaultCreditLimitLabel: 'Default na Limit ng Utang (₱)',
+      defaultCreditLimitHint: 'Gagamitin sa mga bagong kostumer. Maglagay ng 0 kung walang limit.',
+      creditLimitLabel: 'Limit ng Utang',
+      creditLimitNone: 'Walang limit',
+      creditLimitUsesDefault: 'Ginagamit ang default',
+      creditLimitEdit: 'I-edit',
+      creditLimitCancel: 'Kanselahin',
+      creditLimitSave: 'I-save',
+      creditLimitSaved: 'Na-save ang limit ng utang.',
+      creditWarnNear: '⚠ Malapit na sa kanyang {limit} limit ng utang',
+      creditWarnOver: '⛔ Ilalagay nito si {name} sa {total} — lampas sa kanyang {limit} limit',
+      creditWarnAtLimit: '⛔ Naabot na ni {name} ang kanyang {limit} limit ng utang',
+      creditAllowAnyway: 'Payagan pa rin',
+      overLimitDebtors: 'Lampas sa limit ng utang',
       newDebtCustomer: 'Pangalan ng Kostumer',
       newDebtAmount: 'Halaga ng Utang',
       newDebtTitle: 'Bagong Utang',
@@ -578,7 +647,7 @@
       inventoryTutorial1: 'Ito ang Inventory page — pamahalaan ang lahat ng iyong stock item sa isang lugar.',
       inventoryTutorial2: 'Gamitin ang search bar para mabilis na makahanap ng produkto sa pangalan.',
       inventoryTutorial3: 'I-tap ang "Magdagdag ng Stock" para magdagdag ng bagong produkto o mag-restock.',
-      inventoryTutorial4: 'Ang lahat ng iyong inventory ay nakalista na may stock quantity at profit margin.',
+      inventoryTutorial4: 'Ang lahat ng iyong inventory ay nakalista na may stock quantity at markup.',
       inventoryTutorial5: 'Ang bawat item ay nagpapakita ng stock level at color-coded status. I-tap ang edit button para baguhin.',
       // Debts Tutorial
       debtsTutorial1: 'Ito ang Debts page — subaybayan ang lahat ng utang ng kostumer at magtala ng bayad.',
@@ -663,7 +732,7 @@
       tutRecordPayment: 'Record Payment na Tutorial',
       tutReport: 'Reports na Tutorial',
       tutHelp: 'Help na Tutorial',
-      productDetailTutorial1: 'Ang page na ito ay nagpapakita ng lahat tungkol sa produkto: pangalan, unit, stock quantity, presyo ng stock, presyo ng benta, at profit margin.',
+      productDetailTutorial1: 'Ang page na ito ay nagpapakita ng lahat tungkol sa produkto: pangalan, unit, stock quantity, presyo ng stock, presyo ng benta, at markup.',
       productDetailTutorial2: 'May color-coded na alert kapag mababa na o ubos na ang stock.',
       productDetailTutorial3: 'Ibawas ang nabentang stock, mag-restock, o i-edit ang detalye ng produkto dito.',
       productDetailTutorial4: 'Gamitin ang Delete para permanenteng alisin ang produkto — may kumpirmasyon muna.',
@@ -693,7 +762,7 @@
       criticalAlertDesc: 'Wala nang stock ang item na ito. Mag-restock agad.',
       stockLabel: 'Stock',
       sellPrice: 'Presyo ng Benta',
-      profitMargin: 'Profit Margin',
+      profitMargin: 'Markup',
       deductStock: 'Ibawas ang Stock',
       deductBtn: 'Ibawas',
       restockBtn: 'Mag-restock',
@@ -725,6 +794,33 @@
       bestSelling: 'Mga Paboritong Produkto',
       recentTransactions: 'Mga Kamakailang Transaksyon',
       lowStockItems: 'Mga Item na Kulang na',
+      transactions: 'Transaksyon',
+      reportItemsSold: 'Naibenta',
+      cashSales: 'Cash Benta',
+      utangSales: 'Utang Benta',
+      utangReport: 'Utang / Resibols',
+      outstandingUtang: 'Natitirang Utang',
+      activeDebtors: 'May Utang',
+      collected: 'Nakolekta',
+      debtAging: 'Edad ng hindi pa bayad na utang',
+      debtAge30: '0-30 araw',
+      debtAge60: '31-60 araw',
+      debtAge60Plus: '60+ araw',
+      weeklyTrend: 'Lingguhang Benta',
+      stockHealth: 'Kalagayan ng Stock',
+      stockValue: 'Halaga ng Stock',
+      slowMovers: 'Mabagal Bumenta (walang benta sa 30 araw)',
+      noSlowMovers: 'Bumebenta nang maayos ang lahat.',
+      noSales30: 'Walang benta sa 30 araw',
+      leftLabel: 'na lang',
+      outOfStockLabel: 'Walang stock',
+      exportReport: 'I-export ang CSV',
+      exportReportDone: 'Na-export ang report.',
+      exportReportError: 'Nabigong i-export.',
+      reportSummaryLine: '{period}: {sales} benta, {profit} kita{vs}{owed}',
+      reportVsUp: ' \u25b2 +{pct}% vs nakaraan',
+      reportVsDown: ' \u25bc {pct}% vs nakaraan',
+      reportOwed: ' \u00b7 {owed} pa ang utang sa iyo',
       noData: 'Wala pang data',
       helpTitle: 'Tulong',
       replayTutorial: 'Balik-aral sa Tutorial',
@@ -749,6 +845,9 @@
       costLabel: 'Presyo ng Stock (\u20b1)',
       priceLabel: 'Presyo ng Benta (\u20b1)',
       markupLabel: 'Markup (%)',
+      lowStockAlertLabel: 'Alerto Kapag Kulang ang Stock',
+      alertThreshold: 'Low Stock Threshold',
+      alertThresholdDesc: 'Alert kapag ang stock ay bumaba sa ibaba ng numerong ito',
       saveBtn: 'I-save'
     }
   };
@@ -849,8 +948,18 @@
 
   function getStockStatus(product) {
     if (!product || product.quantity <= 0) return 'out';
-    if (product.quantity <= (state.settings.lowStockThreshold || 5)) return 'low';
+    // Per-product threshold wins; fall back to the global Settings threshold
+    // (products created before per-product thresholds have no value here).
+    var threshold = (typeof product.lowStockThreshold === 'number' && product.lowStockThreshold >= 0)
+      ? product.lowStockThreshold
+      : getGlobalLowStockThreshold();
+    if (product.quantity <= threshold) return 'low';
     return 'plenty';
+  }
+
+  function getGlobalLowStockThreshold() {
+    var t = state.settings && state.settings.lowStockThreshold;
+    return (typeof t === 'number' && t >= 0) ? t : 5;
   }
 
   function getTodaySales() {
@@ -941,6 +1050,65 @@
     if (!cost || cost <= 0) return null;
     markup = markup || 20;
     return cost * (1 + markup / 100);
+  }
+
+  /** Configured default markup % from Settings (falls back to 20). */
+  function getDefaultMarkup() {
+    var m = state.settings && state.settings.defaultMarkup;
+    return (typeof m === 'number' && m >= 0) ? m : 20;
+  }
+
+  // ── Credit limit engine (v2.56) ──────────────────────────────────────
+  /** Default credit limit ₱ from Settings (0 = no limit). Falls back to 500. */
+  function getDefaultCreditLimit() {
+    var c = state.settings && state.settings.defaultCreditLimit;
+    return (typeof c === 'number' && c >= 0) ? c : 500;
+  }
+
+  /** Find the debt record for a customer name (case-insensitive), preferring the active one. */
+  function getDebtForName(name) {
+    if (!name) return null;
+    var lower = String(name).toLowerCase();
+    var settled = null;
+    for (var i = 0; i < state.debts.length; i++) {
+      var d = state.debts[i];
+      if (d.customerName && String(d.customerName).toLowerCase() === lower) {
+        if (d.remainingBalance > 0) return d;
+        if (!settled) settled = d;
+      }
+    }
+    return settled;
+  }
+
+  /** Effective limit for a name: per-customer override, else global default. 0 = unlimited. */
+  function getEffectiveCreditLimit(name) {
+    var debt = getDebtForName(name);
+    if (debt && typeof debt.creditLimit === 'number' && debt.creditLimit >= 0) return debt.creditLimit;
+    return getDefaultCreditLimit();
+  }
+
+  /**
+   * Credit status for a customer given a prospective new debt amount.
+   * limit 0 = no limit. nearLimit at ≥80% of limit. overLimit when the
+   * projected total exceeds the limit. All math is automatic (v2.56).
+   */
+  function getCreditStatus(name, prospective) {
+    var limit = getEffectiveCreditLimit(name);
+    var balance = 0;
+    var lower = String(name || '').toLowerCase();
+    state.debts.forEach(function(d) {
+      if (d.customerName && String(d.customerName).toLowerCase() === lower && d.remainingBalance > 0) {
+        balance += d.remainingBalance;
+      }
+    });
+    var total = balance + (prospective || 0);
+    // At-or-above the limit blocks a credit sale (v2.57). Half-cent epsilon so
+    // float drift (e.g. 450.10 + 49.90 = 499.99999999999994) can't slip an
+    // at-limit sale through the gate.
+    var atLimit = limit > 0 && Math.abs(total - limit) < 0.005;
+    var overLimit = limit > 0 && total >= limit - 0.005;
+    var nearLimit = limit > 0 && !overLimit && total >= limit * 0.8;
+    return { limit: limit, balance: balance, total: total, overLimit: overLimit, atLimit: atLimit, nearLimit: nearLimit };
   }
 
   function getWeeklySales() {
@@ -1864,6 +2032,11 @@
   // ============================================
   // SALE SHEET
   // ============================================
+  /** Tapped an out-of-stock suggestion — inform only, no selection (v2.58). */
+  function selectProductOutOfStock() {
+    showToast(t('noStock'), 'error');
+  }
+
   function openSaleSheet() {
     if (!state.dayOpen) {
       showToast(t('dayNotOpen'));
@@ -1878,6 +2051,8 @@
     if (dom.saleStockHint) dom.saleStockHint.textContent = '';
     if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
     if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
+    hideCreditWarn('saleCreditWarn');
+    if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
     if (dom.saleSheetOverlay) dom.saleSheetOverlay.classList.add('open');
     // Disable qty-selector until a product is selected
     var qtySelector = document.querySelector('.qty-selector');
@@ -1885,6 +2060,8 @@
   }
 
   function closeSaleSheet() {
+    hideCreditWarn('saleCreditWarn');
+    if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
     if (dom.saleSheetOverlay) dom.saleSheetOverlay.classList.remove('open');
   }
 
@@ -1897,7 +2074,15 @@
     }
     var matches = state.products.filter(function(p) {
       return p.name.toLowerCase().includes(query);
-    }).slice(0, 6);
+    });
+    // Prioritize sellable items so out-of-stock rows never crowd the
+    // in-stock ones out of the visible 6 (v2.58 review fix).
+    matches.sort(function(a, b) {
+      var ao = a.quantity <= 0 ? 1 : 0;
+      var bo = b.quantity <= 0 ? 1 : 0;
+      return ao - bo;
+    });
+    matches = matches.slice(0, 6);
 
     if (matches.length === 0) {
       dom.productSuggestions.classList.remove('open');
@@ -1906,10 +2091,14 @@
 
     dom.productSuggestions.innerHTML = matches.map(function(p) {
       var status = getStockStatus(p);
-      return '<div class="product-suggestion-item" onclick="window.selectProduct(\'' + p.id + '\')">' +
+      var out = status === 'out';
+      // Out-of-stock items are shown but NOT selectable (v2.58) — tapping
+      // them only flashes the "no stock" toast.
+      var click = out ? 'window.selectProductOutOfStock()' : 'window.selectProduct(\'' + p.id + '\')';
+      return '<div class="product-suggestion-item' + (out ? ' disabled' : '') + '" onclick="' + click + '">' +
         '<div>' +
           '<div class="product-suggestion-name">' + p.name + '</div>' +
-          '<div class="product-suggestion-stock">' + (status === 'out' ? t('noStock') : p.quantity + ' left') + '</div>' +
+          '<div class="product-suggestion-stock">' + (out ? t('noStock') : p.quantity + ' left') + '</div>' +
         '</div>' +
         '<div class="product-suggestion-price">' + formatCurrency(p.sellingPrice) + '</div>' +
       '</div>';
@@ -1920,6 +2109,11 @@
   function selectProduct(id) {
     var product = state.products.find(function(p) { return p.id === id; });
     if (!product) return;
+    // Defensive: never select an out-of-stock product (v2.58)
+    if (product.quantity <= 0) {
+      showToast(t('noStock'), 'error');
+      return;
+    }
     state.selectedProduct = product;
     if (dom.saleProductName) dom.saleProductName.value = product.name;
     if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
@@ -1968,9 +2162,31 @@
       if (dom.saleTotalAmount) dom.saleTotalAmount.textContent = '\u20b10.00';
       if (dom.saleStockHint) dom.saleStockHint.textContent = '';
     }
+    updateCreditWarn();
+  }
+
+  /** Balance badge for customer suggestions: "₱bal / ₱limit" color-coded by utilization (v2.56). */
+  function suggestionBalanceHtml(name, balance) {
+    var limit = getEffectiveCreditLimit(name);
+    var cls = 'customer-suggestion-balance';
+    if (limit > 0 && balance > 0) {
+      cls += balance >= limit ? ' over' : (balance >= limit * 0.8 ? ' near' : '');
+    } else if (balance === 0) {
+      cls += ' settled';
+    }
+    var txt;
+    if (limit > 0) {
+      txt = formatCurrency(balance) + ' / ' + formatCurrency(limit);
+    } else {
+      txt = balance > 0
+        ? t('debtTotal', { amount: formatCurrency(balance) })
+        : '\u2714\uFE0F ' + t('payBalance', { amount: formatCurrency(0) });
+    }
+    return '<span class="' + cls + '">' + txt + '</span>';
   }
 
   function onCustomerSearch() {
+    updateCreditWarn();
     if (!dom.saleCustomer || !dom.customerSuggestions) return;
     var query = dom.saleCustomer.value.toLowerCase().trim();
     if (!query) {
@@ -1999,12 +2215,9 @@
 
     dom.customerSuggestions.innerHTML = matches.map(function(name) {
       var balance = debtBalances[name] || 0;
-      var balanceHtml = balance > 0
-        ? '<span class="customer-suggestion-balance">' + t('debtTotal', { amount: formatCurrency(balance) }) + '</span>'
-        : '<span class="customer-suggestion-balance settled">\u2714\uFE0F ' + t('payBalance', { amount: formatCurrency(0) }) + '</span>';
       return '<div class="customer-suggestion-item" onclick="window.selectCustomer(\'' + name.replace(/'/g, "\\'") + '\')">' +
         '<span class="customer-suggestion-name">' + name + '</span>' +
-        balanceHtml +
+        suggestionBalanceHtml(name, balance) +
         '</div>';
     }).join('');
     dom.customerSuggestions.classList.add('open');
@@ -2013,9 +2226,54 @@
   function selectCustomer(name) {
     if (dom.saleCustomer) dom.saleCustomer.value = name;
     if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
+    updateCreditWarn();
   }
 
-  function saveSale() {
+  // ── Credit-limit warnings (v2.56) ────────────────────────────────────
+  /** Warning key by status: over limit → over/at-limit message, else near. */
+  function creditWarnKey(cs) {
+    return cs.overLimit ? (cs.total > cs.limit ? 'creditWarnOver' : 'creditWarnAtLimit') : 'creditWarnNear';
+  }
+
+  function creditWarnMessage(key, cs, name) {
+    if (key === 'creditWarnNear') return t('creditWarnNear', { limit: formatCurrency(cs.limit) });
+    if (key === 'creditWarnAtLimit') return t('creditWarnAtLimit', { name: esc(name), limit: formatCurrency(cs.limit) });
+    return t('creditWarnOver', { name: esc(name), total: formatCurrency(cs.total), limit: formatCurrency(cs.limit) });
+  }
+
+  function showCreditWarn(elId, key, cs, name) {
+    var el = dom[elId];
+    if (!el) return;
+    el.innerHTML = creditWarnMessage(key, cs, name);
+    el.style.display = 'block';
+  }
+
+  function hideCreditWarn(elId) {
+    var el = dom[elId];
+    if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+  }
+
+  /** Live warning for the Day sale sheet — recomputed as product/qty/customer change. */
+  function updateCreditWarn() {
+    if (!dom.saleCreditWarn) return;
+    if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
+    var customer = dom.saleCustomer ? dom.saleCustomer.value.trim() : '';
+    if (!customer) { hideCreditWarn('saleCreditWarn'); return; }
+    var product = state.selectedProduct;
+    var qty = parseInt(dom.saleQty ? dom.saleQty.value : 1) || 1;
+    var amount = product ? product.sellingPrice * qty : 0;
+    var cs = getCreditStatus(customer, amount);
+    if (cs.overLimit) {
+      showCreditWarn('saleCreditWarn', creditWarnKey(cs), cs, customer);
+      if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'block';
+    } else if (cs.nearLimit) {
+      showCreditWarn('saleCreditWarn', 'creditWarnNear', cs, customer);
+    } else {
+      hideCreditWarn('saleCreditWarn');
+    }
+  }
+
+  function saveSale(force) {
     var product = state.selectedProduct;
     if (!product) {
       showToast('Mangyaring pumili ng produkto.', 'error');
@@ -2033,6 +2291,20 @@
 
     var customer = dom.saleCustomer ? dom.saleCustomer.value.trim() : '';
     var amount = product.sellingPrice * qty;
+
+    // Credit-limit gate (v2.56): block the save with a warning; "Allow anyway"
+    // re-invokes saveSale(true) as a deliberate one-tap override.
+    if (customer && !force) {
+      var cs = getCreditStatus(customer, amount);
+      if (cs.overLimit) {
+        // Alert when the sale is at/over the customer's credit limit (v2.57)
+        var warnKey = creditWarnKey(cs);
+        showCreditWarn('saleCreditWarn', warnKey, cs, customer);
+        if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'block';
+        showToast(creditWarnMessage(warnKey, cs, customer), 'error');
+        return;
+      }
+    }
 
     var sale = {
       id: genId(),
@@ -2090,6 +2362,8 @@
     if (dom.saleStockHint) dom.saleStockHint.textContent = '';
     if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
     if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
+    hideCreditWarn('saleCreditWarn');
+    if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
     // Re-disable the qty-selector until a new product is selected
     var qtySelector = document.querySelector('.qty-selector');
     if (qtySelector) qtySelector.classList.add('disabled');
@@ -2382,7 +2656,7 @@
     if (dom.productQty) dom.productQty.value = '10';
     if (dom.productCost) dom.productCost.value = '';
     if (dom.productPrice) dom.productPrice.value = '';
-    if (dom.productMarkup) dom.productMarkup.value = '20';
+    if (dom.productMarkup) dom.productMarkup.value = getDefaultMarkup();
     if (dom.productMarkupHint) dom.productMarkupHint.textContent = '';
     updateMarkupHint();
     // (overlay replaced by separate add_product.html page)
@@ -2395,10 +2669,11 @@
   function updateMarkupHint() {
     if (!dom.productCost || !dom.productMarkup || !dom.productMarkupHint) return;
     var cost = parseFloat(dom.productCost.value) || 0;
-    var markup = parseInt(dom.productMarkup.value) || 0;
+    var markup = parseFloat(dom.productMarkup.value) || 0;
     var suggested = calcMarkupSuggestion(cost, markup);
     if (suggested) {
-      dom.productMarkupHint.textContent = t('markupHint', { pct: markup, price: formatCurrency(suggested) });
+      var amount = suggested - cost;
+      dom.productMarkupHint.textContent = t('markupHint', { cost: formatCurrency(cost), pct: markup, amount: formatCurrency(amount), price: formatCurrency(suggested) });
       if (dom.productPrice && !_userEditedPrice) {
         _suppressPriceListener = true;
         dom.productPrice.value = suggested.toFixed(2);
@@ -2407,7 +2682,7 @@
       // Show/hide the markup helper block
       if (dom.markupSuggestion && cost > 0 && markup > 0) {
         dom.markupSuggestion.style.display = 'block';
-        if (dom.markupHint) dom.markupHint.textContent = t('markupHint', { pct: markup, price: '' }).replace(' {price}', '').replace('{price}', '').replace('  ', ' ').trim();
+        if (dom.markupHint) dom.markupHint.textContent = t('markupBoxHint', { cost: formatCurrency(cost), pct: markup, amount: formatCurrency(amount) });
         if (dom.markupSuggestedPrice) dom.markupSuggestedPrice.textContent = formatCurrency(suggested);
       } else if (dom.markupSuggestion) {
         dom.markupSuggestion.style.display = 'none';
@@ -2423,6 +2698,10 @@
     var qty = parseInt(dom.productQty ? dom.productQty.value : 0) || 0;
     var cost = parseFloat(dom.productCost ? dom.productCost.value : 0) || 0;
     var price = parseFloat(dom.productPrice ? dom.productPrice.value : 0) || 0;
+    // Per-product low-stock alert threshold; empty falls back to the global
+    // Settings threshold (matching the mobile Add Stock field).
+    var lowStock = dom.productLowStock ? parseInt(dom.productLowStock.value, 10) : null;
+    if (!(typeof lowStock === 'number' && !isNaN(lowStock) && lowStock >= 0)) lowStock = getGlobalLowStockThreshold();
 
     if (!name) { showToast('Ilagay ang pangalan ng produkto.', 'error'); return; }
     if (qty <= 0) { showToast('Ilagay ang tamang dami.', 'error'); return; }
@@ -2430,9 +2709,9 @@
 
     if (state.editProductId) {
       var product = state.products.find(function(p) { return p.id === state.editProductId; });
-      if (product) { product.name = name; product.quantity = qty; product.costPrice = cost; product.sellingPrice = price; }
+      if (product) { product.name = name; product.quantity = qty; product.costPrice = cost; product.sellingPrice = price; product.lowStockThreshold = lowStock; }
     } else {
-      state.products.push({ id: genId(), name: name, quantity: qty, costPrice: cost, sellingPrice: price });
+      state.products.push({ id: genId(), name: name, quantity: qty, costPrice: cost, sellingPrice: price, lowStockThreshold: lowStock });
     }
 
     saveState();
@@ -2714,6 +2993,7 @@
   }
 
   function onNewDebtCustomerSearch() {
+    updateNewDebtCreditWarn();
     if (!dom.newDebtCustomer || !dom.newDebtSuggestions) return;
     var query = dom.newDebtCustomer.value.toLowerCase().trim();
     if (!query) {
@@ -2742,12 +3022,9 @@
 
     dom.newDebtSuggestions.innerHTML = matches.map(function(name) {
       var balance = debtBalances[name] || 0;
-      var balanceHtml = balance > 0
-        ? '<span class="customer-suggestion-balance">' + t('debtTotal', { amount: formatCurrency(balance) }) + '</span>'
-        : '<span class="customer-suggestion-balance settled">\u2714\uFE0F ' + t('payBalance', { amount: formatCurrency(0) }) + '</span>';
       return '<div class="customer-suggestion-item" onclick="window.selectNewDebtCustomer(\'' + name.replace(/'/g, "\\'") + '\')">' +
         '<span class="customer-suggestion-name">' + name + '</span>' +
-        balanceHtml +
+        suggestionBalanceHtml(name, balance) +
         '</div>';
     }).join('');
     dom.newDebtSuggestions.classList.add('open');
@@ -2756,17 +3033,49 @@
   function selectNewDebtCustomer(name) {
     if (dom.newDebtCustomer) dom.newDebtCustomer.value = name;
     if (dom.newDebtSuggestions) dom.newDebtSuggestions.classList.remove('open');
+    updateNewDebtCreditWarn();
+  }
+
+  /** Live warning for the New Debt form — recomputed as name/amount change. */
+  function updateNewDebtCreditWarn() {
+    if (!dom.newDebtCreditWarn) return;
+    if (dom.newDebtAllowAnyway) dom.newDebtAllowAnyway.style.display = 'none';
+    var customer = dom.newDebtCustomer ? dom.newDebtCustomer.value.trim() : '';
+    if (!customer) { hideCreditWarn('newDebtCreditWarn'); return; }
+    var amount = parseFloat(dom.newDebtAmount ? dom.newDebtAmount.value : 0) || 0;
+    var cs = getCreditStatus(customer, amount);
+    if (cs.overLimit) {
+      showCreditWarn('newDebtCreditWarn', creditWarnKey(cs), cs, customer);
+      if (dom.newDebtAllowAnyway) dom.newDebtAllowAnyway.style.display = 'block';
+    } else if (cs.nearLimit) {
+      showCreditWarn('newDebtCreditWarn', 'creditWarnNear', cs, customer);
+    } else {
+      hideCreditWarn('newDebtCreditWarn');
+    }
   }
 
   function closeNewDebt() {
   }
 
-  function saveNewDebt() {
+  function saveNewDebt(force) {
     var customer = dom.newDebtCustomer ? dom.newDebtCustomer.value.trim() : '';
     var amount = parseFloat(dom.newDebtAmount ? dom.newDebtAmount.value : 0) || 0;
 
     if (!customer) { showToast('Ilagay ang pangalan ng kostumer.', 'error'); return; }
     if (amount <= 0) { showToast('Ilagay ang tamang halaga.', 'error'); return; }
+
+    // Credit-limit gate (v2.56): block with a warning; "Allow anyway" re-invokes force.
+    if (!force) {
+      var cs = getCreditStatus(customer, amount);
+      if (cs.overLimit) {
+        // Alert when the entry is at/over the customer's credit limit (v2.57)
+        var warnKey = creditWarnKey(cs);
+        showCreditWarn('newDebtCreditWarn', warnKey, cs, customer);
+        if (dom.newDebtAllowAnyway) dom.newDebtAllowAnyway.style.display = 'block';
+        showToast(creditWarnMessage(warnKey, cs, customer), 'error');
+        return;
+      }
+    }
 
     var existingDebt = state.debts.find(function(d) {
       return d.customerName.toLowerCase() === customer.toLowerCase() && d.remainingBalance > 0;
@@ -2798,6 +3107,8 @@
 
     saveState();
     closeNewDebt();
+    hideCreditWarn('newDebtCreditWarn');
+    if (dom.newDebtAllowAnyway) dom.newDebtAllowAnyway.style.display = 'none';
     showToast(t('debtSaved'));
     // Redirect back to debts page. replace() so Back after saving skips the
     // just-exited form instead of revisiting it (v2.51 history unification).
@@ -2811,6 +3122,18 @@
     if (dom.settingsLanguage) state.settings.language = dom.settingsLanguage.value;
     if (dom.settingsStoreName) state.settings.storeName = dom.settingsStoreName.value.trim() || state.settings.storeName;
     if (dom.settingsOwnerName) state.settings.ownerName = dom.settingsOwnerName.value.trim() || state.settings.ownerName;
+    if (dom.settingsDefaultMarkup) {
+      var mk = parseInt(dom.settingsDefaultMarkup.value, 10);
+      if (!isNaN(mk) && mk >= 0) state.settings.defaultMarkup = Math.min(mk, 200);
+    }
+    if (dom.settingsLowStockThreshold) {
+      var lt = parseInt(dom.settingsLowStockThreshold.value, 10);
+      if (!isNaN(lt) && lt >= 0) state.settings.lowStockThreshold = lt;
+    }
+    if (dom.settingsDefaultCreditLimit) {
+      var cl = parseInt(dom.settingsDefaultCreditLimit.value, 10);
+      if (!isNaN(cl) && cl >= 0) state.settings.defaultCreditLimit = Math.min(cl, 10000);
+    }
     saveState();
     // Apply translations to all data-i18n elements on this page
     applyTranslations();
@@ -2832,6 +3155,7 @@
     state.todayExpenses = 0;
     state.todayEarnings = 0;
     state.settings.launchCount = 0;
+    try { localStorage.removeItem('sss_v3_reportPeriod'); } catch(e) {}
     saveState();
     renderMorningCheck();
     renderManageInventory();
@@ -3038,7 +3362,7 @@
           if (document.getElementById('devChkSales') && document.getElementById('devChkSales').checked) { state.sales = []; msg.push('Sales'); }
           if (document.getElementById('devChkDebts') && document.getElementById('devChkDebts').checked) { state.debts = []; msg.push('Debts'); }
           if (document.getElementById('devChkHistory') && document.getElementById('devChkHistory').checked) { state.history = []; msg.push('History'); }
-          if (document.getElementById('devChkSettings') && document.getElementById('devChkSettings').checked) { state.settings = { language: 'fil', storeName: 'Aking Tindahan', ownerName: 'May-ari', hasCompletedSetup: true, lowStockThreshold: 5 }; msg.push('Settings'); }
+          if (document.getElementById('devChkSettings') && document.getElementById('devChkSettings').checked) { state.settings = { language: 'fil', storeName: 'Aking Tindahan', ownerName: 'May-ari', hasCompletedSetup: true, defaultMarkup: 20, lowStockThreshold: 5, defaultCreditLimit: 500 }; msg.push('Settings'); }
           if (msg.length > 0) { saveState(); showToast('Cleared: ' + msg.join(', ')); }
           else { showToast('No datasets selected.', 'error'); }
         })();
@@ -3048,7 +3372,7 @@
           var csv = 'Sari-Sari Smart - Data Export\n';
           csv += 'Exported: ' + new Date().toISOString() + '\n\n';
           csv += '=== PRODUCTS ===\n';
-          csv += 'Name,Quantity,Cost,Sell Price,Profit Margin\n';
+          csv += 'Name,Quantity,Cost,Sell Price,Markup\n';
           state.products.forEach(function(p) {
             var margin = p.costPrice > 0 ? ((p.sellingPrice - p.costPrice) / p.costPrice * 100).toFixed(1) + '%' : 'N/A';
             csv += p.name + ',' + p.quantity + ',' + p.costPrice + ',' + p.sellingPrice + ',' + margin + '\n';
@@ -3379,6 +3703,34 @@
     payBtnEl.innerHTML =
       '<button class="btn btn-primary btn-large" style="width:100%;" onclick="location.href=\'record_payment.html?id=' + debt.id + '\'">' + t('recordPayment') + '</button>';
 
+    // Credit limit card (v2.56) — per-customer override, defaults to the global setting
+    var clContainer = document.getElementById('cddCreditLimit');
+    if (clContainer) {
+      var hasCustom = typeof debt.creditLimit === 'number' && debt.creditLimit >= 0;
+      var effective = hasCustom ? debt.creditLimit : getDefaultCreditLimit();
+      clContainer.innerHTML =
+        '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+            '<div style="font-weight:700;color:#1e293b;">' + t('creditLimitLabel') + '</div>' +
+            '<button class="btn btn-secondary btn-sm" id="cddCreditLimitEditBtn" onclick="startCreditLimitEdit()">' + t('creditLimitEdit') + '</button>' +
+          '</div>' +
+          (effective > 0
+            ? '<div style="font-size:24px;font-weight:700;color:#16a34a;">' + formatCurrency(effective) + '</div>'
+            : '<div style="font-size:24px;font-weight:700;color:#64748b;">' + t('creditLimitNone') + '</div>') +
+          (!hasCustom && effective > 0
+            ? '<div style="font-size:12px;color:#94a3b8;margin-top:4px;">' + t('creditLimitUsesDefault') + ' (' + formatCurrency(getDefaultCreditLimit()) + ')</div>'
+            : '') +
+          '<div id="cddCreditLimitEdit" style="display:none;margin-top:10px;">' +
+            '<div style="display:flex;gap:8px;">' +
+              '<input type="number" id="creditLimitInput" class="form-input" min="0" max="10000" step="1" value="' + (hasCustom ? debt.creditLimit : getDefaultCreditLimit()) + '" style="flex:1;">' +
+              '<button class="btn btn-primary btn-sm" onclick="saveCreditLimit()">' + t('creditLimitSave') + '</button>' +
+              '<button class="btn btn-secondary btn-sm" onclick="cancelCreditLimitEdit()">' + t('creditLimitCancel') + '</button>' +
+            '</div>' +
+            '<div style="font-size:12px;color:#94a3b8;margin-top:6px;">' + t('defaultCreditLimitHint') + '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
     var rows = [];
     var running = 0;
     (debt.transactions || []).forEach(function(tx) {
@@ -3417,6 +3769,34 @@
           '<div style="text-align:right;"><div style="font-size:12px;color:#94a3b8;">' + t('totalCollected') + '</div><div style="font-weight:700;color:#16a34a;">' + formatCurrency(collected) + '</div></div>' +
         '</div>' +
       '</div>';
+  }
+
+  // ── Credit limit edit (v2.56) ────────────────────────────────────────
+  function startCreditLimitEdit() {
+    var edit = document.getElementById('cddCreditLimitEdit');
+    var btn = document.getElementById('cddCreditLimitEditBtn');
+    if (edit) edit.style.display = 'block';
+    if (btn) btn.style.display = 'none';
+  }
+
+  function cancelCreditLimitEdit() {
+    var edit = document.getElementById('cddCreditLimitEdit');
+    var btn = document.getElementById('cddCreditLimitEditBtn');
+    if (edit) edit.style.display = 'none';
+    if (btn) btn.style.display = '';
+    renderDebtorDetail();
+  }
+
+  function saveCreditLimit() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var debt = state.debts.find(function(d) { return d.id === id; });
+    if (!debt) return;
+    var v = parseInt(document.getElementById('creditLimitInput') ? document.getElementById('creditLimitInput').value : 0, 10);
+    debt.creditLimit = (isNaN(v) || v < 0) ? 0 : Math.min(v, 10000);
+    saveState();
+    showToast(t('creditLimitSaved'));
+    renderDebtorDetail();
   }
 
   // ============================================
@@ -3488,9 +3868,105 @@
   // ============================================
   var _reportPeriod = 'day';
 
+  function loadReportPeriod() {
+    try {
+      var p = localStorage.getItem('sss_v3_reportPeriod');
+      if (p === 'day' || p === 'week' || p === 'month') _reportPeriod = p;
+    } catch (e) { /* keep default */ }
+  }
+
+  function saveReportPeriod() {
+    try { localStorage.setItem('sss_v3_reportPeriod', _reportPeriod); } catch (e) { /* ignore */ }
+  }
+
+  // All sales ever recorded: today's live sales + archived sales inside history.
+  // This fixes Week/Month aggregation — past days' sales live in history.archivedSales,
+  // not in state.sales (which only holds the current open day).
+  function getAllSales() {
+    var out = [];
+    var seen = {};
+    function pushSale(s) {
+      if (!s) return;
+      if (s.id && seen[s.id]) return; // dedupe if the same sale exists in both sources
+      if (s.id) seen[s.id] = true;
+      out.push(s);
+    }
+    (state.sales || []).forEach(pushSale);
+    (state.history || []).forEach(function(h) {
+      if (h.archivedSales && h.archivedSales.length) {
+        h.archivedSales.forEach(pushSale);
+      }
+    });
+    return out;
+  }
+
+  function addDays(dateStr, n) {
+    var d = new Date(dateStr + 'T00:00:00');
+    d.setDate(d.getDate() + n);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  // Escape user-entered text before injecting into innerHTML
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function reportCard(title, bodyHtml) {
     return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">' +
       '<div style="font-weight:700;color:#1e293b;margin-bottom:8px;">' + title + '</div>' + bodyHtml + '</div>';
+  }
+
+  function reportRow(label, value, color) {
+    return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;">' +
+      '<span style="color:#1e293b;font-size:var(--text-sm);">' + label + '</span>' +
+      '<span style="font-weight:600;color:' + (color || '#1e293b') + ';font-size:var(--text-sm);">' + value + '</span></div>';
+  }
+
+  function reportCollapsibleCard(title, bodyHtml, bodyId) {
+    return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleReportSection(\'' + bodyId + '\')">' +
+        '<div style="font-weight:700;color:#1e293b;">' + title + '</div>' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg);transition:transform 0.25s;" id="chev_' + bodyId + '"><polyline points="6 9 12 15 18 9"/></svg>' +
+      '</div>' +
+      '<div id="' + bodyId + '">' + bodyHtml + '</div>' +
+    '</div>';
+  }
+
+  function toggleReportSection(bodyId) {
+    var el = document.getElementById(bodyId);
+    if (!el) return;
+    var hidden = el.style.display === 'none';
+    el.style.display = hidden ? 'block' : 'none';
+    var chev = document.getElementById('chev_' + bodyId);
+    if (chev) chev.style.transform = hidden ? 'rotate(180deg)' : '';
+  }
+  window.toggleReportSection = toggleReportSection;
+
+  // Period stats shared by the page render and the CSV export
+  function computeReportStats() {
+    var today = todayStr();
+    var allSales = getAllSales();
+    var curStart = _reportPeriod === 'day' ? today : (_reportPeriod === 'week' ? addDays(today, -6) : addDays(today, -29));
+    var curSales = allSales.filter(function(s) { return s.date >= curStart; });
+    var prevLen = _reportPeriod === 'day' ? 1 : (_reportPeriod === 'week' ? 7 : 30);
+    var prevEnd = addDays(curStart, -1);
+    var prevStart = addDays(prevEnd, -(prevLen - 1));
+    var prevSales = allSales.filter(function(s) { return s.date >= prevStart && s.date <= prevEnd; });
+    function sum(list, field) {
+      return list.reduce(function(a, s) { return a + (s[field] || 0); }, 0);
+    }
+    return {
+      today: today,
+      allSales: allSales,
+      curSales: curSales,
+      prevSales: prevSales,
+      curStart: curStart,
+      prevStart: prevStart,
+      prevEnd: prevEnd,
+      sum: sum
+    };
   }
 
   function renderReports() {
@@ -3499,21 +3975,29 @@
     var best = document.getElementById('reportBestSellers');
     var recent = document.getElementById('reportRecentTx');
     var low = document.getElementById('reportLowStock');
+    var summaryLine = document.getElementById('reportSummary');
+    var chart = document.getElementById('reportChart');
+    var utang = document.getElementById('reportUtang');
+    var stock = document.getElementById('reportStock');
     if (!toggle || !summary) return;
 
-    var sales = state.sales || [];
-    var now = new Date();
-    var weekAgo = now.getTime() - 7 * 24 * 60 * 60 * 1000;
-    var monthAgo = now.getTime() - 30 * 24 * 60 * 60 * 1000;
-    var filtered = sales.filter(function(s) {
-      var d = new Date(s.date + 'T00:00:00');
-      var ts = d.getTime();
-      if (_reportPeriod === 'week') return ts >= weekAgo;
-      if (_reportPeriod === 'month') return ts >= monthAgo;
-      return s.date === todayStr();
-    });
-    var totalSales = filtered.reduce(function(sum, s) { return sum + (s.amount || 0); }, 0);
-    var totalProfit = filtered.reduce(function(sum, s) { return sum + (s.profit || 0); }, 0);
+    var st = computeReportStats();
+    var curSales = st.curSales;
+    var prevSales = st.prevSales;
+    var totalSales = st.sum(curSales, 'amount');
+    var totalProfit = st.sum(curSales, 'profit');
+    var itemsSold = curSales.reduce(function(a, s) { return a + (s.quantity || 1); }, 0);
+    var txCount = curSales.length;
+    var cashSales = st.sum(curSales.filter(function(s) { return !s.customerName; }), 'amount');
+    var utangSales = st.sum(curSales.filter(function(s) { return s.customerName; }), 'amount');
+    var prevSalesTotal = st.sum(prevSales, 'amount');
+    var prevProfitTotal = st.sum(prevSales, 'profit');
+
+    function vsBadge(cur, prev) {
+      if (prev <= 0) return '';
+      var p = Math.round(((cur - prev) / prev) * 100);
+      return p >= 0 ? t('reportVsUp', { pct: p }) : t('reportVsDown', { pct: Math.abs(p) });
+    }
 
     toggle.innerHTML = ['day', 'week', 'month'].map(function(p) {
       var label = p === 'day' ? t('periodDay') : (p === 'week' ? t('periodWeek') : t('periodMonth'));
@@ -3521,41 +4005,230 @@
       return '<button class="btn btn-sm ' + (sel ? 'btn-primary' : 'btn-secondary') + '" style="flex:1;margin-right:6px;" onclick="setReportPeriod(\'' + p + '\')">' + label + '</button>';
     }).join('');
 
+    // Auto plain-language summary line (no user interaction needed)
+    if (summaryLine) {
+      var periodLabel = _reportPeriod === 'day' ? t('periodDay') : (_reportPeriod === 'week' ? t('periodWeek') : t('periodMonth'));
+      var owed = (state.debts || []).reduce(function(a, d) { return a + (d.remainingBalance || 0); }, 0);
+      var line = t('reportSummaryLine', {
+        period: periodLabel,
+        sales: formatCurrency(totalSales),
+        profit: formatCurrency(totalProfit),
+        vs: vsBadge(totalSales, prevSalesTotal),
+        owed: owed > 0 ? t('reportOwed', { owed: formatCurrency(owed) }) : ''
+      });
+      summaryLine.style.display = 'block';
+      summaryLine.innerHTML = '<div style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:12px;padding:12px 16px;font-size:var(--text-sm);color:#166534;line-height:1.5;">' + line + '</div>';
+    }
+
+    // KPI stat grid
+    function statTile(label, value, color, bg, badge) {
+      return '<div style="flex:1;min-width:44%;background:' + bg + ';border-radius:12px;padding:12px;text-align:center;box-sizing:border-box;">' +
+        '<div style="font-size:var(--text-xs);color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + label + '</div>' +
+        '<div style="font-weight:700;color:' + color + ';font-size:var(--text-lg);margin-top:2px;">' + value + '</div>' +
+        (badge ? '<div style="font-size:11px;color:' + color + ';margin-top:2px;">' + badge + '</div>' : '') +
+      '</div>';
+    }
     summary.innerHTML =
-      '<div style="display:flex;gap:8px;">' +
-        '<div style="flex:1;background:#f0fdf4;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:var(--text-sm);color:#64748b;">' + t('totalSales') + '</div><div style="font-weight:700;color:#16a34a;">' + formatCurrency(totalSales) + '</div></div>' +
-        '<div style="flex:1;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:var(--text-sm);color:#64748b;">' + t('reportsProfit') + '</div><div style="font-weight:700;color:#2563eb;">' + formatCurrency(totalProfit) + '</div></div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+        statTile(t('totalSales'), formatCurrency(totalSales), '#16a34a', '#f0fdf4', vsBadge(totalSales, prevSalesTotal)) +
+        statTile(t('reportsProfit'), formatCurrency(totalProfit), '#2563eb', '#eff6ff', vsBadge(totalProfit, prevProfitTotal)) +
+        statTile(t('reportItemsSold'), String(itemsSold), '#d97706', '#fef3c7') +
+        statTile(t('transactions'), String(txCount), '#475569', '#f1f5f9') +
+        statTile(t('cashSales'), formatCurrency(cashSales), '#15803d', '#dcfce7') +
+        statTile(t('utangSales'), formatCurrency(utangSales), '#dc2626', '#fef2f2') +
       '</div>';
 
+    // 7-day sales trend (Day & Week only, matching mobile)
+    if (chart) {
+      if (_reportPeriod === 'day' || _reportPeriod === 'week') {
+        var last7 = [];
+        for (var i = 6; i >= 0; i--) {
+          var ds = addDays(st.today, -i);
+          var dayTotal = st.sum(st.allSales.filter(function(s) { return s.date === ds; }), 'amount');
+          last7.push({ label: String(parseInt(ds.slice(8, 10), 10)), total: dayTotal });
+        }
+        var maxVal = 1;
+        last7.forEach(function(d) { if (d.total > maxVal) maxVal = d.total; });
+        var bars = last7.map(function(d) {
+          var h = Math.max(4, Math.round((d.total / maxVal) * 100));
+          return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:120px;min-width:0;">' +
+            '<div style="width:70%;max-width:28px;background:' + (d.total > 0 ? 'var(--primary)' : '#e2e8f0') + ';border-radius:4px 4px 0 0;height:' + h + '%;" title="' + formatCurrency(d.total) + '"></div>' +
+            '<div style="font-size:10px;color:#94a3b8;margin-top:4px;">' + d.label + '</div>' +
+          '</div>';
+        }).join('');
+        chart.style.display = 'block';
+        chart.innerHTML = '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">' +
+          '<div style="font-weight:700;color:#1e293b;margin-bottom:12px;">' + t('weeklyTrend') + '</div>' +
+          '<div style="display:flex;align-items:flex-end;gap:6px;height:140px;border-bottom:1px solid #e2e8f0;">' + bars + '</div>' +
+        '</div>';
+      } else {
+        chart.style.display = 'none';
+      }
+    }
+
+    // Utang / receivables section (outstanding, collected this period, aging)
+    if (utang) {
+      var debts = state.debts || [];
+      var outstanding = 0, debtors = 0;
+      debts.forEach(function(d) { if (d.remainingBalance > 0) { outstanding += d.remainingBalance; debtors++; } });
+      var collected = 0;
+      debts.forEach(function(d) {
+        (d.transactions || []).forEach(function(tx) {
+          if (tx.type === 'payment' && tx.date) {
+            var dStr = String(tx.date).slice(0, 10);
+            if (dStr >= st.curStart) collected += (tx.amount || 0);
+          }
+        });
+      });
+      var buckets = [
+        { label: t('debtAge30'), color: '#16a34a', count: 0, amount: 0 },
+        { label: t('debtAge60'), color: '#d97706', count: 0, amount: 0 },
+        { label: t('debtAge60Plus'), color: '#dc2626', count: 0, amount: 0 }
+      ];
+      debts.forEach(function(d) {
+        if (d.remainingBalance > 0) {
+          var age = 0;
+          if (d.createdAt) {
+            var t0 = new Date(d.createdAt).getTime();
+            if (!isNaN(t0)) age = Math.floor((Date.now() - t0) / 86400000);
+          }
+          var idx = age >= 60 ? 2 : (age >= 30 ? 1 : 0);
+          buckets[idx].count++;
+          buckets[idx].amount += d.remainingBalance;
+        }
+      });
+      // Over-limit debtors (v2.56) — customers whose TOTAL balance exceeds their limit
+      var nameTotals = {};
+      debts.forEach(function(d) {
+        if (d.remainingBalance > 0) {
+          var dn = d.customerName;
+          nameTotals[dn] = (nameTotals[dn] || 0) + d.remainingBalance;
+        }
+      });
+      var overLimitCount = Object.keys(nameTotals).filter(function(n) {
+        var lim = getEffectiveCreditLimit(n);
+        return lim > 0 && nameTotals[n] >= lim; // at-or-above counts (v2.57)
+      }).length;
+      var utangBody =
+        reportRow(t('outstandingUtang'), formatCurrency(outstanding), outstanding > 0 ? '#dc2626' : '#16a34a') +
+        reportRow(t('activeDebtors'), String(debtors), '#475569') +
+        reportRow(t('collected'), formatCurrency(collected), '#16a34a') +
+        (overLimitCount > 0 ? reportRow(t('overLimitDebtors'), String(overLimitCount), '#dc2626') : '') +
+        '<div style="margin-top:8px;font-size:var(--text-xs);color:#94a3b8;font-weight:700;">' + t('debtAging') + '</div>' +
+        reportRow(buckets[0].label, buckets[0].amount > 0 ? formatCurrency(buckets[0].amount) + ' (' + buckets[0].count + ')' : t('noData'), buckets[0].color) +
+        reportRow(buckets[1].label, buckets[1].amount > 0 ? formatCurrency(buckets[1].amount) + ' (' + buckets[1].count + ')' : t('noData'), buckets[1].color) +
+        reportRow(buckets[2].label, buckets[2].amount > 0 ? formatCurrency(buckets[2].amount) + ' (' + buckets[2].count + ')' : t('noData'), buckets[2].color);
+      utang.innerHTML = reportCollapsibleCard(t('utangReport'), utangBody, 'reportUtangBody');
+    }
+
+    // Best-selling products (period)
     var counts = {};
-    filtered.forEach(function(s) { counts[s.productName] = (counts[s.productName] || 0) + (s.quantity || 1); });
+    curSales.forEach(function(s) { counts[s.productName] = (counts[s.productName] || 0) + (s.quantity || 1); });
     var sorted = Object.keys(counts).map(function(n) { return { name: n, qty: counts[n] }; }).sort(function(a, b) { return b.qty - a.qty; }).slice(0, 5);
     best.innerHTML = reportCard(t('bestSelling'), sorted.length === 0
       ? '<div style="color:#94a3b8;font-size:var(--text-sm);padding:8px 0;">' + t('noData') + '</div>'
       : sorted.map(function(ps, i) {
-          return '<div style="display:flex;justify-content:space-between;padding:6px 0;"><div><span style="font-weight:700;color:#b45309;">#' + (i + 1) + '</span> ' + ps.name + '</div><div style="font-weight:600;color:#16a34a;">x' + ps.qty + '</div></div>';
+          return '<div style="display:flex;justify-content:space-between;padding:6px 0;"><div><span style="font-weight:700;color:#b45309;">#' + (i + 1) + '</span> ' + esc(ps.name) + '</div><div style="font-weight:600;color:#16a34a;">x' + ps.qty + '</div></div>';
         }).join(''));
 
-    var recentSales = filtered.slice().sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); }).slice(0, 15);
-    recent.innerHTML = reportCard(t('recentTransactions'), recentSales.length === 0
+    // Recent transactions (collapsible)
+    var recentSales = curSales.slice().sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); }).slice(0, 15);
+    var recentBody = recentSales.length === 0
       ? '<div style="color:#94a3b8;font-size:var(--text-sm);padding:8px 0;">' + t('noTransactions') + '</div>'
       : recentSales.map(function(s) {
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f1f5f9;">' +
-            '<div><div style="font-size:var(--text-sm);color:#1e293b;">' + s.productName + (s.customerName ? ' <span style="color:#16a34a;">(' + s.customerName + ')</span>' : '') + '</div>' +
+            '<div><div style="font-size:var(--text-sm);color:#1e293b;">' + esc(s.productName) + (s.customerName ? ' <span style="color:#16a34a;">(' + esc(s.customerName) + ')</span>' : '') + '</div>' +
             '<div style="font-size:12px;color:#94a3b8;">' + formatDateSafe(s.createdAt) + '</div></div>' +
             '<div style="font-weight:600;font-size:var(--text-sm);">' + formatCurrency(s.amount) + '</div></div>';
-        }).join(''));
+        }).join('');
+    recent.innerHTML = reportCollapsibleCard(t('recentTransactions'), recentBody, 'reportRecentTxBody');
 
+    // Low stock items (collapsible)
     var lowItems = state.products.filter(function(p) { return getStockStatus(p) !== 'plenty'; });
-    low.innerHTML = reportCard(t('lowStockItems'), lowItems.length === 0
+    var lowBody = lowItems.length === 0
       ? '<div style="color:#94a3b8;font-size:var(--text-sm);padding:8px 0;">' + t('noData') + '</div>'
       : lowItems.map(function(p) {
-          var st = getStockStatus(p);
-          return '<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>' + p.name + '</span><span style="color:' + (st === 'out' ? '#dc2626' : '#d97706') + ';font-weight:600;">' + p.quantity + ' left</span></div>';
-        }).join(''));
+          var st2 = getStockStatus(p);
+          var val = st2 === 'out' ? t('outOfStockLabel') : p.quantity + ' ' + t('leftLabel');
+          return '<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>' + esc(p.name) + '</span><span style="color:' + (st2 === 'out' ? '#dc2626' : '#d97706') + ';font-weight:600;">' + val + '</span></div>';
+        }).join('');
+    low.innerHTML = reportCollapsibleCard(t('lowStockItems'), lowBody, 'reportLowStockBody');
+
+    // Stock health (value on shelves + slow movers)
+    if (stock) {
+      var stockValue = (state.products || []).reduce(function(a, p) { return a + ((p.quantity || 0) * (p.costPrice || 0)); }, 0);
+      var cutoff = addDays(st.today, -29);
+      var sold = {};
+      st.allSales.forEach(function(s) { if (s.date >= cutoff && s.productName) sold[s.productName.toLowerCase()] = true; });
+      var slow = (state.products || []).filter(function(p) {
+        return (p.quantity || 0) > 0 && !sold[(p.name || '').toLowerCase()];
+      }).sort(function(a, b) { return b.quantity - a.quantity; }).slice(0, 8);
+      var stockBody = reportRow(t('stockValue'), formatCurrency(stockValue), '#16a34a');
+      if (slow.length === 0) {
+        stockBody += '<div style="color:#94a3b8;font-size:var(--text-sm);padding:6px 0;">' + t('noSlowMovers') + '</div>';
+      } else {
+        stockBody += '<div style="margin-top:8px;font-size:var(--text-xs);color:#94a3b8;font-weight:700;">' + t('slowMovers') + '</div>' +
+          slow.map(function(p) {
+            return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;"><span style="font-size:var(--text-sm);color:#1e293b;">' + esc(p.name) + '</span><span style="font-weight:600;font-size:var(--text-sm);color:#d97706;">' + p.quantity + ' \u00b7 ' + t('noSales30') + '</span></div>';
+          }).join('');
+      }
+      stock.innerHTML = reportCollapsibleCard(t('stockHealth'), stockBody, 'reportStockBody');
+    }
   }
 
-  function setReportPeriod(p) { _reportPeriod = p; renderReports(); }
+  function setReportPeriod(p) {
+    if (p === 'day' || p === 'week' || p === 'month') {
+      _reportPeriod = p;
+      saveReportPeriod();
+    }
+    renderReports();
+  }
+
+  // Export the current period as a CSV file
+  function exportCurrentReport() {
+    try {
+      var st = computeReportStats();
+      var periodLabel = _reportPeriod === 'day' ? t('periodDay') : (_reportPeriod === 'week' ? t('periodWeek') : t('periodMonth'));
+      function cell(v) {
+        v = String(v === undefined || v === null ? '' : v);
+        if (/[",\n]/.test(v)) v = '"' + v.replace(/"/g, '""') + '"';
+        return v;
+      }
+      var lines = [];
+      lines.push(cell('Sari-Sari Smart Report'));
+      lines.push(cell('Period') + ',' + cell(periodLabel));
+      lines.push(cell(t('totalSales')) + ',' + cell(st.sum(st.curSales, 'amount').toFixed(2)));
+      lines.push(cell(t('reportsProfit')) + ',' + cell(st.sum(st.curSales, 'profit').toFixed(2)));
+      lines.push(cell(t('reportItemsSold')) + ',' + cell(st.curSales.reduce(function(a, s) { return a + (s.quantity || 1); }, 0)));
+      lines.push(cell(t('transactions')) + ',' + cell(st.curSales.length));
+      lines.push('');
+      lines.push([cell('Date'), cell('Product'), cell('Qty'), cell('Amount'), cell('Profit'), cell('Customer')].join(','));
+      st.curSales.forEach(function(s) {
+        lines.push([cell(s.date), cell(s.productName), cell(s.quantity || 1), cell((s.amount || 0).toFixed(2)), cell((s.profit || 0).toFixed(2)), cell(s.customerName || '')].join(','));
+      });
+      lines.push('');
+      lines.push(cell(t('lowStockItems')));
+      (state.products || []).forEach(function(p) {
+        if (getStockStatus(p) !== 'plenty') {
+          lines.push([cell(p.name), cell(p.quantity)].join(','));
+        }
+      });
+      var csv = lines.join('\r\n');
+      var blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'sari-sari-smart-report-' + _reportPeriod + '-' + st.today + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() { URL.revokeObjectURL(url); a.remove(); }, 100);
+      showToast(t('exportReportDone'));
+    } catch (e) {
+      showToast(t('exportReportError'), 'error');
+    }
+  }
+  window.exportCurrentReport = exportCurrentReport;
+
 
   // ============================================
   // HELP PAGE (help.html)
@@ -3680,13 +4353,21 @@
       if (dom.settingsLanguage) dom.settingsLanguage.value = state.settings.language || 'fil';
       if (dom.settingsStoreName) dom.settingsStoreName.value = state.settings.storeName || '';
       if (dom.settingsOwnerName) dom.settingsOwnerName.value = state.settings.ownerName || '';
+      if (dom.settingsDefaultMarkup) dom.settingsDefaultMarkup.value = getDefaultMarkup();
+      if (dom.settingsLowStockThreshold) dom.settingsLowStockThreshold.value = getGlobalLowStockThreshold();
+      if (dom.settingsDefaultCreditLimit) dom.settingsDefaultCreditLimit.value = getDefaultCreditLimit();
     } else if (pageName === 'add_product') {
       // Add / Edit product page
       applyTranslations();
       var editId = null;
       try { editId = localStorage.getItem('sss_v3_editProductId'); } catch(e) {}
-      // Set default markup
-      if (dom.productMarkup && !dom.productMarkup.value) dom.productMarkup.value = '20';
+      // Default markup: configured Settings value. When editing an existing
+      // product, prefill its ACTUAL markup ((sell/cost - 1) x 100) so the
+      // helper reflects reality instead of always showing 20.
+      if (dom.productMarkup && !dom.productMarkup.value) dom.productMarkup.value = getDefaultMarkup();
+      // Low-stock alert threshold: the product's own value when editing, else
+      // the global Settings threshold as the default for new products.
+      if (dom.productLowStock) dom.productLowStock.value = getGlobalLowStockThreshold();
       if (editId) {
         var product = state.products.find(function(p) { return p.id === editId; });
         if (product) {
@@ -3696,6 +4377,13 @@
           if (dom.productQty) dom.productQty.value = product.quantity;
           if (dom.productCost) dom.productCost.value = product.costPrice;
           if (dom.productPrice) dom.productPrice.value = product.sellingPrice;
+          if (dom.productMarkup && product.costPrice > 0) {
+            var actualMarkup = Math.round(((product.sellingPrice / product.costPrice) - 1) * 100);
+            dom.productMarkup.value = (actualMarkup >= 0) ? actualMarkup : getDefaultMarkup();
+          }
+          if (dom.productLowStock && typeof product.lowStockThreshold === 'number' && product.lowStockThreshold >= 0) {
+            dom.productLowStock.value = product.lowStockThreshold;
+          }
         } else {
           // Stale edit ID (product no longer exists) — treat as a fresh add
           try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
@@ -3725,6 +4413,7 @@
     } else if (pageName === 'reports') {
       // Reports page
       applyTranslations();
+      loadReportPeriod();
       renderReports();
     } else if (pageName === 'help') {
       // Help page
@@ -3772,6 +4461,7 @@
   window.closeSaleSheet = closeSaleSheet;
   window.onProductSearch = onProductSearch;
   window.selectProduct = selectProduct;
+  window.selectProductOutOfStock = selectProductOutOfStock;
   window.adjustQty = adjustQty;
   window.onQtyChange = onQtyChange;
   window.onCustomerSearch = onCustomerSearch;
@@ -3797,6 +4487,10 @@
   window.openNewDebt = openNewDebt;
   window.closeNewDebt = closeNewDebt;
   window.saveNewDebt = saveNewDebt;
+  window.updateNewDebtCreditWarn = updateNewDebtCreditWarn;
+  window.startCreditLimitEdit = startCreditLimitEdit;
+  window.cancelCreditLimitEdit = cancelCreditLimitEdit;
+  window.saveCreditLimit = saveCreditLimit;
   window.saveSettings = saveSettings;
   window.resetData = resetData;
   window.exportData = exportData;

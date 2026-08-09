@@ -57,6 +57,11 @@
           <label for="productPrice" data-i18n="priceLabel">Presyo ng Benta (₱)</label>
           <input type="number" id="productPrice" class="form-input" placeholder="0.00" min="0" step="0.01">
         </div>
+        <div class="form-group">
+          <label for="productLowStock" data-i18n="lowStockAlertLabel">Low Stock Alert At</label>
+          <input type="number" id="productLowStock" class="form-input" placeholder="5" min="0" max="999" step="1">
+          <div class="markup-hint" data-i18n="alertThresholdDesc">Alert when stock falls below this number</div>
+        </div>
         <input type="hidden" id="editProductId">
         <button class="btn btn-primary btn-full" onclick="saveProduct()" data-i18n="saveBtn">I-save</button>
       </main>

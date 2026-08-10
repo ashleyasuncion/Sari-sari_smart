@@ -63,9 +63,8 @@
       'closingWeeklySales', 'closingTopSeller',
       'summaryOverlay', 'summaryText', 'summaryDetails',
       'navMorning', 'navSale', 'navClose',
-      'saleSheetOverlay', 'saleSheet',
       'saleProductName', 'saleQty', 'saleCustomer', 'saleTotalAmount',
-      'saleStockHint', 'btnSaveSale',
+      'saleStockHint',
       'productSuggestions', 'customerSuggestions',
       'paymentSheetOverlay', 'paymentSheet',
       'paymentCustomerName', 'paymentCustomerBalance',
@@ -75,6 +74,8 @@
       'addProductTitle',
       'productName', 'productQty', 'productCost', 'productPrice', 'productMarkup',
       'productLowStock', 'productMarkupHint', 'editProductId',
+      'productCategory', 'productBrand', 'productUnit', 'productPackageSize',
+      'productBrandList', 'productPackageSizeList', 'inventoryCatFilters',
       'headerTutorialBtn', 'tutorialOverlay', 'tutorialBackdrop', 'tutorialHighlight',
       'tutorialBox', 'tutorialText', 'tutorialCurrent', 'tutorialTotal',
       'tutorialSkip', 'tutorialPrev', 'tutorialNext', 'markupSuggestion', 'markupHint', 'markupSuggestedPrice',
@@ -87,6 +88,8 @@
       'settingsLanguage', 'settingsStoreName', 'settingsOwnerName', 'settingsDefaultMarkup',
       'settingsLowStockThreshold', 'settingsDefaultCreditLimit',
       'saleCreditWarn', 'saleAllowAnyway', 'newDebtCreditWarn', 'newDebtAllowAnyway',
+      'btnAddToCart', 'saleCartSection', 'saleCartList', 'saleCartEmpty', 'saleCartCount',
+      'salePayCash', 'salePayCredit', 'saleCustomerWrap', 'btnCompleteSale',
       'cddCreditLimit',
       'setupOverlay', 'setupStoreName', 'setupOwnerName', 'setupLanguage',
       'toastContainer'
@@ -233,7 +236,12 @@
       mainTutorial4: 'When ready, tap "Start the Day" to open your store for business and start recording sales.',
       mainTutorial5: 'Welcome to Day Mode! This is where you record sales as they happen throughout the day.',
       mainTutorial6: 'The Today summary shows your earnings, items sold, and utang transactions at a glance.',
-      mainTutorial7: 'Tap the Sell button to open the sale sheet. Select a product, enter quantity, and save the sale.',
+      mainTutorial7: 'Tap the Sell button to open the checkout page. Add products to the cart, choose Cash or Credit, then complete the sale.',
+      checkoutTutorial1: 'This is the checkout page — ring up one customer at a time. Search for a product and set the quantity.',
+      checkoutTutorial2: 'Tap "Add to Cart" to put it in the cart. You can add several different products to one sale.',
+      checkoutTutorial3: 'The cart lists every item. Use −/+ to change quantities or ✕ to remove an item before completing.',
+      checkoutTutorial4: 'Choose Cash or Credit (Utang). For credit, enter the customer name once — the whole cart is charged to them.',
+      checkoutTutorial5: 'Review the total, then tap "Complete Sale". Stock and earnings update automatically.',
       mainTutorial8: 'At the end of the day, the Closing screen shows a full summary of today\'s performance.',
       mainTutorial9: 'Enter the actual cash you counted. Profit is calculated from each item selling margin.',
       mainTutorial10: 'Tap "Day Complete" when you\'re ready to finalize. Your daily summary will be saved to history.',
@@ -291,6 +299,7 @@
       tutMain: 'Main Tutorial',
       tutMorning: 'Morning Check Tutorial',
       tutDay: 'Day Mode Tutorial',
+      tutCheckout: 'Checkout Tutorial',
       tutClosing: 'Closing Tutorial',
       tutInventory: 'Stock Tutorial',
       tutDebts: 'Debts Tutorial',
@@ -327,6 +336,22 @@
       saleQtyLabel: 'How many?',
       saleCustomerLabel: 'Who? (if credit)',
       saleTotalLabel: 'Total:',
+      addToCart: 'Add to Cart',
+      cartTitle: 'Cart',
+      cartEmpty: 'Cart is empty',
+      paymentMethod: 'Payment',
+      payCash: 'Cash',
+      payCredit: 'Credit (Utang)',
+      completeSale: 'Complete Sale',
+      saleCompleted: 'Transaction recorded!',
+      discardCart: 'Discard cart?',
+      discardCartMsg: 'Items in the cart will be removed.',
+      noCustomerCredit: 'Enter a customer name for credit.',
+      itemRemoved: 'Item removed',
+      addedToCart: 'Added to cart',
+      selectProductFirst: 'Select a product first.',
+      lineSubtotal: 'Subtotal',
+      eachLabel: 'each',
       // Settings
       settingsTitle: 'Settings',
       dataMgmt: 'Data Management',
@@ -478,7 +503,38 @@
       lowStockAlertLabel: 'Low Stock Alert At',
       alertThreshold: 'Low Stock Threshold',
       alertThresholdDesc: 'Alert when stock falls below this number',
-      saveBtn: 'Save'
+      saveBtn: 'Save',
+      // Product details (units, brands, categories)
+      productDetailsSection: 'Product Details',
+      productDetailsHint: 'Optional — helps identify and sort your products',
+      categoryLabel: 'Category',
+      brandLabel: 'Brand',
+      unitLabel: 'Unit',
+      packageSizeLabel: 'Package Size',
+      brandPlaceholder: 'e.g. Ligo, Bear Brand',
+      packageSizePlaceholder: 'e.g. 155g, 1L',
+      catAll: 'All',
+      catFood: 'Food',
+      catCanned: 'Canned Goods',
+      catCondiments: 'Condiments',
+      catSnacks: 'Snacks',
+      catBeverages: 'Beverages',
+      catPersonalCare: 'Personal Care',
+      catHousehold: 'Household',
+      catDryGoods: 'Dry Goods',
+      catOther: 'Other',
+      unitPiece: 'piece',
+      unitSachet: 'sachet',
+      unitPack: 'pack',
+      unitBox: 'box',
+      unitBottle: 'bottle',
+      unitCan: 'can',
+      unitKg: 'kg',
+      unitG: 'g',
+      unitL: 'L',
+      unitMl: 'mL',
+      unitBundle: 'bundle',
+      unitDozen: 'dozen'
     },
     fil: {
       greeting: 'Magandang araw!',
@@ -613,7 +669,12 @@
       mainTutorial4: 'Kapag handa na, i-tap ang "Simulan ang Araw" para buksan ang tindahan at magsimulang magtala ng benta.',
       mainTutorial5: 'Maligayang pagdating sa Day Mode! Dito mo itinatala ang mga benta habang nangyayari ang mga ito.',
       mainTutorial6: 'Ang Today summary ay nagpapakita ng iyong kita, naibenta, at utang sa isang sulyap.',
-      mainTutorial7: 'I-tap ang Sell button para buksan ang sale sheet. Pumili ng produkto, ilagay ang dami, at i-save ang benta.',
+      mainTutorial7: 'I-tap ang Benta para buksan ang checkout page. Magdagdag ng mga produkto sa cart, pumili ng Cash o Utang, tapos tapusin ang benta.',
+      checkoutTutorial1: 'Ito ang checkout page — isang customer sa isang transaksyon. Maghanap ng produkto at ilagay ang dami.',
+      checkoutTutorial2: 'I-tap ang "Add to Cart" para ilagay ito sa cart. Pwedeng magdagdag ng iba\'t ibang produkto sa isang benta.',
+      checkoutTutorial3: 'Ipinapakita ng cart ang bawat item. Gamitin ang −/+ para baguhin ang dami o ✕ para alisin ang item.',
+      checkoutTutorial4: 'Pumili ng Cash o Utang. Para sa utang, ilagay ang pangalan ng kostumer nang isang beses — buong cart ang sisingilin sa kanya.',
+      checkoutTutorial5: 'Suriin ang total, tapos i-tap ang "Complete Sale". Awtomatikong mag-a-update ang stock at kita.',
       mainTutorial8: 'Sa pagtatapos ng araw, ang Closing screen ay nagpapakita ng buong summary ng performance ngayong araw.',
       mainTutorial9: 'Ilagay ang aktwal na pera. Awtomatikong kukuwentahin ang kita mula sa bawat item.',
       mainTutorial10: 'I-tap ang "Tapos Na ang Araw" para tapusin. Ang iyong daily summary ay mase-save sa history.',
@@ -671,6 +732,7 @@
       tutMain: 'Main na Tutorial',
       tutMorning: 'Morning Check na Tutorial',
       tutDay: 'Day Mode na Tutorial',
+      tutCheckout: 'Checkout na Tutorial',
       tutClosing: 'Closing na Tutorial',
       tutInventory: 'Stock na Tutorial',
       tutDebts: 'Debts na Tutorial',
@@ -707,6 +769,22 @@
       saleQtyLabel: 'Ilan?',
       saleCustomerLabel: 'Sino? (kung utang)',
       saleTotalLabel: 'Total:',
+      addToCart: 'Idagdag sa Cart',
+      cartTitle: 'Cart',
+      cartEmpty: 'Wala pang laman',
+      paymentMethod: 'Pagbabayad',
+      payCash: 'Cash',
+      payCredit: 'Utang',
+      completeSale: 'Tapusin ang Benta',
+      saleCompleted: 'Naitala ang transaksyon!',
+      discardCart: 'Alisin ang cart?',
+      discardCartMsg: 'Mawawala ang mga laman ng cart.',
+      noCustomerCredit: 'Ilagay ang pangalan ng kostumer para sa utang.',
+      itemRemoved: 'Naalis ang item',
+      addedToCart: 'Idinagdag sa cart',
+      selectProductFirst: 'Pumili muna ng produkto.',
+      lineSubtotal: 'Subtotal',
+      eachLabel: 'bawat isa',
       // Settings
       settingsTitle: 'Settings',
       dataMgmt: 'Data Management',
@@ -848,7 +926,38 @@
       lowStockAlertLabel: 'Alerto Kapag Kulang ang Stock',
       alertThreshold: 'Low Stock Threshold',
       alertThresholdDesc: 'Alert kapag ang stock ay bumaba sa ibaba ng numerong ito',
-      saveBtn: 'I-save'
+      saveBtn: 'I-save',
+      // Product details (units, brands, categories)
+      productDetailsSection: 'Detalye ng Produkto',
+      productDetailsHint: 'Opsyonal — nakakatulong kilalanin at i-ayos ang mga produkto',
+      categoryLabel: 'Kategorya',
+      brandLabel: 'Brand',
+      unitLabel: 'Unit',
+      packageSizeLabel: 'Laki ng Pack',
+      brandPlaceholder: 'Hal. Ligo, Bear Brand',
+      packageSizePlaceholder: 'Hal. 155g, 1L',
+      catAll: 'Lahat',
+      catFood: 'Pagkain',
+      catCanned: 'Delata',
+      catCondiments: 'Pampalasa',
+      catSnacks: 'Meryenda',
+      catBeverages: 'Inumin',
+      catPersonalCare: 'Pampaganda',
+      catHousehold: 'Pambahay',
+      catDryGoods: 'Tuyong Paninda',
+      catOther: 'Iba pa',
+      unitPiece: 'piraso',
+      unitSachet: 'sachet',
+      unitPack: 'pack',
+      unitBox: 'kahon',
+      unitBottle: 'bote',
+      unitCan: 'lata',
+      unitKg: 'kg',
+      unitG: 'g',
+      unitL: 'L',
+      unitMl: 'mL',
+      unitBundle: 'bundle',
+      unitDozen: 'dosena'
     }
   };
 
@@ -960,6 +1069,59 @@
   function getGlobalLowStockThreshold() {
     var t = state.settings && state.settings.lowStockThreshold;
     return (typeof t === 'number' && t >= 0) ? t : 5;
+  }
+
+  // ============================================
+  // PRODUCT DETAILS — units, brands, categories
+  // ============================================
+  // Category keys (keep in sync with the i18n cat* keys).
+  var PRODUCT_CATEGORIES = ['food', 'canned', 'condiments', 'snacks', 'beverages', 'personal_care', 'household', 'dry_goods', 'other'];
+  // Unit keys (keep in sync with the i18n unit* keys).
+  var PRODUCT_UNITS = ['piece', 'sachet', 'pack', 'box', 'bottle', 'can', 'kg', 'g', 'L', 'mL', 'bundle', 'dozen'];
+
+  function productCategoryLabel(key) {
+    if (!key) return '';
+    var map = {
+      food: 'catFood', canned: 'catCanned', condiments: 'catCondiments',
+      snacks: 'catSnacks', beverages: 'catBeverages', personal_care: 'catPersonalCare',
+      household: 'catHousehold', dry_goods: 'catDryGoods', other: 'catOther'
+    };
+    return t(map[key] || 'catOther');
+  }
+
+  function productUnitLabel(key) {
+    if (!key) return '';
+    var map = {
+      piece: 'unitPiece', sachet: 'unitSachet', pack: 'unitPack', box: 'unitBox',
+      bottle: 'unitBottle', can: 'unitCan', kg: 'unitKg', g: 'unitG',
+      L: 'unitL', mL: 'unitMl', bundle: 'unitBundle', dozen: 'unitDozen'
+    };
+    return t(map[key] || key);
+  }
+
+  // One-line product descriptor: "Brand · Size" (or unit) — used in the sale
+  // sheet and inventory list so variants are distinguishable.
+  // v2.59 cleanup: the sub-line only renders when a BRAND is present. When the
+  // brand is intentionally left blank, nothing is shown — the package size (or
+  // unit) must never leak into the brand slot as a fallback.
+  function productSubline(p) {
+    if (!p || !p.brand) return '';
+    var parts = [esc(p.brand)];
+    if (p.packageSize) parts.push(esc(p.packageSize));
+    else if (p.unit && p.unit !== 'piece') parts.push(esc(productUnitLabel(p.unit)));
+    return parts.join(' \u00b7 ');
+  }
+
+  // Brand / package-size history for the datalist suggestions on add/edit.
+  function getUsedBrands() {
+    var seen = {};
+    state.products.forEach(function(p) { if (p.brand) seen[p.brand] = true; });
+    return Object.keys(seen).sort();
+  }
+  function getUsedPackageSizes() {
+    var seen = {};
+    state.products.forEach(function(p) { if (p.packageSize) seen[p.packageSize] = true; });
+    return Object.keys(seen).sort();
   }
 
   function getTodaySales() {
@@ -1224,6 +1386,17 @@
         { textKey: 'dayTutorial4', highlight: '#dayUtang' },
         { textKey: 'dayTutorial5', highlight: '#dayTransactionList' },
         { textKey: 'dayTutorial6', highlight: '#btnCloseDay' }
+      ]
+    },
+    checkout: {
+      label: 'tutCheckout',
+      page: 'checkout',
+      steps: [
+        { textKey: 'checkoutTutorial1', highlight: '#saleProductName' },
+        { textKey: 'checkoutTutorial2', highlight: '#btnAddToCart' },
+        { textKey: 'checkoutTutorial3', highlight: '#saleCartSection' },
+        { textKey: 'checkoutTutorial4', highlight: '#salePayCredit' },
+        { textKey: 'checkoutTutorial5', highlight: '#btnCompleteSale' }
       ]
     },
     closing: {
@@ -1638,19 +1811,29 @@
   // SAMPLE DATA
   // ============================================
   function getSampleProducts() {
+    // lowStockThreshold is intentionally present on SOME products and absent
+    // on others so both code paths (per-product threshold vs global Settings
+    // fallback) can be exercised — see getStockStatus().
     return [
-      { id: 'p1', name: 'Bigas 1kg', costPrice: 45, sellingPrice: 55, quantity: 20 },
-      { id: 'p2', name: 'Mantika', costPrice: 22, sellingPrice: 30, quantity: 3 },
-      { id: 'p3', name: 'Asin', costPrice: 10, sellingPrice: 15, quantity: 0 },
-      { id: 'p4', name: 'Canned Tuna', costPrice: 18, sellingPrice: 25, quantity: 30 },
-      { id: 'p5', name: 'Instant Noodles', costPrice: 10, sellingPrice: 15, quantity: 8 },
-      { id: 'p6', name: 'Kape 3in1', costPrice: 5, sellingPrice: 8, quantity: 50 },
-      { id: 'p7', name: 'Asukal 1kg', costPrice: 50, sellingPrice: 65, quantity: 10 },
-      { id: 'p8', name: 'Gatas Powder', costPrice: 28, sellingPrice: 38, quantity: 6 },
-      { id: 'p9', name: 'Sardinas', costPrice: 15, sellingPrice: 22, quantity: 25 },
-      { id: 'p10', name: 'Shampoo Sachet', costPrice: 3, sellingPrice: 5, quantity: 100 },
-      { id: 'p11', name: 'Sabon', costPrice: 10, sellingPrice: 16, quantity: 2 },
-      { id: 'p12', name: 'Toyo', costPrice: 12, sellingPrice: 18, quantity: 15 }
+      { id: 'p1', name: 'Bigas', category: 'food', brand: '', unit: 'kg', packageSize: '1kg', costPrice: 45, sellingPrice: 55, quantity: 20, lowStockThreshold: 10 },
+      { id: 'p2', name: 'Mantika', category: 'dry_goods', brand: '', unit: 'L', packageSize: '1L', costPrice: 22, sellingPrice: 30, quantity: 3 },
+      { id: 'p3', name: 'Asin', category: 'condiments', brand: '', unit: 'sachet', packageSize: '', costPrice: 10, sellingPrice: 15, quantity: 0 },
+      { id: 'p4', name: 'Canned Tuna', category: 'canned', brand: 'Ligo', unit: 'can', packageSize: '155g', costPrice: 18, sellingPrice: 25, quantity: 30, lowStockThreshold: 12 },
+      { id: 'p5', name: 'Instant Noodles', category: 'food', brand: 'Lucky Me', unit: 'pack', packageSize: '60g', costPrice: 10, sellingPrice: 15, quantity: 8 },
+      { id: 'p6', name: 'Kape 3in1', category: 'beverages', brand: 'Nescaf\u00e9', unit: 'sachet', packageSize: '', costPrice: 5, sellingPrice: 8, quantity: 50, lowStockThreshold: 20 },
+      { id: 'p7', name: 'Asukal', category: 'food', brand: '', unit: 'kg', packageSize: '1kg', costPrice: 50, sellingPrice: 65, quantity: 10 },
+      { id: 'p8', name: 'Gatas Powder', category: 'beverages', brand: 'Bear Brand', unit: 'sachet', packageSize: '25g', costPrice: 28, sellingPrice: 38, quantity: 6, lowStockThreshold: 10 },
+      { id: 'p9', name: 'Sardinas', category: 'canned', brand: '555', unit: 'can', packageSize: '155g', costPrice: 15, sellingPrice: 22, quantity: 25 },
+      { id: 'p10', name: 'Shampoo Sachet', category: 'personal_care', brand: 'Sunsilk', unit: 'sachet', packageSize: '', costPrice: 3, sellingPrice: 5, quantity: 100 },
+      { id: 'p11', name: 'Sabon', category: 'personal_care', brand: 'Safeguard', unit: 'piece', packageSize: '', costPrice: 10, sellingPrice: 16, quantity: 2, lowStockThreshold: 5 },
+      { id: 'p12', name: 'Toyo', category: 'condiments', brand: 'Silver Swan', unit: 'bottle', packageSize: '350mL', costPrice: 12, sellingPrice: 18, quantity: 15 },
+      // One sample per previously-uncovered category (snacks / household / other).
+      { id: 'p13', name: 'Chichirya', category: 'snacks', brand: 'Jack \'n Jill', unit: 'pack', packageSize: '90g', costPrice: 8, sellingPrice: 12, quantity: 40 },
+      { id: 'p14', name: 'Detergent', category: 'household', brand: 'Surf', unit: 'sachet', packageSize: '50g', costPrice: 6, sellingPrice: 10, quantity: 35, lowStockThreshold: 15 },
+      { id: 'p15', name: 'Lighter', category: 'other', brand: '', unit: 'piece', packageSize: '', costPrice: 7, sellingPrice: 12, quantity: 24 },
+      // Extra unit coverage (bundle / dozen).
+      { id: 'p16', name: 'Pisi (Bamboo Ties)', category: 'dry_goods', brand: '', unit: 'bundle', packageSize: '25 pcs', costPrice: 20, sellingPrice: 30, quantity: 12 },
+      { id: 'p17', name: 'Itlog', category: 'food', brand: '', unit: 'dozen', packageSize: '', costPrice: 90, sellingPrice: 115, quantity: 4 }
     ];
   }
 
@@ -2037,12 +2220,37 @@
     showToast(t('noStock'), 'error');
   }
 
+  // Multi-item checkout state (v2.63): the in-progress cart and its payment
+  // method. These are session-only — they never persist across a reload, and a
+  // completed transaction clears them. Sale records store the shared
+  // transactionId + paymentMethod for the whole group.
+  var saleCart = [];
+  var salePayment = 'cash'; // 'cash' | 'credit'
+
+  /** v2.64: the checkout is its own page — the "Benta" action navigates to it. */
   function openSaleSheet() {
     if (!state.dayOpen) {
       showToast(t('dayNotOpen'));
       return;
     }
     closePaymentSheet();
+    if (pageName === 'checkout') {
+      // Already on the checkout page: start a fresh session in place — but
+      // never silently drop an in-progress cart.
+      if (saleCart.length > 0) {
+        if (!confirm(t('discardCart') + '\n\n' + t('discardCartMsg'))) return;
+      }
+      resetSaleForm();
+      if (dom.saleProductName) dom.saleProductName.focus();
+      return;
+    }
+    window.location.href = 'checkout.html';
+  }
+
+  /** Resets the checkout form to a fresh session (used on checkout.html load). */
+  function resetSaleForm() {
+    saleCart = [];
+    salePayment = 'cash';
     state.selectedProduct = null;
     if (dom.saleProductName) dom.saleProductName.value = '';
     if (dom.saleQty) dom.saleQty.value = '1';
@@ -2053,16 +2261,32 @@
     if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
     hideCreditWarn('saleCreditWarn');
     if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
-    if (dom.saleSheetOverlay) dom.saleSheetOverlay.classList.add('open');
+    setSalePayment('cash');
+    renderSaleCart();
     // Disable qty-selector until a product is selected
     var qtySelector = document.querySelector('.qty-selector');
     if (qtySelector) qtySelector.classList.add('disabled');
   }
 
   function closeSaleSheet() {
+    // On the standalone checkout page, "close" means go back to Day.
+    // Never silently drop an in-progress multi-item cart (v2.63).
+    if (pageName === 'checkout') {
+      leaveCheckout('day.html');
+      return;
+    }
+    // Legacy callers (e.g. openPaymentSheet) still close the old overlay if present.
     hideCreditWarn('saleCreditWarn');
     if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
     if (dom.saleSheetOverlay) dom.saleSheetOverlay.classList.remove('open');
+  }
+
+  /** v2.64: navigate away from the checkout page, guarding an in-progress cart. */
+  function leaveCheckout(dest) {
+    if (saleCart.length > 0) {
+      if (!confirm(t('discardCart') + '\n\n' + t('discardCartMsg'))) return;
+    }
+    window.location.href = dest;
   }
 
   function onProductSearch() {
@@ -2073,7 +2297,15 @@
       return;
     }
     var matches = state.products.filter(function(p) {
-      return p.name.toLowerCase().includes(query);
+      // v2.59 cleanup: search covers ALL product identity fields (name,
+      // category, brand, unit, package size) — not just the name — so an
+      // owner can find products by category (e.g. "condiments"), brand, or size.
+      var hay = p.name.toLowerCase();
+      if (p.category) hay += ' ' + p.category.toLowerCase() + ' ' + productCategoryLabel(p.category).toLowerCase();
+      if (p.brand) hay += ' ' + p.brand.toLowerCase();
+      if (p.unit) hay += ' ' + p.unit.toLowerCase() + ' ' + productUnitLabel(p.unit).toLowerCase();
+      if (p.packageSize) hay += ' ' + p.packageSize.toLowerCase();
+      return hay.includes(query);
     });
     // Prioritize sellable items so out-of-stock rows never crowd the
     // in-stock ones out of the visible 6 (v2.58 review fix).
@@ -2095,9 +2327,12 @@
       // Out-of-stock items are shown but NOT selectable (v2.58) — tapping
       // them only flashes the "no stock" toast.
       var click = out ? 'window.selectProductOutOfStock()' : 'window.selectProduct(\'' + p.id + '\')';
+      // Brand · size sub-line so variants are distinguishable at a glance
+      var subline = productSubline(p);
       return '<div class="product-suggestion-item' + (out ? ' disabled' : '') + '" onclick="' + click + '">' +
         '<div>' +
           '<div class="product-suggestion-name">' + p.name + '</div>' +
+          (subline ? '<div class="product-suggestion-brand">' + subline + '</div>' : '') +
           '<div class="product-suggestion-stock">' + (out ? t('noStock') : p.quantity + ' left') + '</div>' +
         '</div>' +
         '<div class="product-suggestion-price">' + formatCurrency(p.sellingPrice) + '</div>' +
@@ -2148,18 +2383,16 @@
     var qty = parseInt(dom.saleQty ? dom.saleQty.value : 1) || 1;
     if (product) {
       var total = product.sellingPrice * qty;
-      if (dom.saleTotalAmount) dom.saleTotalAmount.textContent = formatCurrency(total);
       if (dom.saleStockHint) {
         if (product.quantity <= 0) {
           dom.saleStockHint.textContent = '\ud83d\udd34 ' + t('noStock');
         } else if (qty > product.quantity) {
           dom.saleStockHint.textContent = '\u26a0\ufe0f ' + t('stockHint', { qty: product.quantity }) + ' \u2014 ' + t('noStock');
         } else {
-          dom.saleStockHint.textContent = '\u2705 ' + t('stockHint', { qty: product.quantity });
+          dom.saleStockHint.textContent = '\u2705 ' + t('stockHint', { qty: product.quantity }) + ' \u00b7 ' + t('lineSubtotal') + ': ' + formatCurrency(total);
         }
       }
     } else {
-      if (dom.saleTotalAmount) dom.saleTotalAmount.textContent = '\u20b10.00';
       if (dom.saleStockHint) dom.saleStockHint.textContent = '';
     }
     updateCreditWarn();
@@ -2253,15 +2486,15 @@
     if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   }
 
-  /** Live warning for the Day sale sheet — recomputed as product/qty/customer change. */
+  /** Live warning for the Day sale sheet — recomputed as cart/customer/payment change. */
   function updateCreditWarn() {
     if (!dom.saleCreditWarn) return;
     if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
+    if (salePayment !== 'credit') { hideCreditWarn('saleCreditWarn'); return; }
     var customer = dom.saleCustomer ? dom.saleCustomer.value.trim() : '';
     if (!customer) { hideCreditWarn('saleCreditWarn'); return; }
-    var product = state.selectedProduct;
-    var qty = parseInt(dom.saleQty ? dom.saleQty.value : 1) || 1;
-    var amount = product ? product.sellingPrice * qty : 0;
+    // The warning is based on the whole transaction total, not one line.
+    var amount = getCartTotal();
     var cs = getCreditStatus(customer, amount);
     if (cs.overLimit) {
       showCreditWarn('saleCreditWarn', creditWarnKey(cs), cs, customer);
@@ -2273,10 +2506,12 @@
     }
   }
 
-  function saveSale(force) {
+  // ── Multi-item checkout (v2.63) ──────────────────────────────────────
+  /** Line preview subtotal for the currently selected product. */
+  function addToCart() {
     var product = state.selectedProduct;
     if (!product) {
-      showToast('Mangyaring pumili ng produkto.', 'error');
+      showToast(t('selectProductFirst'), 'error');
       return;
     }
     var qty = parseInt(dom.saleQty ? dom.saleQty.value : 1) || 1;
@@ -2288,16 +2523,134 @@
       showToast('Only ' + product.quantity + ' available', 'error');
       return;
     }
+    // Merge with an existing cart line for the same product (never exceed stock)
+    var existing = saleCart.find(function(l) { return l.productId === product.id; });
+    if (existing) {
+      existing.qty = Math.min(existing.qty + qty, product.quantity);
+    } else {
+      saleCart.push({
+        productId: product.id,
+        name: product.name,
+        brand: product.brand || '',
+        unit: product.unit || '',
+        packageSize: product.packageSize || '',
+        price: product.sellingPrice,
+        costPrice: product.costPrice || 0,
+        qty: qty
+      });
+    }
+    // Reset the picker so the next item can be added
+    state.selectedProduct = null;
+    if (dom.saleProductName) dom.saleProductName.value = '';
+    if (dom.saleQty) dom.saleQty.value = '1';
+    if (dom.saleStockHint) dom.saleStockHint.textContent = '';
+    if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
+    var qtySelector = document.querySelector('.qty-selector');
+    if (qtySelector) qtySelector.classList.add('disabled');
+    renderSaleCart();
+    showToast(t('addedToCart'));
+  }
 
-    var customer = dom.saleCustomer ? dom.saleCustomer.value.trim() : '';
-    var amount = product.sellingPrice * qty;
+  function cartAdjustQty(index, delta) {
+    var line = saleCart[index];
+    if (!line) return;
+    var product = state.products.find(function(p) { return p.id === line.productId; });
+    var max = product ? product.quantity : line.qty;
+    line.qty = Math.max(1, Math.min(line.qty + delta, max));
+    renderSaleCart();
+  }
 
-    // Credit-limit gate (v2.56): block the save with a warning; "Allow anyway"
-    // re-invokes saveSale(true) as a deliberate one-tap override.
+  function cartRemoveLine(index) {
+    saleCart.splice(index, 1);
+    renderSaleCart();
+    showToast(t('itemRemoved'));
+  }
+
+  function getCartTotal() {
+    return saleCart.reduce(function(sum, l) { return sum + (l.price * l.qty); }, 0);
+  }
+
+  /** Renders the cart list, count badge, empty state, and the transaction total. */
+  function renderSaleCart() {
+    if (!dom.saleCartSection) return;
+    var hasItems = saleCart.length > 0;
+    dom.saleCartSection.style.display = 'block';
+    if (dom.saleCartEmpty) dom.saleCartEmpty.style.display = hasItems ? 'none' : 'block';
+    if (dom.saleCartList) dom.saleCartList.style.display = hasItems ? 'block' : 'none';
+    if (dom.saleCartCount) dom.saleCartCount.textContent = saleCart.length;
+    if (dom.saleCartList) {
+      dom.saleCartList.innerHTML = saleCart.map(function(line, i) {
+        var sub = '';
+        if (line.brand) {
+          sub = esc(line.brand);
+          if (line.packageSize) sub += ' \u00b7 ' + esc(line.packageSize);
+          else if (line.unit && line.unit !== 'piece') sub += ' \u00b7 ' + esc(productUnitLabel(line.unit));
+        }
+        return '<div class="sale-cart-line">' +
+          '<div class="sale-cart-line-info">' +
+            '<div class="sale-cart-line-name">' + esc(line.name) + '</div>' +
+            (sub ? '<div class="sale-cart-line-sub">' + sub + '</div>' : '') +
+            '<div class="sale-cart-line-price">' + formatCurrency(line.price) + ' ' + t('eachLabel') + '</div>' +
+          '</div>' +
+          '<div class="sale-cart-line-qty">' +
+            '<button class="qty-btn" onclick="cartAdjustQty(' + i + ', -1)">\u2212</button>' +
+            '<input type="number" class="qty-input qty-input-editable" value="' + line.qty + '" min="1" onchange="cartSetQty(' + i + ', this.value)">' +
+            '<button class="qty-btn" onclick="cartAdjustQty(' + i + ', 1)">+</button>' +
+          '</div>' +
+          '<div class="sale-cart-line-subtotal">' + formatCurrency(line.price * line.qty) + '</div>' +
+          '<button class="sale-cart-line-remove" onclick="cartRemoveLine(' + i + ')" title="' + t('itemRemoved') + '">\u2715</button>' +
+        '</div>';
+      }).join('');
+    }
+    if (dom.saleTotalAmount) dom.saleTotalAmount.textContent = formatCurrency(getCartTotal());
+    updateCreditWarn();
+  }
+
+  function cartSetQty(index, value) {
+    var line = saleCart[index];
+    if (!line) return;
+    var qty = parseInt(value) || 1;
+    var product = state.products.find(function(p) { return p.id === line.productId; });
+    line.qty = Math.max(1, Math.min(qty, product ? product.quantity : qty));
+    renderSaleCart();
+  }
+
+  /** Switches the payment method (Cash / Credit) and toggles the customer field. */
+  function setSalePayment(method) {
+    salePayment = method === 'credit' ? 'credit' : 'cash';
+    if (dom.salePayCash) dom.salePayCash.classList.toggle('active', salePayment === 'cash');
+    if (dom.salePayCredit) dom.salePayCredit.classList.toggle('active', salePayment === 'credit');
+    if (dom.saleCustomerWrap) dom.saleCustomerWrap.style.display = salePayment === 'credit' ? 'block' : 'none';
+    if (dom.saleCustomer && salePayment === 'cash') {
+      dom.saleCustomer.value = '';
+      if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
+    }
+    hideCreditWarn('saleCreditWarn');
+    if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
+    updateCreditWarn();
+  }
+
+  /** Completes the whole cart as one transaction (v2.63). */
+  function completeSale(force) {
+    if (saleCart.length === 0) {
+      showToast(t('cartEmpty'), 'error');
+      return;
+    }
+    var customer = '';
+    if (salePayment === 'credit') {
+      customer = dom.saleCustomer ? dom.saleCustomer.value.trim() : '';
+      if (!customer) {
+        showToast(t('noCustomerCredit'), 'error');
+        return;
+      }
+    }
+    var total = getCartTotal();
+
+    // Credit-limit gate (v2.56): block the whole transaction with a warning;
+    // "Allow anyway" re-invokes completeSale(true) as a deliberate override.
     if (customer && !force) {
-      var cs = getCreditStatus(customer, amount);
+      var cs = getCreditStatus(customer, total);
       if (cs.overLimit) {
-        // Alert when the sale is at/over the customer's credit limit (v2.57)
         var warnKey = creditWarnKey(cs);
         showCreditWarn('saleCreditWarn', warnKey, cs, customer);
         if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'block';
@@ -2306,44 +2659,53 @@
       }
     }
 
-    var sale = {
-      id: genId(),
-      date: todayStr(),
-      createdAt: new Date().toISOString(),
-      productName: product.name,
-      productId: product.id,
-      quantity: qty,
-      amount: amount,
-      costPrice: product.costPrice || 0,
-      profit: (product.sellingPrice - (product.costPrice || 0)) * qty,
-      customerName: customer || null
-    };
+    var transactionId = genId();
+    var now = new Date().toISOString();
 
-    state.sales.push(sale);
-    product.quantity -= qty;
+    // Per-line sale records, grouped by a shared transactionId + paymentMethod.
+    saleCart.forEach(function(line) {
+      var product = state.products.find(function(p) { return p.id === line.productId; });
+      var amount = line.price * line.qty;
+      state.sales.push({
+        id: genId(),
+        transactionId: transactionId,
+        paymentMethod: salePayment,
+        date: todayStr(),
+        createdAt: now,
+        productName: line.name,
+        productId: line.productId,
+        quantity: line.qty,
+        amount: amount,
+        costPrice: line.costPrice,
+        profit: (line.price - line.costPrice) * line.qty,
+        customerName: customer || null
+      });
+      if (product) product.quantity = Math.max(0, product.quantity - line.qty);
+    });
 
+    // One debt entry for the whole transaction, with a per-line ledger.
     if (customer) {
       var existingDebt = state.debts.find(function(d) {
         return d.customerName.toLowerCase() === customer.toLowerCase() && d.remainingBalance > 0;
       });
+      var ledger = saleCart.map(function(line) {
+        return {
+          id: genId(), date: now, type: 'debt',
+          description: line.name + (line.qty > 1 ? ' \u00d7 ' + line.qty : ''),
+          amount: line.price * line.qty
+        };
+      });
       if (existingDebt) {
-        existingDebt.amount += amount;
-        existingDebt.remainingBalance += amount;
-        existingDebt.updatedAt = new Date().toISOString();
+        existingDebt.amount += total;
+        existingDebt.remainingBalance += total;
+        existingDebt.updatedAt = now;
         if (!existingDebt.transactions) existingDebt.transactions = [];
-        existingDebt.transactions.push({
-          id: genId(), date: new Date().toISOString(), type: 'debt',
-          description: product.name, amount: amount
-        });
+        ledger.forEach(function(e) { existingDebt.transactions.push(e); });
       } else {
         state.debts.push({
-          id: genId(), customerName: customer, amount: amount,
-          remainingBalance: amount, createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          transactions: [{
-            id: genId(), date: new Date().toISOString(), type: 'debt',
-            description: product.name, amount: amount
-          }]
+          id: genId(), customerName: customer, amount: total,
+          remainingBalance: total, createdAt: now, updatedAt: now,
+          transactions: ledger
         });
       }
     }
@@ -2351,22 +2713,10 @@
     saveState();
     renderDayMode();
     renderMorningCheck();
-    showToast(t('saleSaved'));
+    showToast(t('saleCompleted'));
 
-    // Stay open for next sale — reset the form
-    state.selectedProduct = null;
-    if (dom.saleProductName) dom.saleProductName.value = '';
-    if (dom.saleQty) dom.saleQty.value = '1';
-    if (dom.saleCustomer) dom.saleCustomer.value = '';
-    if (dom.saleTotalAmount) dom.saleTotalAmount.textContent = '\u20b10.00';
-    if (dom.saleStockHint) dom.saleStockHint.textContent = '';
-    if (dom.productSuggestions) dom.productSuggestions.classList.remove('open');
-    if (dom.customerSuggestions) dom.customerSuggestions.classList.remove('open');
-    hideCreditWarn('saleCreditWarn');
-    if (dom.saleAllowAnyway) dom.saleAllowAnyway.style.display = 'none';
-    // Re-disable the qty-selector until a new product is selected
-    var qtySelector = document.querySelector('.qty-selector');
-    if (qtySelector) qtySelector.classList.add('disabled');
+    // Ready for the next customer — fresh session, stay on the page
+    resetSaleForm();
   }
 
   // ============================================
@@ -2607,12 +2957,57 @@
   // ============================================
   // (toggleManageStore and switchManageTab removed — now using separate pages)
 
+  // Inventory category filter ('' = all). Persisted so the filter survives
+  // page navigation within the tab (matches the report-period pattern).
+  var inventoryCatFilter = '';
+  function loadInventoryCatFilter() {
+    try { inventoryCatFilter = sessionStorage.getItem('sss_v3_inventoryCat') || ''; } catch(e) { inventoryCatFilter = ''; }
+  }
+  function saveInventoryCatFilter() {
+    try {
+      if (inventoryCatFilter) sessionStorage.setItem('sss_v3_inventoryCat', inventoryCatFilter);
+      else sessionStorage.removeItem('sss_v3_inventoryCat');
+    } catch(e) {}
+  }
+
+  // Category chip row above the inventory list (selection over typing).
+  function renderInventoryCatFilters() {
+    if (!dom.inventoryCatFilters) return;
+    var chips = '<button class="cat-chip' + (inventoryCatFilter === '' ? ' active' : '') + '" onclick="setInventoryCatFilter(\'\')">' + t('catAll') + '</button>';
+    PRODUCT_CATEGORIES.forEach(function(k) {
+      chips += '<button class="cat-chip' + (inventoryCatFilter === k ? ' active' : '') + '" onclick="setInventoryCatFilter(\'' + k + '\')">' + productCategoryLabel(k) + '</button>';
+    });
+    dom.inventoryCatFilters.innerHTML = chips;
+  }
+
+  function setInventoryCatFilter(cat) {
+    inventoryCatFilter = cat;
+    saveInventoryCatFilter();
+    renderInventoryCatFilters();
+    renderManageInventory();
+  }
+
   function renderManageInventory() {
     if (!dom.manageInventoryList) return;
     var query = dom.manageStockSearch ? dom.manageStockSearch.value.toLowerCase() : '';
     var products = state.products;
     if (query) {
-      products = products.filter(function(p) { return p.name.toLowerCase().includes(query); });
+      products = products.filter(function(p) {
+        // v2.59 cleanup: inventory search also matches category and unit,
+        // including their localized labels (e.g. "Pampalasa"), matching the
+        // sale-sheet search behavior.
+        return p.name.toLowerCase().includes(query) ||
+          (p.brand && p.brand.toLowerCase().includes(query)) ||
+          (p.packageSize && p.packageSize.toLowerCase().includes(query)) ||
+          (p.category && (p.category.toLowerCase().includes(query) ||
+            productCategoryLabel(p.category).toLowerCase().includes(query))) ||
+          (p.unit && (p.unit.toLowerCase().includes(query) ||
+            productUnitLabel(p.unit).toLowerCase().includes(query)));
+      });
+    }
+    // Category filter ('' = all) — products without a category only match 'all'.
+    if (inventoryCatFilter) {
+      products = products.filter(function(p) { return p.category === inventoryCatFilter; });
     }
     products = products.slice().sort(function(a, b) { return a.name.localeCompare(b.name); });
 
@@ -2625,10 +3020,12 @@
       var status = getStockStatus(p);
       var icon = status === 'plenty' ? '\u2705' : (status === 'low' ? '\u26a0\ufe0f' : '\ud83d\udd34');
       var margin = p.costPrice > 0 ? Math.round(((p.sellingPrice - p.costPrice) / p.costPrice) * 100) : 0;
+      var subline = productSubline(p);
       return '<div class="inv-manage-item" onclick="location.href=\'product_detail.html?id=' + p.id + '\'" style="cursor:pointer;">' +
         '<div class="inv-manage-icon ' + status + '">' + icon + '</div>' +
         '<div class="inv-manage-info">' +
           '<div class="inv-manage-name">' + p.name + '</div>' +
+          (subline ? '<div class="inv-manage-sub">' + subline + '</div>' : '') +
           '<div class="inv-manage-detail">Stock: ' + p.quantity + ' | +' + margin + '% | ' + formatCurrency(p.sellingPrice) + '</div>' +
         '</div>' +
         '<div class="inv-manage-actions">' +
@@ -2649,7 +3046,11 @@
     window.location.href = 'add_product.html';
   }
 
-  function openAddProduct() {
+  // Reset every Add Stock field to its fresh-add default (used by
+  // openAddProduct and by the bfcache pageshow handler — Chrome's back/forward
+  // cache restores the whole page DOM including typed values, which
+  // autocomplete="off" cannot prevent).
+  function resetAddProductFields() {
     state.editProductId = null;
     if (dom.addProductTitle) dom.addProductTitle.textContent = t('addStock');
     if (dom.productName) dom.productName.value = '';
@@ -2658,7 +3059,61 @@
     if (dom.productPrice) dom.productPrice.value = '';
     if (dom.productMarkup) dom.productMarkup.value = getDefaultMarkup();
     if (dom.productMarkupHint) dom.productMarkupHint.textContent = '';
+    if (dom.productLowStock) dom.productLowStock.value = getGlobalLowStockThreshold();
+    if (dom.productCategory) dom.productCategory.value = '';
+    if (dom.productBrand) dom.productBrand.value = '';
+    if (dom.productUnit) dom.productUnit.value = 'piece';
+    if (dom.productPackageSize) dom.productPackageSize.value = '';
     updateMarkupHint();
+  }
+
+  // Refresh the Brand / Package Size datalist suggestions from the current
+  // inventory (getUsedBrands / getUsedPackageSizes).
+  function populateProductDatalists() {
+    if (dom.productBrandList) {
+      dom.productBrandList.innerHTML = getUsedBrands().map(function(b) {
+        return '<option value="' + esc(b) + '"></option>';
+      }).join('');
+    }
+    if (dom.productPackageSizeList) {
+      dom.productPackageSizeList.innerHTML = getUsedPackageSizes().map(function(s) {
+        return '<option value="' + esc(s) + '"></option>';
+      }).join('');
+    }
+  }
+
+  // Prefill the Add Stock form from an existing product (edit mode).
+  // A stale edit ID is cleared so the form stays in fresh-add mode.
+  function fillProductFormFromEdit(editId) {
+    if (!editId) return;
+    var product = state.products.find(function(p) { return p.id === editId; });
+    if (!product) {
+      state.editProductId = null;
+      try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
+      return;
+    }
+    state.editProductId = editId;
+    if (dom.addProductTitle) dom.addProductTitle.textContent = 'Edit Stock';
+    if (dom.productName) dom.productName.value = product.name;
+    if (dom.productQty) dom.productQty.value = product.quantity;
+    if (dom.productCost) dom.productCost.value = product.costPrice;
+    if (dom.productPrice) dom.productPrice.value = product.sellingPrice;
+    if (dom.productMarkup && product.costPrice > 0) {
+      var actualMarkup = Math.round(((product.sellingPrice / product.costPrice) - 1) * 100);
+      dom.productMarkup.value = (actualMarkup >= 0) ? actualMarkup : getDefaultMarkup();
+    }
+    if (dom.productLowStock && typeof product.lowStockThreshold === 'number' && product.lowStockThreshold >= 0) {
+      dom.productLowStock.value = product.lowStockThreshold;
+    }
+    if (dom.productCategory) dom.productCategory.value = product.category || '';
+    if (dom.productBrand) dom.productBrand.value = product.brand || '';
+    if (dom.productUnit) dom.productUnit.value = product.unit || 'piece';
+    if (dom.productPackageSize) dom.productPackageSize.value = product.packageSize || '';
+    updateMarkupHint();
+  }
+
+  function openAddProduct() {
+    resetAddProductFields();
     // (overlay replaced by separate add_product.html page)
   }
 
@@ -2698,6 +3153,11 @@
     var qty = parseInt(dom.productQty ? dom.productQty.value : 0) || 0;
     var cost = parseFloat(dom.productCost ? dom.productCost.value : 0) || 0;
     var price = parseFloat(dom.productPrice ? dom.productPrice.value : 0) || 0;
+    // Product details — optional structured attributes (units, brands, categories)
+    var category = dom.productCategory ? dom.productCategory.value : '';
+    var brand = dom.productBrand ? dom.productBrand.value.trim() : '';
+    var unit = dom.productUnit ? dom.productUnit.value : '';
+    var packageSize = dom.productPackageSize ? dom.productPackageSize.value.trim() : '';
     // Per-product low-stock alert threshold; empty falls back to the global
     // Settings threshold (matching the mobile Add Stock field).
     var lowStock = dom.productLowStock ? parseInt(dom.productLowStock.value, 10) : null;
@@ -2709,9 +3169,9 @@
 
     if (state.editProductId) {
       var product = state.products.find(function(p) { return p.id === state.editProductId; });
-      if (product) { product.name = name; product.quantity = qty; product.costPrice = cost; product.sellingPrice = price; product.lowStockThreshold = lowStock; }
+      if (product) { product.name = name; product.quantity = qty; product.costPrice = cost; product.sellingPrice = price; product.lowStockThreshold = lowStock; product.category = category; product.brand = brand; product.unit = unit; product.packageSize = packageSize; }
     } else {
-      state.products.push({ id: genId(), name: name, quantity: qty, costPrice: cost, sellingPrice: price, lowStockThreshold: lowStock });
+      state.products.push({ id: genId(), name: name, quantity: qty, costPrice: cost, sellingPrice: price, lowStockThreshold: lowStock, category: category, brand: brand, unit: unit, packageSize: packageSize });
     }
 
     saveState();
@@ -3544,6 +4004,8 @@
         // Close dev panel first if open
         var devPanel = document.getElementById('devPanelOverlay');
         if (devPanel && devPanel.classList.contains('open')) { toggleDevPanel(); return; }
+        // Standalone checkout page: Escape goes back to Day (guards the cart)
+        if (pageName === 'checkout') { closeSaleSheet(); return; }
         if (dom.saleSheetOverlay && dom.saleSheetOverlay.classList.contains('open')) closeSaleSheet();
         if (dom.paymentSheetOverlay && dom.paymentSheetOverlay.classList.contains('open')) closePaymentSheet();
       }
@@ -3616,6 +4078,15 @@
         '<div style="font-size:var(--text-sm);color:#dc2626;">' + t('criticalAlertDesc') + '</div></div>';
     }
 
+    // Product details row (category / brand / unit / size) — shown when set
+    var details = [];
+    if (product.category) details.push('<span class="pd-tag">' + productCategoryLabel(product.category) + '</span>');
+    if (product.brand) details.push('<span class="pd-tag">' + esc(product.brand) + '</span>');
+    if (product.unit && product.unit !== 'piece') details.push('<span class="pd-tag">' + productUnitLabel(product.unit) + '</span>');
+    if (product.packageSize) details.push('<span class="pd-tag">' + esc(product.packageSize) + '</span>');
+    var detailsHtml = details.length ?
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">' + details.join('') + '</div>' : '';
+
     container.innerHTML =
       alertHtml +
       '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:16px;">' +
@@ -3624,6 +4095,7 @@
           '<div><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('stockLabel') + '</div>' +
           '<div style="font-weight:700;color:#1e293b;">' + product.name + '</div></div>' +
         '</div>' +
+        detailsHtml +
         '<div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #f1f5f9;">' +
           '<div style="text-align:center;flex:1;"><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('costPrice') + '</div><div style="font-weight:700;">' + formatCurrency(product.costPrice) + '</div></div>' +
           '<div style="text-align:center;flex:1;"><div style="font-size:var(--text-sm);color:#94a3b8;">' + t('sellPrice') + '</div><div style="font-weight:700;color:#16a34a;">' + formatCurrency(product.sellingPrice) + '</div></div>' +
@@ -4324,6 +4796,19 @@
       }
       applyTranslations();
       renderDayMode();
+    } else if (pageName === 'checkout') {
+      // Standalone checkout page (v2.64) — the sale sheet is a full page now.
+      // Same day-open guard as the Day page: a closed/stale day routes to
+      // Morning where the overdue banner lives.
+      if (!state.dayOpen || isStaleOpenDay()) {
+        showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
+        setTimeout(function() { window.location.href = 'morning.html'; }, 1500);
+        return;
+      }
+      applyTranslations();
+      resetSaleForm();
+      // Focus the product search so the owner can start typing immediately.
+      if (dom.saleProductName) dom.saleProductName.focus();
     } else if (pageName === 'closing') {
       // Evening closing page
       // If the store is closed, or the open day belongs to a previous business
@@ -4342,6 +4827,8 @@
       // instead of silently entering edit mode for an old product.
       try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
       applyTranslations();
+      loadInventoryCatFilter();
+      renderInventoryCatFilters();
       renderManageInventory();
     } else if (pageName === 'debts') {
       // Debts management page
@@ -4368,32 +4855,52 @@
       // Low-stock alert threshold: the product's own value when editing, else
       // the global Settings threshold as the default for new products.
       if (dom.productLowStock) dom.productLowStock.value = getGlobalLowStockThreshold();
-      if (editId) {
-        var product = state.products.find(function(p) { return p.id === editId; });
-        if (product) {
-          state.editProductId = editId;
-          if (dom.addProductTitle) dom.addProductTitle.textContent = 'Edit Stock';
-          if (dom.productName) dom.productName.value = product.name;
-          if (dom.productQty) dom.productQty.value = product.quantity;
-          if (dom.productCost) dom.productCost.value = product.costPrice;
-          if (dom.productPrice) dom.productPrice.value = product.sellingPrice;
-          if (dom.productMarkup && product.costPrice > 0) {
-            var actualMarkup = Math.round(((product.sellingPrice / product.costPrice) - 1) * 100);
-            dom.productMarkup.value = (actualMarkup >= 0) ? actualMarkup : getDefaultMarkup();
-          }
-          if (dom.productLowStock && typeof product.lowStockThreshold === 'number' && product.lowStockThreshold >= 0) {
-            dom.productLowStock.value = product.lowStockThreshold;
-          }
-        } else {
-          // Stale edit ID (product no longer exists) — treat as a fresh add
-          try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
-        }
+      // Product details (units, brands, categories): populate the selects and
+      // datalists. Unit defaults to 'piece' for new products (matches mobile).
+      if (dom.productCategory) {
+        dom.productCategory.innerHTML = '<option value="">' + t('catAll') + '</option>' +
+          PRODUCT_CATEGORIES.map(function(k) {
+            return '<option value="' + k + '">' + productCategoryLabel(k) + '</option>';
+          }).join('');
       }
+      if (dom.productUnit) {
+        dom.productUnit.innerHTML = PRODUCT_UNITS.map(function(k) {
+          return '<option value="' + k + '">' + productUnitLabel(k) + '</option>';
+        }).join('');
+      }
+      if (dom.productBrandList) {
+        dom.productBrandList.innerHTML = getUsedBrands().map(function(b) {
+          return '<option value="' + esc(b) + '"></option>';
+        }).join('');
+      }
+      if (dom.productPackageSizeList) {
+        dom.productPackageSizeList.innerHTML = getUsedPackageSizes().map(function(s) {
+          return '<option value="' + esc(s) + '"></option>';
+        }).join('');
+      }
+      fillProductFormFromEdit(editId);
       // Leaving this page without saving (back button, nav) must clear any
       // pending edit ID so the next "Add Stock" opens a blank form instead
       // of re-entering edit mode for the abandoned product.
       window.addEventListener('pagehide', function() {
         try { localStorage.removeItem('sss_v3_editProductId'); } catch(e) {}
+      });
+      // Chrome's back-forward cache (bfcache) restores the ENTIRE page DOM —
+      // including every typed form value — when the user returns to this page
+      // with Back/Forward. autocomplete="off" does not stop bfcache, so reset
+      // the form explicitly whenever the page is restored from cache. The
+      // datalists are also refreshed in case a product saved since the first
+      // load introduced new brands/sizes.
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;   // normal first load is handled by init()
+        resetAddProductFields();
+        populateProductDatalists();
+        // Defensive only: the pagehide listener above normally clears the edit
+        // ID before the page freezes into bfcache, so this re-fill only fires
+        // if pagehide did not run (e.g. unusual browser/eviction paths).
+        var pendingEdit = null;
+        try { pendingEdit = localStorage.getItem('sss_v3_editProductId'); } catch(err) {}
+        fillProductFormFromEdit(pendingEdit);
       });
     } else if (pageName === 'new_debt') {
       // New Debt page
@@ -4459,6 +4966,8 @@
   window.closeDayAndShowMorning = closeDayAndShowMorning;
   window.openSaleSheet = openSaleSheet;
   window.closeSaleSheet = closeSaleSheet;
+  window.leaveCheckout = leaveCheckout;
+  window.resetSaleForm = resetSaleForm;
   window.onProductSearch = onProductSearch;
   window.selectProduct = selectProduct;
   window.selectProductOutOfStock = selectProductOutOfStock;
@@ -4468,7 +4977,12 @@
   window.selectCustomer = selectCustomer;
   window.onNewDebtCustomerSearch = onNewDebtCustomerSearch;
   window.selectNewDebtCustomer = selectNewDebtCustomer;
-  window.saveSale = saveSale;
+  window.addToCart = addToCart;
+  window.cartAdjustQty = cartAdjustQty;
+  window.cartRemoveLine = cartRemoveLine;
+  window.cartSetQty = cartSetQty;
+  window.setSalePayment = setSalePayment;
+  window.completeSale = completeSale;
   window.openDebtDetail = openDebtDetail;
   window.closeDebtDetail = closeDebtDetail;
   window.togglePaidDebts = togglePaidDebts;
@@ -4477,6 +4991,7 @@
   window.updatePaymentPreview = updatePaymentPreview;
   window.savePayment = savePayment;
   window.renderManageInventory = renderManageInventory;
+  window.setInventoryCatFilter = setInventoryCatFilter;
   window.editProduct = editProduct;
   window.openAddProduct = openAddProduct;
   window.closeAddProduct = closeAddProduct;

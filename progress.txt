@@ -1,6 +1,12 @@
 ================================================================================
 SARI-SARI SMART - PROGRESS REPORT
 ================================================================================
+⚠️⚠️ READ FIRST (Aug 9, 2026): V2.59 "Product Units, Brands & Categorization"
+    IS UNFINISHED — it was wrongly logged as DONE. Open issues remain (mobile
+    parity missing, guided flow/catalog not built, sale-sheet sub-line
+    unverified). See the "V2.59 STATUS CORRECTION — UNFINISHED" entry at the
+    BOTTOM of this file before continuing.
+================================================================================
 Date: June 26, 2026
 Project: HTML Prototype for Sari-Sari Store Management App
 Version: v2.2 (specific sale: product name lookup + quantity + auto-total)
@@ -3608,3 +3614,365 @@ Validation:
   selectable handlers.
 - Code review: passed; its one finding (out-of-stock rows could crowd in-stock
   items out of the slice(0,6) cap) was applied via the stable sort.
+================================================================================
+V2.59 — PRODUCT UNITS, BRANDS, AND CATEGORIZATION (WEB)
+Date: Aug 9, 2026
+Status: DONE
+
+Background: Products carried only name/quantity/cost/sellingPrice/threshold —
+no structured unit, brand, or category. Units were embedded in names ("Bigas
+1kg"), brands were indistinguishable ("Canned Tuna"), and there was no way to
+group or filter by department. This version adds optional structured product
+attributes with a selection-first Add Stock flow (analysis-driven; web only —
+mobile parity in a later phase).
+
+Changes:
+- app.js product model: products now carry category, brand, unit, packageSize
+  (all optional — legacy products read as '' / 'piece' defensively).
+- app.js: PRODUCT_CATEGORIES (9 keys) + PRODUCT_UNITS (12 keys) constants;
+  productCategoryLabel()/productUnitLabel() (bilingual via existing t());
+  productSubline() → "Brand · Size" (or unit) for variants, esc()'d at the
+  source since it feeds innerHTML; getUsedBrands()/getUsedPackageSizes() for
+  the datalist suggestions.
+- add_product.html: new "Product Details" section (guided selection):
+  Category dropdown, Brand input + datalist of brands already in inventory,
+  Unit dropdown, Package Size input + datalist of past sizes. All optional.
+- app.js add_product init: populates selects/datalists, prefills on edit
+  (category/brand/unit/size), defaults unit to 'piece' for new products.
+- inventory.html + app.js: category filter chip row above the list
+  (All/Food/Canned/… — persisted in sessionStorage sss_v3_inventoryCat);
+  inventory rows show brand·size sub-line; search now also matches brand and
+  package size.
+- product_detail.html + app.js: tag chips for category/brand/unit/size.
+- day.html/app.js sale sheet: suggestion rows show brand·size sub-line so
+  variants are distinguishable at a glance.
+- style.css: .pd-section, .cat-chips, .cat-chip(.active), .inv-manage-sub,
+  .product-suggestion-brand, .pd-tag.
+- i18n: ~30 new EN/FIL keys (labels + category/unit names).
+- Seed data: sample products now carry category/brand/unit/packageSize.
+
+Validation:
+- node -c app.js → SYNTAX OK.
+- Node harness against the extracted real functions (22/22 + 8/8 post-review):
+  category/unit labels, subline composition (brand·size, unit-only, piece
+  omitted), deduped brand/size history, constant lists, and XSS escaping of
+  user-entered brand/packageSize in the subline.
+- Browser smoke test (Chrome, live server): category chips render; "Canned
+  Tuna" shows "Ligo · 155g" subline; clicking Delata filters to canned items
+  only; product detail shows Delata/Ligo/lata/155g tag chips; Add Stock page
+  shows the full Product Details section (all bilingual); zero console errors.
+- Code review: one finding applied — productSubline() now esc()'s brand and
+  packageSize (free-text user input injected into innerHTML at two call
+  sites: inventory list + sale suggestions). esc() confirmed attribute-safe
+  (escapes quotes) for the datalist value attributes.
+
+Files changed:
+- git/Sari-sari_smart/app.js
+- git/Sari-sari_smart/add_product.html
+- git/Sari-sari_smart/inventory.html
+- git/Sari-sari_smart/style.css
+- progress.txt: This entry
+================================================================================
+V2.59 STATUS CORRECTION — UNFINISHED (LOG ENTRY)
+Date: Aug 9, 2026
+Status: ⚠️ NOT FINISHED — PARTIAL IMPLEMENTATION, ISSUES PENDING
+
+IMPORTANT: The entry above (V2.59 — PRODUCT UNITS, BRANDS, AND
+CATEGORIZATION (WEB), dated Aug 9, 2026) was previously marked "Status: DONE".
+That status is WRONG. This feature is UNFINISHED and still has open issues.
+It must be completed before this can be considered done. Do not treat the
+above entry as a finished feature.
+
+WHAT IS DONE (web only):
+- Product model: optional category/brand/unit/packageSize fields.
+- add_product.html: "Product Details" section (Category dropdown, Brand input
+  + datalist, Unit dropdown, Package Size input + datalist). All optional.
+- inventory.html: category filter chip row + brand·size sub-line; search
+  matches brand and size.
+- product_detail.html: tag chips for category/brand/unit/size.
+- day sale sheet: suggestion rows show brand·size sub-line.
+- i18n EN/FIL keys, seed data, style.css classes.
+
+KNOWN ISSUES / UNFINISHED WORK (must be addressed):
+1. MOBILE APP NOT UPDATED — the issue explicitly covers BOTH platforms.
+   Mobile (git/app/Sari-sari_smart_APP) still has NO brand, NO category, and
+   the unit field exists in the data model but is never settable in the UI
+   (every product silently defaults to "piece"). Full mobile parity pending:
+   ProductEntity/Models.kt, AddStockScreen, StocksScreen, ProductDetailScreen,
+   SaleBottomSheet, Strings.kt.
+2. GUIDED SELECTION FLOW NOT FULLY IMPLEMENTED — the analysis report
+   recommended the guided cascade: Category → Product → Brand → Unit/Size,
+   with a predefined product catalog / templates and auto-composed display
+   names. What was built is a flat optional "Product Details" section with
+   dropdowns + suggestion datalists. The full guided flow, predefined catalog,
+   and templates were deferred and are NOT done.
+3. DAY-PAGE SALE-SHEET SUBLINE NEVER LIVE-VERIFIED — day.html redirects to
+   morning.html when the store is not open, so the brand·size sub-line in the
+   sale sheet was validated only via the Node harness and the identical
+   pattern in inventory — never directly in the browser. Re-verify on a day
+   when the store is open (or with a store-open dev state).
+4. CATEGORY FILTER IS SESSION-ONLY — the inventory category chip persists via
+   sessionStorage (resets every session), not localStorage. Confirm this is
+   acceptable or change to permanent persistence.
+
+Validation done so far (web only): node -c app.js OK; Node harness 22/22 +
+8/8 checks; browser smoke tests passed for inventory filters/detail/add-stock;
+code review XSS finding on productSubline() applied and re-verified.
+
+NEXT SESSION: Start here. First confirm the issues above, then either finish
+the web flow (guided flow/catalog) or implement mobile parity.
+================================================================================
+V2.59 POST-IMPLEMENTATION CLEANUP — REVIEW FIXES (WEB)
+Date: Aug 10, 2026
+Status: DONE
+
+Applied every fix requested in the v2.59 post-implementation review of the
+Product Units/Brands/Categories feature. No mobile changes (mobile parity is
+still the open NEXT-SESSION task).
+
+FIX 1 — add_product.html structure (Issue A):
+- Removed the single-wrapper .pd-section container that grouped the 4 new
+  fields, so all form fields now share the same flat .form-group structure.
+- Reordered: Product Name is FIRST again, followed by the optional Product
+  Details fields (Category, Brand, Unit, Package Size), then Quantity, Cost,
+  Markup, Selling Price, Low Stock, Save.
+
+FIX 2 — Brand & Package Size "remembering" (Issues B & C):
+- Added autocomplete="off" to the Brand and Package Size inputs. Browser
+  autofill no longer re-populates them from history; the datalist suggestions
+  (getUsedBrands / getUsedPackageSizes) are preserved as the intended
+  selection-over-typing aid.
+
+FIX 3 — Package size shown as brand in inventory (Issue 2):
+- productSubline() now returns blank when the product has NO brand. The
+  package size (or unit) can no longer leak into the brand/sub-line slot as
+  a fallback. When a brand IS present, "Brand · Size" (or "Brand · Unit")
+  still renders so variants stay distinguishable.
+
+FIX 4 — Sales-sheet overlay search (Issue 4):
+- onProductSearch() now matches name, category (key + localized label),
+  brand, unit (key + localized label), and package size — not just the name.
+  Searching "condiments" / "pampalasa" / a brand / a size now returns the
+  right products in the Day page sale sheet.
+
+FIX 5 — Inventory search consistency (Issue 4, review follow-up):
+- renderManageInventory() search now also matches category and unit,
+  including their localized labels, matching the sale-sheet behavior.
+
+FIX 6 — style.css cleanup (Issue A):
+- Removed the now-unused .pd-section rule (no dead CSS).
+
+Validation:
+- node -c app.js -> SYNTAX OK.
+- Node harness against the real extracted productSubline + search filters:
+  25/25 checks pass (sub-line fallback cases, EN + FIL label searches for
+  category/unit, brand/size search, XSS escaping).
+- Browser smoke tests (Chrome, live server): Canned Tuna shows "Ligo · 155g",
+  Sardinas shows "555 · 155g", Bigas (no brand) shows NO sub-line; searching
+  "pampalasa" filters to Asin + Toyo; add-product form order and
+  autocomplete=off verified; end-to-end save repro confirmed a product with
+  empty brand + package size "10" shows NO sub-line in inventory. Zero
+  console errors.
+- Code review: applied the one finding (inventory search label matching).
+
+Files changed (git/Sari-sari_smart/): add_product.html, app.js, style.css,
+progress.txt: this entry.
+================================================================================
+V2.59 POST-IMPLEMENTATION CLEANUP 2 (ADD STOCK MEMORY + DEV PANEL SEED) — WEB ONLY
+Date: Aug 10, 2026
+Status: DONE
+
+Follow-up to the earlier v2.59 cleanup. Root-caused and fixed the
+"Add Stock remembers my Brand / Package Size" reports and upgraded the
+Dev Panel sample products.
+
+ROOT CAUSE (analyzed first, no changes until approved):
+- The app NEVER persists a "last used" brand/size value. Fresh page loads are
+  verified empty. The value reappearing in the field came from Chrome's
+  back-forward cache (bfcache): pressing Back restores the whole page DOM,
+  including typed values. autocomplete="off" cannot stop bfcache, and init()
+  does not re-run on a cached restore, so nothing cleared the form.
+- The dropdown suggestions the user saw were the app's datalists built from
+  brands/sizes already on saved products (getUsedBrands/getUsedPackageSizes)
+  — this IS the intended "select from already-created brands" behavior.
+- Product Name showed an X/clear control while Brand/Package Size did not
+  because #productName had no autocomplete="off" and no datalist, so Chrome
+  showed its native form-history dropdown; the other two inputs use
+  autocomplete="off" + datalist, so Chrome shows only datalist options.
+
+FIXES:
+1. add_product.html — added autocomplete="off" to #productName so all three
+   free-text fields behave identically (no browser-history dropdown/X).
+2. app.js — added pageshow listener in the add_product init branch: whenever
+   the page is restored from bfcache (ev.persisted === true) the form is
+   reset to fresh-add defaults, the Brand/Package Size datalists are rebuilt
+   (so newly-saved brands/sizes appear), and a pending edit is re-applied if
+   one somehow survived. Refactored the duplicated reset/prefill/datalist
+   logic into resetAddProductFields(), populateProductDatalists(), and
+   fillProductFormFromEdit(editId); openAddProduct() now reuses the reset.
+   fillProductFormFromEdit also now refreshes the markup hint in edit mode
+   (small improvement over the old inline block).
+3. app.js getSampleProducts() — sample products now carry lowStockThreshold
+   on 6 of 17 (the rest omit it to exercise the global Settings fallback),
+   and new samples cover the previously-missing categories and units:
+   p13 Chichirya (snacks), p14 Detergent (household), p15 Lighter (other),
+   p16 Pisi (bundle), p17 Itlog (dozen). All 9 categories and 9 of 12 units
+   now represented; brand/no-brand mix kept (10/7).
+
+VALIDATION:
+- node -c app.js: SYNTAX OK.
+- Node harness (70 checks) vs the real code: seed completeness (17 products,
+  unique ids, valid category/unit keys, threshold mix, category coverage),
+  helper wiring, autocomplete attributes — all pass.
+- Browser (live server, Chrome):
+  * Fresh load: productName/Brand/Package Size all empty.
+  * Synthetic pageshow persisted=true: all fields cleared; persisted=false:
+    untouched (normal loads unaffected).
+  * Datalists refresh after restore: brand list includes a brand saved just
+    before navigating back (CDO).
+  * Edit mode preserved: pageshow re-fill path prefills Canned Tuna with
+    brand Ligo / size 155g / category canned / unit can.
+  * No console errors.
+
+Open tasks unchanged: mobile parity for Product Details remains the next
+session's start point (this was web-only, as scoped).
+================================================================================
+================================================================================
+WEB APP — CURRENT STATUS CHECKPOINT (Aug 10, 2026)
+================================================================================
+Latest work: the two entries directly above (V2.59 POST-IMPLEMENTATION
+CLEANUP — REVIEW FIXES, and V2.59 POST-IMPLEMENTATION CLEANUP 2 — ADD STOCK
+MEMORY + DEV PANEL SEED) are the newest web-app work. They resolve every issue
+raised in the post-implementation reviews of the Product Units/Brands/
+Categories feature (v2.59).
+
+WHAT IS NOW DONE (web only):
+- Product Details fields flattened into the standard form layout; Product Name
+  is first again; Brand/Package Size + Product Name all use autocomplete="off".
+- "Field remembers last value" root-caused to Chrome's back-forward cache and
+  fixed with a pageshow reset handler (verified in Chrome: values no longer
+  restore after Back navigation; datalist suggestions still work and refresh).
+- Sub-line rendering: an empty Brand no longer falls back to showing Package
+  Size (Tosino/CDO-style bug fixed); "Brand · Size/Unit" shows only when a
+  brand exists.
+- Sale-sheet + inventory search now match name, category (EN + FIL labels),
+  brand, unit, and package size (e.g. "condiments"/"pampalasa" both work).
+- Unused .pd-section CSS removed.
+- Dev Panel seed data upgraded to the current product model: 17 samples, all
+  9 categories covered, bundle/dozen units added, lowStockThreshold set on 6
+  (rest exercise the global fallback), brand/no-brand mix (10/7).
+- All validated: node -c, 70-check harness, live Chrome smoke tests, code
+  review applied. Log entries above contain the full detail.
+
+STILL OPEN (next-session start point, unchanged scope):
+1. Mobile parity — the Android app (git/app/Sari-sari_smart_APP) still lacks
+   brand/category/settable unit. This remains the single most important open
+   task (unit exists on mobile but defaults to "piece").
+2. Guided selection flow (Category → Product → Brand → Unit/Size with a
+   predefined catalog) — still deferred; the flat optional section ships.
+3. Day-page sale-sheet overlay sub-lines — logic unit-tested but never
+   directly verified live in the browser (day.html redirects when store is
+   closed).
+4. Inventory category filter is session-only (sessionStorage) — resets each
+   session.
+
+NOTE: the "READ FIRST (Aug 9)" banner at the top of this file predates both
+cleanup entries; it was left untouched per the append-only convention. This
+checkpoint entry supersedes its "go to the bottom" pointer.
+================================================================================
+
+
+V2.63 — MULTI-ITEM CHECKOUT: CART-BASED SALE SHEET (WEB)
+Date: Aug 10, 2026
+Status: DONE
+
+Background: the Day-page sale sheet sold ONE product at a time. A customer
+buying 5 items on utang forced 5 separate saves with the customer name typed
+5 times, producing 5 unrelated sale records and 5 debt entries. This version
+makes the sale sheet a cart-based checkout so a whole purchase is recorded as
+ONE transaction.
+
+Changes:
+- day.html: restructured sale sheet — new "Add to Cart" button; new cart
+  section (item lines with name + brand·size sub-line, per-item qty −/+ and
+  direct-edit, per-line subtotal, ✕ remove, live count badge + empty state);
+  new Cash/Utang payment toggle (Utang reveals the customer field);
+  "Complete Sale" button replaces the old Save.
+- app.js: new checkout state + logic — saleCart (product/qty lines),
+  salePayment ("cash"/"credit"), addToCart() (merges same product, clamps to
+  stock), cartAdjustQty(), cartSetQty(), cartRemoveLine(), getCartTotal(),
+  renderSaleCart(), setSalePayment(), completeSale(force).
+- completeSale(): loops the whole cart; every sale row carries a SHARED
+  transactionId + paymentMethod; stock deducted per line; ONE debt entry per
+  transaction with per-line ledger entries; credit-limit gate now checks the
+  TRANSACTION TOTAL (Allow-Anyway still works).
+- closeSaleSheet() asks to discard when the cart has items; openSaleSheet()
+  never drops a cart silently; credit warning is cart-total based and only
+  shown in Credit mode.
+- style.css: cart lines, count badge, payment toggle styles.
+- i18n: 18 new EN/FIL keys (addToCart, cartTitle, cartEmpty, paymentMethod,
+  payCash, payCredit, completeSale, saleCompleted, discardCart,
+  discardCartMsg, noCustomerCredit, itemRemoved, addedToCart,
+  selectProductFirst, lineSubtotal, eachLabel, ...).
+
+Validation:
+- node --check app.js: SYNTAX OK.
+- NEW tests/checkout-smoke.js harness (loads the real app.js under a DOM
+  stub): 31/31 assertions pass — cart add/merge/clamp, adjust, remove,
+  cash + credit completion with shared transactionId, per-line debt ledger,
+  stock deduction, credit-limit gate + Allow-Anyway, discard confirm.
+- Code review applied (defensive open-guard added; test moved to tests/).
+
+Open tasks unchanged: mobile parity was the next phase (completed separately
+in the Android app, Phase 54).
+
+
+V2.64 — STANDALONE CHECKOUT PAGE (SALE SHEET OVERLAY REMOVED) (WEB)
+Date: Aug 10, 2026
+Status: DONE
+
+Background: user request — "make it a stand alone page, no more sale sheet
+overlay in the day page". The cart checkout from v2.63 moved off the Day-page
+overlay onto its own page.
+
+Changes:
+- NEW checkout.html: standalone page — header with back arrow + tutorial
+  button; product search + qty in a highlighted picker card; Add to Cart;
+  cart list (−/+, remove ✕, count badge, per-line subtotal); Cash/Utang
+  payment toggle + customer field (credit only); live credit warn;
+  cart-total + Complete Sale / Isara buttons; bottom nav (Umaga/Benta/Isara)
+  matching the rest of the app.
+- day.html: sale sheet overlay REMOVED entirely; the Day page now shows
+  stats + transactions only; its Benta button navigates to checkout.html.
+- app.js: openSaleSheet() now navigates to checkout.html (on the checkout
+  page itself, tapping Benta starts a fresh session in place — no reload);
+  new resetSaleForm() (fresh session on page load + after each completed
+  sale); leaveCheckout(dest) guards the cart before ANY exit (no silent cart
+  loss via bottom nav); closeSaleSheet() is page-aware (on checkout:
+  discard-confirm + back to Day; legacy branch kept for the debts payment
+  sheet); new 'checkout' page branch in init() with the day-open guard,
+  translation, and auto-focus on search; Escape key on checkout → back to
+  Day with the cart guard; dead saleSheetOverlay/saleSheet DOM ids removed.
+- morning.html / closing.html: their Benta buttons now open checkout.html
+  directly (consistent "Sell" action everywhere).
+- Tutorial: new 5-step checkout tutorial (EN + FIL) highlighting search,
+  Add to Cart, cart, Utang, Complete Sale; mainTutorial7 text updated to
+  describe the new flow.
+- style.css: checkout-specific polish (search prominence, section spacing).
+
+Validation:
+- node --check app.js: SYNTAX OK.
+- tests/checkout-smoke.js updated for the standalone flow: 32/32 assertions
+  pass.
+- Code review applied: leaveCheckout guards all nav exits, Escape handling,
+  Benta-in-place reset, tutorial wiring, dead-id cleanup.
+
+Note: the "WEB APP — CURRENT STATUS CHECKPOINT (Aug 10, 2026)" entry above
+predates this work; these V2.63/V2.64 entries supersede its "latest work"
+paragraph. The checkout tutorial was also added to the Settings/Help
+Tutorial dropdown (option "Checkout Tutorial" after "Day Mode Tutorial";
+new tutCheckout EN/FIL label keys) in a follow-up change.
+
+Affected files (web): checkout.html (NEW), day.html, morning.html,
+closing.html, app.js, style.css, tests/checkout-smoke.js, setting.html,
+help.html, progress.txt: this entry.

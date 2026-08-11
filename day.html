@@ -45,7 +45,7 @@
                 <div class="day-stat-icon cash-bg">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </div>
-                <div class="day-stat-label" data-i18n="dayEarningsLabel">Kita Ngayon</div>
+                <div class="day-stat-label" data-i18n="dayEarningsLabel">Cash Sales Today</div>
                 <div class="day-stat-value" id="dayEarnings">₱0.00</div>
               </div>
               <div class="day-stat-card">
@@ -71,7 +71,10 @@
                 <svg class="day-transactions-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
               <div class="list-container" id="dayTransactionList">
-                <div class="empty-state">Wala pang transaksyon ngayong araw. I-tap ang "May Bumili" para magsimula.</div>
+                <!-- V2.68: fallback synced to the localized noTransactions text
+                     (runtime replaces this with t('noTransactions')) — the old
+                     "May Bumili" sales-sheet wording is gone. -->
+                <div class="empty-state">No transactions yet.</div>
               </div>
             </div>
           </div>

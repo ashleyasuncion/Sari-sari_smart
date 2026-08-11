@@ -3976,3 +3976,214 @@ new tutCheckout EN/FIL label keys) in a follow-up change.
 Affected files (web): checkout.html (NEW), day.html, morning.html,
 closing.html, app.js, style.css, tests/checkout-smoke.js, setting.html,
 help.html, progress.txt: this entry.
+
+================================================================================
+V2.65 — OVERDUE-STORE NAV FIX: SELL BUTTON NO LONGER BOUNCES THROUGH CHECKOUT (WEB)
+Date: Aug 11, 2026
+Status: DONE
+
+Background: regression from the v2.64 page split. From the Morning page, the
+Benta/Sell button on an overdue store (dayOpen = true but dayDate from a
+previous calendar day) navigated to checkout.html FIRST; the checkout page's
+init guard then detected the stale day, toasted overdueRedirect, and bounced
+back to Morning after 1.5s. The validation belongs on the source page (matches
+the mobile app's "block at the source" behavior) — the intermediate navigation
+must not happen.
+
+Root cause: openSaleSheet() only guarded !state.dayOpen. An overdue store has
+dayOpen === true, so the guard passed and navigation proceeded to checkout.
+showClosingScreen() and navigateToDayMode() both guard
+!state.dayOpen || isStaleOpenDay() — the v2.64 checkout navigation function was
+written without the stale-day half of that v2.35 guard.
+
+Fix:
+[MOD] app.js — openSaleSheet() now uses the exact same guard as
+      showClosingScreen()/navigateToDayMode():
+        if (!state.dayOpen || isStaleOpenDay()) {
+          showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
+          return;
+        }
+      - Overdue store -> stays on the current page, overdue alert toast.
+      - Closed store (never started) -> dayNotOpen toast, stays.
+      - Fresh open day -> unchanged, navigates to checkout.html.
+      - Covers every Sell call site (morning.html / day.html / closing.html
+        bottom-nav FABs all call openSaleSheet()).
+      - Behavior delta (intended, consistent with mobile): if the day turns
+        stale WHILE already on checkout, tapping Benta now toasts instead of
+        starting a fresh in-place session.
+
+Tests:
+[MOD] tests/checkout-smoke.js — new STEP 7 (6 assertions) spins up a second
+      vm context simulating morning.html with a pre-seeded stale open day:
+      overdue -> banner visible + no navigation + overdue alert; closed ->
+      no navigation + day-not-open alert; fresh open day -> navigates to
+      checkout.html (behavior preserved). Added the Morning-page element IDs
+      the new context renders (harness previously stubbed checkout only).
+
+Validation:
+- node --check app.js: SYNTAX OK.
+- node tests/checkout-smoke.js: 38/38 assertions pass (32 existing + 6 new).
+- Code review: passed (resilient toast assertions, entry notes the
+  checkout-page behavior delta).
+
+Affected files (web): app.js, tests/checkout-smoke.js, progress.txt: this entry.
+
+================================================================================
+V2.66 — FINANCIAL TERMINOLOGY UPDATE (WEB): BENTA/KITA/TUBO CLARITY (EN + FIL)
+Date: Aug 11, 2026
+Status: DONE
+
+Background: capstone panel feedback — "sales" in English does not map to both
+"benta" AND "kita" in Filipino; profit translated as "kita" conflates income/
+revenue with profit. A full terminology analysis was produced (Terminology.txt
+at project root). This version applies its label recommendations to the WEB
+app (mobile port pending user decision).
+
+Terminology rule applied: Benta = sales, Kita = income/revenue only, Tubo =
+profit. Also removed Taglish from EN labels and invented words from FIL.
+
+Changes (app.js strings.en / strings.fil):
+- Recorded Sales Today -> Cash Sales Today  /  Naitalang Benta Ngayon ->
+  Bentang Cash Ngayon  (value is cash-only recorded sales)
+- Actual Sales Today -> Cash Counted  /  Aktwal na Benta Ngayon -> Perang
+  Nabilang sa Drawer  (value is the cash physically counted in the drawer)
+- Sales Difference -> Cash Difference  /  Pagkakaiba sa Benta ->
+  Pagkakaiba ng Pera  (cash over/short)
+- Profit (closing) -> Profit from Items Sold  /  Kita -> Tubo mula sa mga
+  Naibenta  (value = per-item (sell - cost) x qty; gross, before expenses)
+- NEW key closingProfitHint (EN/FIL): helper line under the closing profit
+  total: "Sales of items sold minus their cost." / "Benta ng mga naibenta
+  minus ang halaga ng paninda."
+- Day page: Debt Today -> Credit Sales Today (EN only; FIL keeps Utang Ngayon)
+- Reports: Profit -> Gross Profit / Kita -> Kabuuang Tubo; Cash Benta ->
+  Bentang Cash; Utang Benta -> Bentang Utang; Utang / Resibols -> Utang na
+  Hindi pa Bayad; Utang / Receivables -> Debts / Receivables; Outstanding
+  Utang -> Outstanding Debts; report summary line FIL kita -> tubo.
+
+HTML fallback text synced to match the dictionary (day.html "Kita Ngayon"
+stale hardcode removed; closing.html labels + comments updated).
+
+Files changed (web): app.js, day.html, closing.html, style.css,
+progress.txt: this entry. (Terminology.txt at project root documents the
+full analysis and the mobile-app follow-up items.)
+
+Validation:
+- node --check app.js: SYNTAX OK.
+- node tests/checkout-smoke.js: 38/38 pass.
+- Chrome (live server): Closing EN shows Cash Sales Today / Cash Counted /
+  Cash Difference / Profit from Items Sold + hint; Closing FIL shows Bentang
+  Cash Ngayon / Perang Nabilang sa Drawer / Pagkakaiba ng Pera / Tubo mula
+  sa mga Naibenta + hint; Day FIL shows Bentang Cash Ngayon / Naibenta /
+  Utang Ngayon with correct values (P105 cash vs P48 utang); Reports FIL
+  shows Kabuuang Benta / Kabuuang Tubo / Bentang Cash / Bentang Utang /
+  Utang na Hindi pa Bayad. No console errors.
+
+NOT APPLIED (follow-ups): mobile (Strings.kt) terminology, tutorial prose
+pass (FIL "kita" in closingTutorial4/mainTutorial9), supporting hints on
+the two cash fields, user-check of "Tubo" with target users.
+
+--- V2.66 addendum (code review follow-ups) ---
+- profitLabel (day-complete summary overlay) confirmed in use; updated to the
+  same Profit from Items Sold / Tubo mula sa mga Naibenta wording.
+- closingProfitHint wording refined to "Selling price of items sold minus
+  their cost." (EN) for clarity; FIL kept "Benta ng mga naibenta minus ang
+  halaga ng paninda." (Taglish "minus" is natural).
+- tests/checkout-smoke.js: new STEP 8 — 17 source-level terminology-lock
+  assertions guard the corrected EN/FIL labels and the absence of stale
+  terms (Kita, Resibols, Kita Ngayon). 55/55 pass.
+- Still deferred: CSV export column headers (exportCurrentReport still emits
+  a bare "Profit" header) and the FIL tutorial prose (closingTutorial4 /
+  mainTutorial9 use "kita" for profit) — listed for the next terminology
+  pass. Mobile (Strings.kt) port pending user decision.
+
+--- V2.66 addendum 2 (mobile port COMPLETED — V2.67) ---
+- The mobile-app terminology port is DONE as mobile V2.67 (see
+  git/app/Sari-sari_smart_APP/progress.txt). Mobile now matches the web's
+  labels (Cash Sales Today / Bentang Cash Ngayon, Cash Counted / Perang
+  Nabilang sa Drawer, Cash Difference / Pagkakaiba ng Pera, Profit from
+  Items Sold / Tubo mula sa mga Naibenta, Gross Profit / Kabuuang Tubo,
+  Credit Sales / Bentang Utang, Debts / Receivables / Utang na Hindi pa
+  Bayad, Outstanding Debts) plus mobile-only fixes (Morning Yesterday card
+  localized + shows actual sales, weeklyTrend/lowStockAlertLabel/units
+  keys, dead-key kita->tubo).
+- KNOWN DIVERGENCE: mobile CSV export now emits Credit Sales / Outstanding
+  Debts, but the web's exportCurrentReport still emits Utang Sales /
+  Outstanding Utang. The web CSV headers are the only remaining
+  terminology difference between platforms -- mirror them in the next web
+  pass.
+- Still deferred (both platforms): FIL tutorial prose (closingTutorial4 /
+  mainTutorial9 use "kita" for profit), supporting hint text on the two
+  cash fields, and a user-check of "Tubo" with target users.
+================================================================================
+V2.68 — CHECKOUT & NAVIGATION CONSISTENCY (WEB): SELL FLOW, HEADER TITLE, CENTERING
+Date: Aug 11, 2026
+Status: DONE
+
+Fixes (3 web issues from the Checkout & Navigation review):
+
+1. SELL NAVIGATION — Morning -> Sell -> Day -> Sell -> Checkout (was: Morning
+   -> Sell -> Checkout -> Back -> Day, which skipped the Day page).
+   - morning.html: the Sell FAB now calls navigateToDayMode() instead of
+     openSaleSheet(), so the first Sell from Morning opens the Day page.
+   - Day's Sell (openSaleSheet) still opens checkout.html; Back from Checkout
+     still returns to day.html (closeSaleSheet -> leaveCheckout('day.html')).
+   - The overdue/day-not-open guard is preserved on Morning: navigateToDayMode()
+     shows the same alert and stays on the Morning page (no checkout bounce).
+   - tests/checkout-smoke.js STEP 7 updated: 2 new assertions lock the flow
+     (Morning Sell -> day.html; Day Sell -> checkout.html) + keeps the guard
+     checks for both navigateToDayMode and openSaleSheet. 57/57 pass.
+
+2. CHECKOUT HEADER — legacy sales-sheet title removed.
+   - checkout.html header now uses data-i18n="checkoutTitle" (was
+     data-i18n="saleSheetTitle" -> "Someone Bought" / "May Bumili").
+   - app.js: saleSheetTitle keys removed from both EN and FIL maps; new
+     checkoutTitle key = 'Checkout' in both languages (matches mobile
+     Strings.kt checkoutTitle, so the same key/value is used on both platforms).
+
+3. HEADER ALIGNMENT — pages with a Back button get a center-aligned title.
+   - checkout.html h1 now uses the same centered inline style as the other
+     subpages (font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;).
+   - Morning and Closing remain the exceptions (left-aligned, no Back button).
+   - All other Back-button pages (Settings, Inventory, Debts, Restock, Add
+     Stock, New Debt, Customer Details, etc.) were already centered — verified.
+
+Validation: node tests/checkout-smoke.js -> PASS 57, FAIL 0.
+Cross-ref: mobile port is V2.68 in git/app/Sari-sari_smart_APP/progress.txt.
+================================================================================
+V2.69 — ANALYSIS: EXPENSES & NOTIFICATION MANAGEMENT (WEB) — REPORTS ONLY
+Date: Aug 11, 2026
+Status: ANALYSIS DONE — no code changes in this version
+
+Analysis & requirements tasks completed for the web version (no code modified):
+
+1. EXPENSES IN PROFIT TRACKING -> main-dir report ExpenseTracking.txt
+   - Confirmed web profit model: per-sale profit = (sellingPrice - costPrice)
+     x qty stored on each sale; state.todayEarnings accumulates it; Closing
+     page shows "Cost of Goods" (closingExpenses key = COGS, NOT operating
+     expenses); Reports sum sales + profit per period; utang tracked via
+     customerName on sales.
+   - Finding: current "Profit from Items Sold" is GROSS profit. No operating
+     expense tracking exists anywhere. closingExpenses must NOT be reused for
+     operating expenses (distinct keys + labels required).
+   - Recommendation (NOT implemented): lightweight Expense Log (amount +
+     category only; date auto-defaults to today; optional note) -> Net Profit
+     / Tunay na Kita = gross profit - expenses, shown as new rows at Closing
+     and in Reports; localStorage persistence alongside sss_v3_* keys;
+     extend tests/checkout-smoke.js.
+
+2. NOTIFICATION MANAGEMENT -> main-dir report NotificationManagement.txt
+   - Inventory of web in-app alerts: showToast() for every action (saved,
+     dayNotOpen, overdueRedirect, overdueArchivedToast, noStock,
+     selectProductFirst, cartEmpty, saleSaved, etc.), isStaleOpenDay()
+     overdue banner/overlay + navigation guards, low-stock badges/hints.
+   - Web role: remains the prototype/dev environment with its existing in-app
+     alerts ONLY. No device notifications, no service worker, no Push API.
+   - 4 mobile-only device-notification categories recommended (overdue store,
+     out-of-stock grouped, end-of-day closing reminder, weekly debt digest).
+     Notification rules are platform-neutral; web mirrors the same conditions
+     in-app so behavior stays consistent.
+
+Validation: n/a (analysis only). Implementation of either feature is pending
+user direction.
+Cross-ref: same V2.69 analysis logged in git/app/Sari-sari_smart_APP/progress.txt.
+================================================================================

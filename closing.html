@@ -46,19 +46,19 @@
           <div class="closing-section">
             <div class="closing-section-title" data-i18n="closingSectionSales">Sales</div>
             <div class="closing-input-group">
-              <!-- Recorded Sales Today (read-only) -->
+              <!-- Cash Sales Today (read-only) -->
               <div class="closing-input-row">
-                <label data-i18n="closingRecordedSales">Recorded Sales Today</label>
+                <label data-i18n="closingRecordedSales">Cash Sales Today</label>
                 <span class="closing-readonly-value" id="closingRecordedSales">₱0.00</span>
               </div>
-              <!-- Actual Sales Today -->
+              <!-- Cash Counted -->
               <div class="closing-input-row">
-                <label data-i18n="closingActualSales">Actual Sales Today</label>
+                <label data-i18n="closingActualSales">Cash Counted</label>
                 <input type="number" id="closingActualSales" class="closing-input" placeholder="0.00" min="0" step="0.01">
               </div>
-              <!-- Sales Difference -->
+              <!-- Cash Difference -->
               <div class="closing-diff-row">
-                <span data-i18n="closingSalesDiff">Sales Difference</span>
+                <span data-i18n="closingSalesDiff">Cash Difference</span>
                 <span class="closing-diff-value" id="closingSalesDiff">₱0.00</span>
               </div>
               <!-- Profit from Items Sold (auto, per-sale data) -->
@@ -66,6 +66,7 @@
                 <span class="closing-total-label" data-i18n="closingProfitLabel">Profit from Items Sold</span>
                 <span class="closing-total-value" id="closingTotalToday">₱0.00</span>
               </div>
+              <div class="closing-profit-hint" data-i18n="closingProfitHint">Selling price of items sold minus their cost.</div>
               <!-- Last restock info -->
               <div class="closing-diff-row" id="closingRestockInfo" style="border-top:none;padding-top:4px;padding-bottom:0;">
                 <span style="font-size:var(--text-xs);color:var(--text-muted);" id="closingRestockText">Last restock: --</span>

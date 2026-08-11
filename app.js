@@ -140,15 +140,15 @@
       utangToday: 'Debt Today',
       noTransactions: 'No transactions yet.',
       closingExpenses: 'Cost of Goods',
-      closingActualSales: 'Actual Sales Today',
-      closingProfitLabel: 'Profit',
+      closingActualSales: 'Cash Counted',
+      closingProfitLabel: 'Profit from Items Sold',
+      closingProfitHint: 'Selling price of items sold minus their cost.',
       noSales: 'No sales recorded today.',
-      closingRecordedSales: 'Recorded Sales Today',
-      closingSalesDiff: 'Sales Difference',
+      closingRecordedSales: 'Cash Sales Today',
+      closingSalesDiff: 'Cash Difference',
       allStockOk: 'All stock is good.',
       noDebts: 'No outstanding debts.',
       dayCompleteSub: 'Rest well, {name}. See you tomorrow!',
-      mayBumili: 'May Bumili',
       productLabel: 'What did they buy?',
       productPlaceholder: 'Search product...',
       qtyLabel: 'How many?',
@@ -219,7 +219,7 @@
       confirmReset: 'Reset all data? This cannot be undone.',
       dayAlreadyOpen: 'Day is already open!',
       dayNotOpen: 'Day not started yet!',
-      profitLabel: 'Profit',
+      profitLabel: 'Profit from Items Sold',
       // Tutorial
       next: 'Next',
       skip: 'Skip',
@@ -313,9 +313,9 @@
       navSale: 'Sell',
       navClose: 'Close',
       // Day mode
-      dayEarningsLabel: 'Recorded Sales Today',
+      dayEarningsLabel: 'Cash Sales Today',
       dayItemsSoldLabel: 'Sold',
-      dayUtangLabel: 'Debt Today',
+      dayUtangLabel: 'Credit Sales Today',
       dayTransactionsLabel: "Today's Transactions",
       // Closing
       closingTitle: 'Close Store \ud83c\udf19',
@@ -331,8 +331,9 @@
       backToDayBtn: 'Back to Day',
       dayCompleteTitle: 'Day Complete!',
       prepareTomorrow: 'Prepare for Tomorrow',
-      // Sale sheet
-      saleSheetTitle: 'Someone Bought',
+      // Sale sheet (V2.68: header now uses checkoutTitle — the legacy
+      // "Someone Bought" sales-sheet title was removed)
+      checkoutTitle: 'Checkout',
       saleQtyLabel: 'How many?',
       saleCustomerLabel: 'Who? (if credit)',
       saleTotalLabel: 'Total:',
@@ -441,16 +442,16 @@
       periodWeek: 'Week',
       periodMonth: 'Month',
       totalSales: 'Total Sales',
-      reportsProfit: 'Profit',
+      reportsProfit: 'Gross Profit',
       bestSelling: 'Best-Selling Products',
       recentTransactions: 'Recent Transactions',
       lowStockItems: 'Low Stock Items',
       transactions: 'Transactions',
       reportItemsSold: 'Items Sold',
       cashSales: 'Cash Sales',
-      utangSales: 'Utang Sales',
-      utangReport: 'Utang / Receivables',
-      outstandingUtang: 'Outstanding Utang',
+      utangSales: 'Credit Sales',
+      utangReport: 'Debts / Receivables',
+      outstandingUtang: 'Outstanding Debts',
       activeDebtors: 'Active Debtors',
       collected: 'Collected',
       debtAging: 'Age of unpaid debts',
@@ -573,15 +574,15 @@
       utangToday: 'Utang Ngayon',
       noTransactions: 'Wala pang transaksyon.',
       closingExpenses: 'Gastos sa Paninda',
-      closingRecordedSales: 'Naitalang Benta Ngayon',
-      closingActualSales: 'Aktwal na Benta Ngayon',
-      closingSalesDiff: 'Pagkakaiba sa Benta',
-      closingProfitLabel: 'Kita',
+      closingRecordedSales: 'Bentang Cash Ngayon',
+      closingActualSales: 'Perang Nabilang sa Drawer',
+      closingSalesDiff: 'Pagkakaiba ng Pera',
+      closingProfitLabel: 'Tubo mula sa mga Naibenta',
+      closingProfitHint: 'Benta ng mga naibenta minus ang halaga ng paninda.',
       noSales: 'Walang naitalang benta.',
       allStockOk: 'Lahat ng stock ay okay.',
       noDebts: 'Walang utang na natitira.',
       dayCompleteSub: 'Magpahinga na, {name}. Bukas ulit!',
-      mayBumili: 'May Bumili',
       productLabel: 'Ano ang binili?',
       productPlaceholder: 'Maghanap ng produkto...',
       qtyLabel: 'Ilan?',
@@ -652,7 +653,7 @@
       confirmReset: 'I-reset ang lahat ng data? Hindi ito maaaring i-undo.',
       dayAlreadyOpen: 'Bukas na ang araw!',
       dayNotOpen: 'Hindi pa bukas ang araw!',
-      profitLabel: 'Kita',
+      profitLabel: 'Tubo mula sa mga Naibenta',
       // Tutorial
       next: 'Susunod',
       skip: 'Laktawan',
@@ -746,7 +747,7 @@
       navSale: 'Benta',
       navClose: 'Isara',
       // Day mode
-      dayEarningsLabel: 'Naitalang Benta Ngayon',
+      dayEarningsLabel: 'Bentang Cash Ngayon',
       dayItemsSoldLabel: 'Naibenta',
       dayUtangLabel: 'Utang Ngayon',
       dayTransactionsLabel: 'Mga Transaksyon Ngayon',
@@ -764,8 +765,9 @@
       backToDayBtn: 'Bumalik sa Araw',
       dayCompleteTitle: 'Tapos Na ang Araw!',
       prepareTomorrow: 'Maghanda para Bukas',
-      // Sale sheet
-      saleSheetTitle: 'May Bumili',
+      // Sale sheet (V2.68: header now uses checkoutTitle — the legacy
+      // "May Bumili" sales-sheet title was removed)
+      checkoutTitle: 'Checkout',
       saleQtyLabel: 'Ilan?',
       saleCustomerLabel: 'Sino? (kung utang)',
       saleTotalLabel: 'Total:',
@@ -868,15 +870,15 @@
       periodWeek: 'Linggo',
       periodMonth: 'Buwan',
       totalSales: 'Kabuuang Benta',
-      reportsProfit: 'Kita',
+      reportsProfit: 'Kabuuang Tubo',
       bestSelling: 'Mga Paboritong Produkto',
       recentTransactions: 'Mga Kamakailang Transaksyon',
       lowStockItems: 'Mga Item na Kulang na',
       transactions: 'Transaksyon',
       reportItemsSold: 'Naibenta',
-      cashSales: 'Cash Benta',
-      utangSales: 'Utang Benta',
-      utangReport: 'Utang / Resibols',
+      cashSales: 'Bentang Cash',
+      utangSales: 'Bentang Utang',
+      utangReport: 'Utang na Hindi pa Bayad',
       outstandingUtang: 'Natitirang Utang',
       activeDebtors: 'May Utang',
       collected: 'Nakolekta',
@@ -895,7 +897,7 @@
       exportReport: 'I-export ang CSV',
       exportReportDone: 'Na-export ang report.',
       exportReportError: 'Nabigong i-export.',
-      reportSummaryLine: '{period}: {sales} benta, {profit} kita{vs}{owed}',
+      reportSummaryLine: '{period}: {sales} benta, {profit} tubo{vs}{owed}',
       reportVsUp: ' \u25b2 +{pct}% vs nakaraan',
       reportVsDown: ' \u25bc {pct}% vs nakaraan',
       reportOwed: ' \u00b7 {owed} pa ang utang sa iyo',
@@ -2228,9 +2230,14 @@
   var salePayment = 'cash'; // 'cash' | 'credit'
 
   /** v2.64: the checkout is its own page — the "Benta" action navigates to it. */
+  // Overdue guard (web v2.35 parity, same as showClosingScreen/navigateToDayMode):
+  // a closed store OR an open-but-stale day (left open from a previous calendar
+  // day) must NOT leave for checkout.html — block here with the existing alert
+  // instead of bouncing through the checkout page's init guard (v2.64 regression:
+  // the Sell button used to reach checkout before being redirected back).
   function openSaleSheet() {
-    if (!state.dayOpen) {
-      showToast(t('dayNotOpen'));
+    if (!state.dayOpen || isStaleOpenDay()) {
+      showToast(state.dayOpen ? t('overdueRedirect') : t('dayNotOpen'));
       return;
     }
     closePaymentSheet();

@@ -72,7 +72,14 @@ const IDS = [
   'productCategory', 'productBrand', 'productUnit', 'productPackageSize',
   'productBrandList', 'productPackageSizeList', 'inventoryCatFilters',
   'closingActualSales', 'devPanelOverlay',
-  'newDebtCreditWarn', 'newDebtAllowAnyway'
+  'newDebtCreditWarn', 'newDebtAllowAnyway',
+  // Morning-page elements (STEP 7 overdue-guard context renders morning.html)
+  'headerGreeting', 'headerPageTitle',
+  'morningGreeting', 'morningSubtitle',
+  'morningStockTitle', 'morningStockDesc',
+  'morningDebtTitle', 'morningDebtDesc',
+  'morningYesterdayCard', 'morningYesterdayTitle', 'morningYesterdayDesc',
+  'btnStartDay'
 ];
 
 const elements = {};
@@ -283,6 +290,136 @@ assert(W.location.href === '', 'back cancelled (stays on checkout)');
 sandbox.confirm = () => true;
 W.closeSaleSheet();
 assert(W.location.href === 'day.html', 'back confirmed (navigates to day.html)');
+
+console.log('\n— STEP 7: overdue-store guard blocks navigation (V2.68 Morning → Day → Checkout flow) —');
+// Fresh context simulating morning.html (pageName = 'morning'). V2.68: the
+// Morning Sell FAB calls navigateToDayMode() (Morning → Day → Checkout).
+// Pre-seed a STALE open day (dayOpen = true but dayDate from a previous
+// calendar day) so the store is overdue — navigateToDayMode must keep the
+// user on Morning with the overdue alert, NOT navigate away.
+const storage2 = {
+  sss_v3_settings: JSON.stringify({
+    language: 'en', textSize: 'standard', storeName: 'My Store', ownerName: 'Owner',
+    hasCompletedSetup: true, launchCount: 1, defaultMarkup: 20,
+    lowStockThreshold: 5, defaultCreditLimit: 500
+  }),
+  sss_v3_dayOpen: 'true',
+  sss_v3_dayDate: '"2000-01-01"',
+  sss_v3_dayArchived: 'false',
+  sss_v3_todayExpenses: '0',
+  sss_v3_todayEarnings: '0'
+};
+const session2 = { sss_v3_tutorialShown: '1' }; // skip the auto-start tutorial timer
+const toasts2 = [];
+const elements2 = {};
+IDS.forEach(id => { elements2[id] = makeEl(id); });
+// The overdue banner starts hidden; renderMorningCheck() (run during init)
+// reveals it when the day is stale.
+elements2['morningOverdueCard'].style.display = 'none';
+// toastContainer must actually record appended toasts for assertions.
+elements2['toastContainer'].appendChild = function (el) { toasts2.push(el.textContent); };
+const fakeWindow2 = {
+  location: { pathname: '/morning.html', search: '', replace: function () {}, href: '' },
+  localStorage: {
+    getItem: k => (k in storage2 ? storage2[k] : null),
+    setItem: (k, v) => { storage2[k] = String(v); },
+    removeItem: k => { delete storage2[k]; }
+  },
+  sessionStorage: {
+    getItem: k => (k in session2 ? session2[k] : null),
+    setItem: (k, v) => { session2[k] = String(v); },
+    removeItem: k => { delete session2[k]; }
+  },
+  addEventListener: () => {},
+  confirm: () => true,
+  alert: () => {},
+  Blob: function () {},
+  URL: { createObjectURL: () => '', revokeObjectURL: () => {} },
+  navigator: { userAgent: 'node-test' }
+};
+const fakeDocument2 = {
+  readyState: 'complete',
+  getElementById: id => elements2[id] || null,
+  querySelector: sel => (sel === '.qty-selector' ? makeEl('qty-selector-probe') : null),
+  querySelectorAll: () => [],
+  addEventListener: () => {},
+  createElement: () => makeEl('created'),
+  body: makeEl('body')
+};
+fakeWindow2.document = fakeDocument2;
+const sandbox2 = {
+  window: fakeWindow2, document: fakeDocument2,
+  localStorage: fakeWindow2.localStorage, sessionStorage: fakeWindow2.sessionStorage,
+  console, confirm: fakeWindow2.confirm, alert: fakeWindow2.alert,
+  Blob: fakeWindow2.Blob, URL: fakeWindow2.URL, URLSearchParams,
+  navigator: fakeWindow2.navigator,
+  setTimeout, clearTimeout, Date, Math, JSON, parseInt, parseFloat, isNaN,
+  String, Number, Object, Array, Promise
+};
+sandbox2.globalThis = sandbox2;
+vm.createContext(sandbox2);
+vm.runInContext(fs.readFileSync('app.js', 'utf8'), sandbox2, { filename: 'app.js' });
+const W2 = sandbox2.window;
+
+// Overdue (stale open day): the Morning page shows its overdue banner and the
+// Sell FAB (navigateToDayMode) must stay put with the overdue alert.
+assert(elements2['morningOverdueCard'].style.display !== 'none',
+  'overdue store: overdue banner is visible on the Morning page');
+W2.navigateToDayMode();
+assert(W2.location.href === '', 'overdue store: navigateToDayMode does NOT navigate away from Morning');
+assert(toasts2[toasts2.length - 1] === 'Please close the previous day on the Morning page.',
+  'overdue store: overdue alert shown on Morning (got: ' + (toasts2[toasts2.length - 1] || 'none') + ')');
+// openSaleSheet (used by Day/Closing pages) keeps its own overdue guard too.
+W2.openSaleSheet();
+assert(W2.location.href === '', 'overdue store: openSaleSheet does NOT navigate to checkout');
+
+// Closed day (never started): Morning Sell stays with the day-not-open alert.
+W2.handleDevAction('toggleDayOpen'); // dayOpen true → false (store closed)
+W2.navigateToDayMode();
+assert(W2.location.href === '', 'closed store: navigateToDayMode does NOT navigate away from Morning');
+// toasts2[1] is the toggle action's own toast ('Day closed manually.'); the
+// day-not-open alert is appended after it.
+assert(toasts2[toasts2.length - 1] === 'Day not started yet!',
+  'closed store: day-not-open alert shown (got: ' + (toasts2[toasts2.length - 1] || 'none') + ')');
+W2.handleDevAction('toggleDayOpen'); // back to open (stale again)
+
+// Fresh open day: Morning → Sell → Day, then Day → Sell → Checkout.
+W2.handleDevAction('startNewDay');   // archive stale day, dayDate = today, day closed
+W2.handleDevAction('toggleDayOpen'); // open today's fresh day
+W2.navigateToDayMode();
+assert(W2.location.href === 'day.html',
+  'fresh open day: Morning Sell opens the Day page (got: ' + W2.location.href + ')');
+W2.location.href = '';
+W2.openSaleSheet();
+assert(W2.location.href === 'checkout.html',
+  'fresh open day: Day Sell opens the checkout page (got: ' + W2.location.href + ')');
+
+console.log('\n— STEP 8: terminology lock (V2.66 EN/FIL financial labels) —');
+// Source-level guard so the corrected financial labels can't silently regress
+// (V2.66: Benta = sales, Kita = income/revenue only, Tubo = profit).
+const src8 = fs.readFileSync('app.js', 'utf8');
+const day8 = fs.readFileSync('day.html', 'utf8');
+const close8 = fs.readFileSync('closing.html', 'utf8');
+// EN
+assert(src8.includes("closingRecordedSales: 'Cash Sales Today'"), 'EN: recorded sales = Cash Sales Today');
+assert(src8.includes("closingActualSales: 'Cash Counted'"), 'EN: actual sales = Cash Counted');
+assert(src8.includes("closingSalesDiff: 'Cash Difference'"), 'EN: sales difference = Cash Difference');
+assert(src8.includes("closingProfitLabel: 'Profit from Items Sold'"), 'EN: closing profit = Profit from Items Sold');
+assert(src8.includes("utangSales: 'Credit Sales'"), 'EN: utang sales = Credit Sales');
+assert(src8.includes("outstandingUtang: 'Outstanding Debts'"), 'EN: outstanding utang = Outstanding Debts');
+assert(src8.includes("closingProfitHint: 'Selling price of items sold minus their cost.'"), 'EN: profit helper hint present');
+// FIL
+assert(src8.includes("closingRecordedSales: 'Bentang Cash Ngayon'"), 'FIL: recorded sales = Bentang Cash Ngayon');
+assert(src8.includes("closingActualSales: 'Perang Nabilang sa Drawer'"), 'FIL: actual sales = Perang Nabilang sa Drawer');
+assert(src8.includes("closingSalesDiff: 'Pagkakaiba ng Pera'"), 'FIL: sales difference = Pagkakaiba ng Pera');
+assert(src8.includes("closingProfitLabel: 'Tubo mula sa mga Naibenta'"), 'FIL: closing profit = Tubo mula sa mga Naibenta');
+assert(src8.includes("reportsProfit: 'Kabuuang Tubo'"), 'FIL: reports profit = Kabuuang Tubo');
+assert(src8.includes("utangReport: 'Utang na Hindi pa Bayad'"), 'FIL: receivables = Utang na Hindi pa Bayad');
+// stale terms must be gone
+assert(!src8.includes("closingProfitLabel: 'Kita',"), 'no FIL closing profit = Kita');
+assert(!src8.includes("utangReport: 'Utang / Resibols'"), 'no FIL invented word Resibols');
+assert(!day8.includes('Kita Ngayon'), 'day.html: no stale Kita Ngayon fallback');
+assert(close8.includes('Cash Sales Today'), 'closing.html fallback matches Cash Sales Today');
 
 console.log('\n========================================');
 console.log('PASS: ' + pass + '  FAIL: ' + fail);

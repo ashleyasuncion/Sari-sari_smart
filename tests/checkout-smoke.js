@@ -71,7 +71,13 @@ const IDS = [
   'productMarkup', 'productLowStock', 'productMarkupHint', 'editProductId',
   'productCategory', 'productBrand', 'productUnit', 'productPackageSize',
   'productBrandList', 'productPackageSizeList', 'inventoryCatFilters',
-  'closingActualSales', 'devPanelOverlay',
+  'closingActualSales', 'closingRecordedSales', 'closingSalesDiff',
+  'closingTotalToday', 'closingSoldItems', 'closingLowStock', 'closingDebts',
+  'closingWeeklySales', 'closingTopSeller',
+  'closingExpensesToday', 'closingNetProfit',
+  'dayExpensesTotal', 'expenseAmount', 'expenseCategory', 'expenseDate',
+  'expenseNote', 'expenseList', 'expenseTodayTotal',
+  'devPanelOverlay',
   'newDebtCreditWarn', 'newDebtAllowAnyway',
   // Morning-page elements (STEP 7 overdue-guard context renders morning.html)
   'headerGreeting', 'headerPageTitle',
@@ -420,6 +426,61 @@ assert(!src8.includes("closingProfitLabel: 'Kita',"), 'no FIL closing profit = K
 assert(!src8.includes("utangReport: 'Utang / Resibols'"), 'no FIL invented word Resibols');
 assert(!day8.includes('Kita Ngayon'), 'day.html: no stale Kita Ngayon fallback');
 assert(close8.includes('Cash Sales Today'), 'closing.html fallback matches Cash Sales Today');
+
+console.log('\n— STEP 9: expense log (V2.71) —');
+// Source-level locks for the expense terminology (ExpenseTracking analysis §13:
+// operating expenses must NOT reuse the COGS label "Cost of Goods").
+assert(src8.includes("closingExpensesToday: 'Store Expenses Today'"), 'EN: closing expenses = Store Expenses Today');
+assert(src8.includes("closingNetProfit: 'Net Profit'"), 'EN: net profit = Net Profit');
+assert(src8.includes("reportsExpenses: 'Expenses'"), 'EN: reports expenses = Expenses');
+assert(src8.includes("reportsNetProfit: 'Net Profit'"), 'EN: reports net profit = Net Profit');
+assert(src8.includes("closingExpensesToday: 'Mga Gastos sa Tindahan Ngayon'"), 'FIL: closing expenses = Mga Gastos sa Tindahan Ngayon');
+assert(src8.includes("closingNetProfit: 'Tunay na Kita'"), 'FIL: net profit = Tunay na Kita');
+assert(src8.includes("reportsExpenses: 'Mga Gastos'"), 'FIL: reports expenses = Mga Gastos');
+assert(src8.includes("reportsNetProfit: 'Tunay na Kita'"), 'FIL: reports net profit = Tunay na Kita');
+assert(!src8.includes("closingExpensesToday: 'Cost of Goods'"), 'no EN collision: operating expenses ≠ Cost of Goods');
+assert(close8.includes('id="closingNetProfit"'), 'closing.html has the Net Profit row');
+assert(close8.includes('id="closingExpensesToday"'), 'closing.html has the Store Expenses Today row');
+const exp8 = fs.readFileSync('expenses.html', 'utf8');
+assert(exp8.includes('id="expenseAmount"'), 'expenses.html has the amount field');
+assert(exp8.includes('id="expenseCategory"'), 'expenses.html has the category select');
+assert(exp8.includes('id="expenseDate"'), 'expenses.html has the date field');
+
+// Functional flow: add an expense, verify it persists and feeds the closing rows.
+const expBefore = JSON.parse(storage['sss_v3_expenseLog'] || '[]').length;
+elements['expenseAmount'].value = '150.5';
+elements['expenseCategory'].value = 'utilities';
+elements['expenseNote'].value = 'electric bill';
+W.addExpense();
+let expLog = JSON.parse(storage['sss_v3_expenseLog'] || '[]');
+assert(expLog.length === expBefore + 1, 'addExpense appends one entry (got ' + expLog.length + ')');
+const lastExp = expLog[expLog.length - 1];
+assert(lastExp && lastExp.category === 'utilities' && lastExp.note === 'electric bill', 'expense category + note saved');
+assert(lastExp && Math.abs(lastExp.amount - 150.5) < 0.001, 'expense amount saved (₱150.50)');
+assert(lastExp && typeof lastExp.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(lastExp.date), 'expense has a YYYY-MM-DD date');
+
+// Closing reads today\'s expense total and shows Net Profit = gross - expenses.
+W.renderClosingScreen();
+assert(elements['closingExpensesToday'].textContent === '₱150.50',
+  'closing shows today\'s expense total (got ' + elements['closingExpensesToday'].textContent + ')');
+const grossShown = parseFloat(elements['closingTotalToday'].textContent.replace('₱', '').replace(/,/g, ''));
+const netShown = parseFloat(elements['closingNetProfit'].textContent.replace('₱', '').replace(/,/g, ''));
+assert(Math.abs((grossShown - netShown) - 150.5) < 0.01,
+  'closing Net Profit = gross profit - today\'s expenses (gross ₱' + grossShown.toFixed(2) + ' → net ₱' + netShown.toFixed(2) + ')');
+
+// Validation: a missing amount must be rejected (no entry appended).
+elements['expenseAmount'].value = '';
+elements['expenseCategory'].value = 'rent';
+const expBeforeVal = JSON.parse(storage['sss_v3_expenseLog'] || '[]').length;
+W.addExpense();
+assert(JSON.parse(storage['sss_v3_expenseLog'] || '[]').length === expBeforeVal, 'expense without an amount is rejected');
+
+// Delete restores the log (recalculate from source, not a memory decrement).
+W.deleteExpense(lastExp.id);
+expLog = JSON.parse(storage['sss_v3_expenseLog'] || '[]');
+assert(expLog.length === expBefore, 'deleteExpense removes the entry');
+W.renderClosingScreen();
+assert(elements['closingExpensesToday'].textContent === '₱0.00', 'closing expense total recalculates to ₱0.00 after delete');
 
 console.log('\n========================================');
 console.log('PASS: ' + pass + '  FAIL: ' + fail);

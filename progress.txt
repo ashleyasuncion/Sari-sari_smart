@@ -4187,3 +4187,72 @@ Validation: n/a (analysis only). Implementation of either feature is pending
 user direction.
 Cross-ref: same V2.69 analysis logged in git/app/Sari-sari_smart_APP/progress.txt.
 ================================================================================
+
+================================================================================
+V2.70 — IMPLEMENTATION PLAN: NOTIFICATION MANAGEMENT (WEB) — PLAN ONLY
+Date: Aug 11, 2026
+Status: PLAN COMPLETE — no code changes in this version
+
+The notification implementation plan (Section 11 of the main-dir report
+NotificationManagement.txt) targets the MOBILE app only. The web prototype
+remains the in-app-alert-only dev environment — no device notifications, no
+service worker, no Push API.
+
+Web-side notes for the mobile V2.70 plan:
+- Notification rules are platform-neutral and mirror existing web conditions
+  in-app: isStaleOpenDay() overdue banner, low-stock/out-of-stock sections,
+  restock reminder card (daysSinceLastRestock >= 2), closing-not-done
+  business tip, debt aging buckets in Reports.
+- If mobile thresholds change during implementation, mirror them in web
+  renderMorningCheck()/renderInventory() so behavior stays consistent.
+- No web code changes required for V2.70.
+
+Validation: n/a (plan only — Section 11 of NotificationManagement.txt).
+Cross-ref: same V2.70 plan logged in git/app/Sari-sari_smart_APP/progress.txt.
+================================================================================
+
+================================================================================
+V2.71 — FEATURE: EXPENSE LOG + NET PROFIT (WEB) — DONE
+Date: Aug 14, 2026
+Status: IMPLEMENTED + VERIFIED — implements the V2.69 ExpenseTracking.txt analysis
+       (web side). Mobile parity pending.
+
+WHAT CHANGED (user-facing):
+- NEW page expenses.html ("Store Expenses" / "Mga Gastos sa Tindahan"), reachable
+  from a new button on the Day page showing today's expense total. Sub-page
+  follows the V2.68 centered-header + Back-button rule.
+  - Add form: Amount (required), Category (required), Date (defaults to today,
+    editable for backfilling), Note (optional).
+  - Expense list: date, category, note, amount + Delete button. Recalculates
+    totals from the log on delete (no memory decrement).
+- Closing page now shows THREE figures:
+     Profit from Items Sold (gross, unchanged)
+     Store Expenses Today   (NEW)
+     Net Profit             (NEW, red when negative)
+  with hint "Net Profit = profit from items sold - store expenses."
+- Day-complete summary overlay adds the same expenses + Net Profit rows.
+- Reports: KPI grid gains Expenses + Net Profit tiles for Day/Week/Month with
+  vs-previous badges; CSV export gains Expenses, Net Profit, and a per-expense
+  detail section.
+- EN + FIL localization for every new label/category (Utilities/Rent/Transport/
+  Permits & Fees/Labor/Supplies/Maintenance/Other; Kuryente at Tubig/Upa/
+  Pamasahe/Mga Gamit/etc.). Terminology per analysis §10.7/§13: operating
+  expenses use "Store Expenses Today"/"Mga Gastos sa Tindahan Ngayon" — the COGS
+  label "Cost of Goods"/"Gastos sa Paninda" is untouched.
+- Expenses tutorial (3 steps) added to tutorials map + Help selector.
+
+DATA MODEL (matches analysis §10.1):
+- state.expenseLog = [{ id, date (YYYY-MM-DD), category, amount, note, createdAt }]
+- Persisted as sss_v3_expenseLog via saveState()/loadState().
+- history entries now store the day's expenses + netProfit snapshot.
+- Dev snapshot (date-override restore), export/import JSON, resetData/resetAll,
+  and the "Clear Specific Data" panel all handle the expense log.
+
+VERIFICATION:
+- node --check app.js clean.
+- tests/checkout-smoke.js: 80/80 PASS (was 57) — new STEP 9 covers the expense
+  flow (add → closing totals → Net Profit = gross - expenses → validation →
+  delete → recalc) plus EN/FIL terminology locks and the COGS no-collision lock.
+- tests/i18n-check.js: all 109 data-i18n keys resolve in EN + FIL (also fixed a
+  pre-existing missing FIL tutRestock label in the Help selector).
+================================================================================

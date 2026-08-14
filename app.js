@@ -38,6 +38,7 @@
     dayArchived: false,   // whether day's sales data has been archived to history
     todayExpenses: 0,
     todayEarnings: 0,
+    expenseLog: [],      // V2.71: { id, date (YYYY-MM-DD), category, amount, note, createdAt }
     selectedProduct: null,
     paymentDebtId: null,
     editProductId: null
@@ -59,8 +60,11 @@
       'dayDate', 'dayEarnings', 'dayItemsSold', 'dayUtang',
       'dayTransactionList', 'daySummary',
       'closingExpenses', 'closingActualSales', 'closingRecordedSales', 'closingSalesDiff', 'closingTotalToday',
+      'closingExpensesToday', 'closingNetProfit',
       'closingSoldItems', 'closingLowStock', 'closingDebts',
       'closingWeeklySales', 'closingTopSeller',
+      'dayExpensesTotal', 'expenseAmount', 'expenseCategory', 'expenseDate', 'expenseNote',
+      'expenseList', 'expenseTodayTotal',
       'summaryOverlay', 'summaryText', 'summaryDetails',
       'navMorning', 'navSale', 'navClose',
       'saleProductName', 'saleQty', 'saleCustomer', 'saleTotalAmount',
@@ -143,6 +147,9 @@
       closingActualSales: 'Cash Counted',
       closingProfitLabel: 'Profit from Items Sold',
       closingProfitHint: 'Selling price of items sold minus their cost.',
+      closingExpensesToday: 'Store Expenses Today',
+      closingNetProfit: 'Net Profit',
+      closingNetProfitHint: 'Net Profit = profit from items sold - store expenses.',
       noSales: 'No sales recorded today.',
       closingRecordedSales: 'Cash Sales Today',
       closingSalesDiff: 'Cash Difference',
@@ -220,6 +227,36 @@
       dayAlreadyOpen: 'Day is already open!',
       dayNotOpen: 'Day not started yet!',
       profitLabel: 'Profit from Items Sold',
+      // Expense Log (V2.71)
+      pageExpenses: 'Store Expenses',
+      expensesSubtitle: 'Record store expenses — rent, utilities, transport, wages, and more.',
+      expensesTodayLabel: 'Today',
+      expensesTotalToday: 'Total Today',
+      expenseAddTitle: 'Add Expense',
+      expenseAmount: 'Amount (₱)',
+      expenseAmountPlaceholder: '0.00',
+      expenseCategory: 'Category',
+      expenseCategoryPlaceholder: 'Select category...',
+      expenseDate: 'Date',
+      expenseNote: 'Note (optional)',
+      expenseNotePlaceholder: 'e.g. electric bill',
+      expenseSave: 'Save Expense',
+      expenseDelete: 'Delete',
+      expenseEmpty: 'No expenses recorded yet.',
+      expenseAdded: 'Expense added.',
+      expenseDeleted: 'Expense deleted.',
+      expenseAmountRequired: 'Enter an amount greater than 0.',
+      expenseCategoryRequired: 'Choose a category.',
+      expenseListTitle: 'All Expenses',
+      expUtilities: 'Utilities',
+      expRent: 'Rent',
+      expTransport: 'Transport',
+      expPermits: 'Permits & Fees',
+      expLabor: 'Labor',
+      expSupplies: 'Supplies',
+      expMaintenance: 'Maintenance',
+      expOther: 'Other',
+      dayExpensesBtn: 'Store Expenses Today',
       // Tutorial
       next: 'Next',
       skip: 'Skip',
@@ -409,6 +446,10 @@
       helpTutorial4: 'The Contact section shows how to reach support for questions or feedback about the app.',
       helpTutorial5: 'The About section tells you about the app version and its purpose.',
       helpTutorial6: 'You can also access page-specific tutorials from any page by tapping the (?) Help button in the top-right corner of the header.',
+      tutExpenses: 'Store Expenses Tutorial',
+      expensesTutorial1: 'The Store Expenses page records money spent on the store itself — rent, electricity, transport, wages, and other operating costs.',
+      expensesTutorial2: 'Fill in the amount and pick a category. The date defaults to today, and a note is optional.',
+      expensesTutorial3: 'Expenses are subtracted from your profit to show Net Profit (Tunay na Kita) on the Closing and Reports pages.',
       pdTitle: 'Product Detail',
       criticalStockAlert: '⚠️ Critical Stock Alert',
       criticalAlertDesc: 'This item is out of stock. Restock soon.',
@@ -443,6 +484,8 @@
       periodMonth: 'Month',
       totalSales: 'Total Sales',
       reportsProfit: 'Gross Profit',
+      reportsExpenses: 'Expenses',
+      reportsNetProfit: 'Net Profit',
       bestSelling: 'Best-Selling Products',
       recentTransactions: 'Recent Transactions',
       lowStockItems: 'Low Stock Items',
@@ -579,6 +622,9 @@
       closingSalesDiff: 'Pagkakaiba ng Pera',
       closingProfitLabel: 'Tubo mula sa mga Naibenta',
       closingProfitHint: 'Benta ng mga naibenta minus ang halaga ng paninda.',
+      closingExpensesToday: 'Mga Gastos sa Tindahan Ngayon',
+      closingNetProfit: 'Tunay na Kita',
+      closingNetProfitHint: 'Tunay na Kita = tubo mula sa mga naibenta - mga gastos ng tindahan.',
       noSales: 'Walang naitalang benta.',
       allStockOk: 'Lahat ng stock ay okay.',
       noDebts: 'Walang utang na natitira.',
@@ -654,6 +700,36 @@
       dayAlreadyOpen: 'Bukas na ang araw!',
       dayNotOpen: 'Hindi pa bukas ang araw!',
       profitLabel: 'Tubo mula sa mga Naibenta',
+      // Expense Log (V2.71)
+      pageExpenses: 'Mga Gastos sa Tindahan',
+      expensesSubtitle: 'Itala ang mga gastos ng tindahan — upa, kuryente, pamasahe, sahod, at iba pa.',
+      expensesTodayLabel: 'Ngayon',
+      expensesTotalToday: 'Kabuuang Ngayon',
+      expenseAddTitle: 'Magdagdag ng Gastos',
+      expenseAmount: 'Halaga (₱)',
+      expenseAmountPlaceholder: '0.00',
+      expenseCategory: 'Kategorya',
+      expenseCategoryPlaceholder: 'Pumili ng kategorya...',
+      expenseDate: 'Petsa',
+      expenseNote: 'Tandaan (opsyonal)',
+      expenseNotePlaceholder: 'hal. bill ng kuryente',
+      expenseSave: 'I-save ang Gastos',
+      expenseDelete: 'Burahin',
+      expenseEmpty: 'Wala pang naitalang gastos.',
+      expenseAdded: 'Naidagdag ang gastos.',
+      expenseDeleted: 'Nabura ang gastos.',
+      expenseAmountRequired: 'Maglagay ng halagang mas malaki sa 0.',
+      expenseCategoryRequired: 'Pumili ng kategorya.',
+      expenseListTitle: 'Lahat ng Gastos',
+      expUtilities: 'Kuryente at Tubig',
+      expRent: 'Upa',
+      expTransport: 'Pamasahe / Deliveries',
+      expPermits: 'Lisensya / Bayarin',
+      expLabor: 'Sahod',
+      expSupplies: 'Mga Gamit',
+      expMaintenance: 'Pagkukumpuni',
+      expOther: 'Iba pa',
+      dayExpensesBtn: 'Mga Gastos sa Tindahan Ngayon',
       // Tutorial
       next: 'Susunod',
       skip: 'Laktawan',
@@ -801,6 +877,7 @@
       debtsTotalLabel: 'Kabuuang Utang',
       newDebtBtn: 'Bagong Utang',
       // New Debt tutorial
+      tutRestock: 'Restock Day na Tutorial',
       tutNewDebt: 'New Debt na Tutorial',
       newDebtTutorial1: 'Ang page na ito ay para manu-manong magtala ng bagong utang para sa isang kostumer.',
       newDebtTutorial2: 'Ilagay ang pangalan ng kostumer. Kung sila ay bagong kostumer, awtomatiko silang idadagdag.',
@@ -837,6 +914,10 @@
       helpTutorial4: 'Ang Contact section ay nagpapakita kung paano makipag-ugnayan sa support para sa mga tanong o feedback.',
       helpTutorial5: 'Ang About section ay nagsasabi tungkol sa bersyon ng app at layunin nito.',
       helpTutorial6: 'Maaari ka ring mag-access ng page-specific tutorial mula sa kahit anong page sa pamamagitan ng pag-tap sa (?) Help button sa kanang bahagi ng header.',
+      tutExpenses: 'Tutorial ng Mga Gastos',
+      expensesTutorial1: 'Ang pahina ng Mga Gastos ay nagtatala ng perang ginastos sa tindahan mismo — upa, kuryente, pamasahe, sahod, at iba pang gastusin.',
+      expensesTutorial2: 'Ilagay ang halaga at pumili ng kategorya. Ang petsa ay awtomatikong ngayon, at ang tala ay opsyonal.',
+      expensesTutorial3: 'Ibawas ang mga gastos sa iyong tubo para makita ang Tunay na Kita sa Closing at Reports pages.',
       pdTitle: 'Detalye ng Produkto',
       criticalStockAlert: '⚠️ Kritikal na Stock Alert',
       criticalAlertDesc: 'Wala nang stock ang item na ito. Mag-restock agad.',
@@ -871,6 +952,8 @@
       periodMonth: 'Buwan',
       totalSales: 'Kabuuang Benta',
       reportsProfit: 'Kabuuang Tubo',
+      reportsExpenses: 'Mga Gastos',
+      reportsNetProfit: 'Tunay na Kita',
       bestSelling: 'Mga Paboritong Produkto',
       recentTransactions: 'Mga Kamakailang Transaksyon',
       lowStockItems: 'Mga Item na Kulang na',
@@ -1014,6 +1097,7 @@
       dayArchived: state.dayArchived,
       todayExpenses: state.todayExpenses,
       todayEarnings: state.todayEarnings,
+      expenseLog: JSON.parse(JSON.stringify(state.expenseLog || [])),
       sales: JSON.parse(JSON.stringify(state.sales)),
       history: JSON.parse(JSON.stringify(state.history))
     };
@@ -1032,6 +1116,7 @@
     state.dayArchived = snap.dayArchived;
     state.todayExpenses = snap.todayExpenses;
     state.todayEarnings = snap.todayEarnings;
+    state.expenseLog = JSON.parse(JSON.stringify(snap.expenseLog || []));
     // Restore the exact pre-test history too, so any history entries created
     // during the test (EOD/archive writes dated to the override date) are also
     // purged. Newer snapshots carry the history list; older ones (pre-v2.34)
@@ -1178,6 +1263,47 @@
     return getTodaySales().reduce(function(sum, s) {
       return sum + (s.profit || 0);
     }, 0);
+  }
+
+  // ============================================
+  // EXPENSE LOG — helpers (V2.71)
+  // ============================================
+  // Fixed category list (Filipino-first, per the ExpenseTracking analysis).
+  var EXPENSE_CATEGORIES = ['utilities', 'rent', 'transport', 'permits', 'labor', 'supplies', 'maintenance', 'other'];
+
+  function expenseCategoryLabel(key) {
+    if (!key) return '';
+    var map = {
+      utilities: 'expUtilities', rent: 'expRent', transport: 'expTransport',
+      permits: 'expPermits', labor: 'expLabor', supplies: 'expSupplies',
+      maintenance: 'expMaintenance', other: 'expOther'
+    };
+    return t(map[key] || 'expOther');
+  }
+
+  function getExpenses() {
+    return state.expenseLog || [];
+  }
+
+  // Sum of expenses recorded for one exact business date.
+  function getExpensesTotalFor(dateStr) {
+    return getExpenses().filter(function(e) { return e.date === dateStr; })
+      .reduce(function(a, e) { return a + (e.amount || 0); }, 0);
+  }
+
+  // Sum of expenses recorded on or after a start date (reports period).
+  function getPeriodExpensesTotal(startDate) {
+    return getExpenses().filter(function(e) { return e.date >= startDate; })
+      .reduce(function(a, e) { return a + (e.amount || 0); }, 0);
+  }
+
+  function getTodayExpensesTotal() {
+    return getExpensesTotalFor(todayStr());
+  }
+
+  // Net Profit = gross profit (profit from items sold) - store expenses today.
+  function getNetProfitToday() {
+    return getTodayProfit() - getTodayExpensesTotal();
   }
 
   function getDaysSinceLastRestock() {
@@ -1512,6 +1638,15 @@
         { textKey: 'recordPaymentTutorial2', highlight: '#rpRemainingPreview' },
         { textKey: 'recordPaymentTutorial3', highlight: '#rpNoteField' },
         { textKey: 'recordPaymentTutorial4', highlight: '#rpPayBtn' }
+      ]
+    },
+    expenses: {
+      label: 'tutExpenses',
+      page: 'expenses',
+      steps: [
+        { textKey: 'expensesTutorial1', highlight: null },
+        { textKey: 'expensesTutorial2', highlight: '#expenseCategory' },
+        { textKey: 'expensesTutorial3', highlight: '#expenseList' }
       ]
     },
     report: {
@@ -1854,6 +1989,7 @@
       localStorage.setItem('sss_v3_dayArchived', JSON.stringify(state.dayArchived));
       localStorage.setItem('sss_v3_todayExpenses', JSON.stringify(state.todayExpenses));
       localStorage.setItem('sss_v3_todayEarnings', JSON.stringify(state.todayEarnings));
+      localStorage.setItem('sss_v3_expenseLog', JSON.stringify(state.expenseLog));
     } catch(e) { /* ignore */ }
   }
 
@@ -1880,7 +2016,12 @@
       if (s !== null) state.todayExpenses = JSON.parse(s);
       s = localStorage.getItem('sss_v3_todayEarnings');
       if (s !== null) state.todayEarnings = JSON.parse(s);
+      s = localStorage.getItem('sss_v3_expenseLog');
+      if (s !== null) state.expenseLog = JSON.parse(s);
     } catch(e) { /* use defaults */ }
+
+    // V2.71: normalize the expense log (older saves have no field at all)
+    if (!state.expenseLog || !Array.isArray(state.expenseLog)) state.expenseLog = [];
 
     if (!state.products || state.products.length === 0) {
       state.products = getSampleProducts();
@@ -2168,6 +2309,7 @@
     if (dom.dayEarnings) dom.dayEarnings.textContent = formatCurrency(earnings);
     if (dom.dayItemsSold) dom.dayItemsSold.textContent = items;
     if (dom.dayUtang) dom.dayUtang.textContent = formatCurrency(utang);
+    if (dom.dayExpensesTotal) dom.dayExpensesTotal.textContent = formatCurrency(getTodayExpensesTotal());
 
     if (dom.dayTransactionList) {
       var todaySales = getTodaySales();
@@ -2816,10 +2958,18 @@
     var actualSales = parseFloat(dom.closingActualSales.value) || 0;
     var diff = actualSales - recordedSales;
     var profit = getTodayProfit();
+    var expenses = getTodayExpensesTotal();
+    var netProfit = profit - expenses;
     dom.closingRecordedSales.textContent = formatCurrency(recordedSales);
     dom.closingSalesDiff.textContent = (diff >= 0 ? '+' : '') + formatCurrency(diff);
     dom.closingSalesDiff.style.color = diff === 0 ? 'var(--text-muted)' : (diff > 0 ? 'var(--primary)' : 'var(--danger)');
     dom.closingTotalToday.textContent = formatCurrency(profit);
+    // V2.71: store expenses + Net Profit rows (gross profit stays unchanged)
+    if (dom.closingExpensesToday) dom.closingExpensesToday.textContent = formatCurrency(expenses);
+    if (dom.closingNetProfit) {
+      dom.closingNetProfit.textContent = formatCurrency(netProfit);
+      dom.closingNetProfit.style.color = netProfit < 0 ? 'var(--danger)' : 'var(--primary)';
+    }
     var restockInfo = document.getElementById('closingRestockText');
     if (restockInfo) {
       var days = getDaysSinceLastRestock();
@@ -2841,13 +2991,15 @@
 
     var recordedSales = getTodayEarnings();
     var actualSales = parseFloat(dom.closingActualSales ? dom.closingActualSales.value : 0) || 0;
-    state.todayExpenses = 0;
+    var expenses = getTodayExpensesTotal();
+    state.todayExpenses = expenses;
     state.todayEarnings = actualSales;
 
     var totalItemsSold = getTodayItemsSold();
     var totalUtang = getTodayUtang();
     var diff = actualSales - recordedSales;
     var profit = getTodayProfit();
+    var netProfit = profit - expenses;
 
     // Update or create today's history entry (overwrite if exists)
     var todayHistoryIndex = -1;
@@ -2863,7 +3015,8 @@
       recordedSales: recordedSales,
       actualSales: actualSales,
       salesDiff: diff,
-      expenses: 0,
+      expenses: expenses,
+      netProfit: netProfit,
       profit: profit,
       itemsSold: totalItemsSold,
       utangTotal: totalUtang,
@@ -2888,7 +3041,9 @@
         '<div class="summary-detail-row"><span>' + t('closingRecordedSales') + '</span><span>' + formatCurrency(recordedSales) + '</span></div>' +
         '<div class="summary-detail-row"><span>' + t('closingActualSales') + '</span><span>' + formatCurrency(actualSales) + '</span></div>' +
         (diff !== 0 ? '<div class="summary-detail-row"><span>' + t('closingSalesDiff') + '</span><span style="color:' + (diff > 0 ? 'var(--primary)' : 'var(--danger)') + ';">' + (diff > 0 ? '+' : '') + formatCurrency(diff) + '</span></div>' : '') +
-        '<div class="summary-detail-row" style="border-top:1px solid var(--border);padding-top:8px;font-weight:700;"><span>' + t('profitLabel') + '</span><span style="color:var(--primary);">' + formatCurrency(profit) + '</span></div>' +
+        '<div class="summary-detail-row"><span>' + t('closingProfitLabel') + '</span><span>' + formatCurrency(profit) + '</span></div>' +
+        '<div class="summary-detail-row"><span>' + t('closingExpensesToday') + '</span><span style="color:var(--danger);">' + formatCurrency(expenses) + '</span></div>' +
+        '<div class="summary-detail-row" style="border-top:1px solid var(--border);padding-top:8px;font-weight:700;"><span>' + t('closingNetProfit') + '</span><span style="color:' + (netProfit < 0 ? 'var(--danger)' : 'var(--primary)') + ';">' + formatCurrency(netProfit) + '</span></div>' +
         '<div class="summary-detail-row"><span>Items Sold</span><span>' + totalItemsSold + '</span></div>' +
         (totalUtang > 0 ? '<div class="summary-detail-row"><span>Unpaid Debt</span><span style="color:var(--danger);">' + formatCurrency(totalUtang) + '</span></div>' : '');
     }
@@ -2945,7 +3100,7 @@
           recordedSales: 0,
           actualSales: 0,
           salesDiff: 0,
-          expenses: 0,
+          expenses: getExpensesTotalFor(state.dayDate),
           profit: 0,
           itemsSold: 0,
           utangTotal: 0,
@@ -3621,6 +3776,7 @@
     state.dayOpen = false;
     state.todayExpenses = 0;
     state.todayEarnings = 0;
+    state.expenseLog = [];
     state.settings.launchCount = 0;
     try { localStorage.removeItem('sss_v3_reportPeriod'); } catch(e) {}
     saveState();
@@ -3634,6 +3790,7 @@
     var exportObj = {
       settings: state.settings, products: state.products,
       sales: state.sales, debts: state.debts, history: state.history,
+      expenseLog: state.expenseLog || [],
       exportedAt: new Date().toISOString()
     };
     var dataStr = JSON.stringify(exportObj, null, 2);
@@ -3705,6 +3862,7 @@
               '<label class="dev-panel-checkbox"><input type="checkbox" id="devChkSales"> Sales</label>' +
               '<label class="dev-panel-checkbox"><input type="checkbox" id="devChkDebts"> Debts</label>' +
               '<label class="dev-panel-checkbox"><input type="checkbox" id="devChkHistory"> History</label>' +
+              '<label class="dev-panel-checkbox"><input type="checkbox" id="devChkExpenses"> Expenses</label>' +
               '<label class="dev-panel-checkbox"><input type="checkbox" id="devChkSettings"> Settings</label>' +
             '</div>' +
             '<button class="dev-panel-btn dev-panel-btn-danger" onclick="handleDevAction(\'clearSelected\')">Clear Selected Datasets</button>' +
@@ -3776,7 +3934,7 @@
         saveState(); showToast(count + ' items added.');
         break;
       case 'viewRawState':
-        var summary = 'Products: ' + state.products.length + '\nSales: ' + state.sales.length + '\nDebts: ' + state.debts.length + '\nHistory: ' + state.history.length + '\nDay Open: ' + state.dayOpen + '\n\nFirst 3 products:\n';
+        var summary = 'Products: ' + state.products.length + '\nSales: ' + state.sales.length + '\nDebts: ' + state.debts.length + '\nHistory: ' + state.history.length + '\nExpenses: ' + (state.expenseLog || []).length + '\nDay Open: ' + state.dayOpen + '\n\nFirst 3 products:\n';
         state.products.slice(0, 3).forEach(function(p) { summary += '- ' + p.name + ' (' + p.quantity + ' @ ' + formatCurrency(p.sellingPrice) + ')\n'; });
         alert(summary);
         break;
@@ -3796,6 +3954,7 @@
                 if (data.sales) state.sales = data.sales;
                 if (data.debts) state.debts = data.debts;
                 if (data.history) state.history = data.history;
+                if (data.expenseLog) state.expenseLog = data.expenseLog;
                 if (data.settings) state.settings = data.settings;
                 if (data.dayOpen !== undefined) state.dayOpen = data.dayOpen;
                 saveState(); showToast('Data imported successfully!');
@@ -3811,6 +3970,7 @@
         state.products = getSampleProducts();
         state.sales = []; state.debts = []; state.history = [];
         state.dayOpen = false; state.todayExpenses = 0; state.todayEarnings = 0;
+        state.expenseLog = [];
         state.settings.hasCompletedSetup = false;
         state.settings.launchCount = 0;
         devDateOverride = null; // factory reset also clears the temporary dev override
@@ -3829,6 +3989,7 @@
           if (document.getElementById('devChkSales') && document.getElementById('devChkSales').checked) { state.sales = []; msg.push('Sales'); }
           if (document.getElementById('devChkDebts') && document.getElementById('devChkDebts').checked) { state.debts = []; msg.push('Debts'); }
           if (document.getElementById('devChkHistory') && document.getElementById('devChkHistory').checked) { state.history = []; msg.push('History'); }
+          if (document.getElementById('devChkExpenses') && document.getElementById('devChkExpenses').checked) { state.expenseLog = []; msg.push('Expenses'); }
           if (document.getElementById('devChkSettings') && document.getElementById('devChkSettings').checked) { state.settings = { language: 'fil', storeName: 'Aking Tindahan', ownerName: 'May-ari', hasCompletedSetup: true, defaultMarkup: 20, lowStockThreshold: 5, defaultCreditLimit: 500 }; msg.push('Settings'); }
           if (msg.length > 0) { saveState(); showToast('Cleared: ' + msg.join(', ')); }
           else { showToast('No datasets selected.', 'error'); }
@@ -4343,6 +4504,78 @@
   }
 
   // ============================================
+  // EXPENSE LOG PAGE (expenses.html) — V2.71
+  // ============================================
+  function renderExpenses() {
+    var list = document.getElementById('expenseList');
+    var total = document.getElementById('expenseTodayTotal');
+    if (total) total.textContent = formatCurrency(getTodayExpensesTotal());
+    if (list) {
+      var items = getExpenses().slice().sort(function(a, b) {
+        return (b.date || '').localeCompare(a.date || '') ||
+          String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
+      });
+      if (items.length === 0) {
+        list.innerHTML = '<div class="empty-state">' + t('expenseEmpty') + '</div>';
+      } else {
+        list.innerHTML = items.map(function(e) {
+          return '<div class="closing-item">' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div class="closing-item-name">' + expenseCategoryLabel(e.category) + '</div>' +
+              '<div style="font-size:12px;color:var(--text-muted);margin-top:2px;">' + e.date + (e.note ? ' · ' + esc(e.note) : '') + '</div>' +
+            '</div>' +
+            '<span class="closing-item-value danger">' + formatCurrency(e.amount) + '</span>' +
+            '<button class="btn btn-secondary btn-sm" style="margin-left:8px;padding:4px 10px;" onclick="deleteExpense(\'' + e.id + '\')">' + t('expenseDelete') + '</button>' +
+          '</div>';
+        }).join('');
+      }
+    }
+    // Date field defaults to today (and stays visible so backfilling old
+    // expenses is possible — the analysis calls for a visible, pre-filled date).
+    var dateField = document.getElementById('expenseDate');
+    if (dateField && !dateField.value) dateField.value = todayStr();
+  }
+
+  function addExpense() {
+    var amount = parseFloat(document.getElementById('expenseAmount') ? document.getElementById('expenseAmount').value : '');
+    var category = document.getElementById('expenseCategory') ? document.getElementById('expenseCategory').value : '';
+    var date = document.getElementById('expenseDate') ? document.getElementById('expenseDate').value : '';
+    var note = document.getElementById('expenseNote') ? document.getElementById('expenseNote').value.trim() : '';
+    if (!amount || amount <= 0) { showToast(t('expenseAmountRequired'), 'error'); return; }
+    if (!category) { showToast(t('expenseCategoryRequired'), 'error'); return; }
+    if (!date) date = todayStr();
+    state.expenseLog = state.expenseLog || [];
+    state.expenseLog.push({
+      id: genId(), date: date, category: category,
+      amount: Math.round(amount * 100) / 100, note: note,
+      createdAt: new Date().toISOString()
+    });
+    saveState();
+    var amountField = document.getElementById('expenseAmount');
+    var categoryField = document.getElementById('expenseCategory');
+    var noteField = document.getElementById('expenseNote');
+    if (amountField) amountField.value = '';
+    if (categoryField) categoryField.value = '';
+    if (noteField) noteField.value = '';
+    renderExpenses();
+    showToast(t('expenseAdded'));
+  }
+
+  function deleteExpense(id) {
+    state.expenseLog = (state.expenseLog || []).filter(function(e) { return e.id !== id; });
+    saveState();
+    renderExpenses();
+    showToast(t('expenseDeleted'));
+  }
+
+  // Day-page entry point → expenses.html (V2.71). No day-open guard: the
+  // expense log is a date-stamped ledger, so backfilling a past expense while
+  // the store is closed is legitimate.
+  function goToExpenses() {
+    window.location.href = 'expenses.html';
+  }
+
+  // ============================================
   // REPORTS PAGE (reports.html)
   // ============================================
   var _reportPeriod = 'day';
@@ -4471,6 +4704,11 @@
     var utangSales = st.sum(curSales.filter(function(s) { return s.customerName; }), 'amount');
     var prevSalesTotal = st.sum(prevSales, 'amount');
     var prevProfitTotal = st.sum(prevSales, 'profit');
+    // V2.71: expenses + Net Profit for the period (gross profit stays as-is)
+    var totalExpenses = getPeriodExpensesTotal(st.curStart);
+    var netProfit = totalProfit - totalExpenses;
+    var prevExpensesTotal = getPeriodExpensesTotal(st.prevStart) - totalExpenses;
+    var prevNetProfit = prevProfitTotal - prevExpensesTotal;
 
     function vsBadge(cur, prev) {
       if (prev <= 0) return '';
@@ -4511,6 +4749,8 @@
       '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
         statTile(t('totalSales'), formatCurrency(totalSales), '#16a34a', '#f0fdf4', vsBadge(totalSales, prevSalesTotal)) +
         statTile(t('reportsProfit'), formatCurrency(totalProfit), '#2563eb', '#eff6ff', vsBadge(totalProfit, prevProfitTotal)) +
+        statTile(t('reportsExpenses'), formatCurrency(totalExpenses), '#dc2626', '#fef2f2') +
+        statTile(t('reportsNetProfit'), formatCurrency(netProfit), netProfit < 0 ? '#dc2626' : '#2563eb', '#eff6ff', vsBadge(netProfit, prevNetProfit)) +
         statTile(t('reportItemsSold'), String(itemsSold), '#d97706', '#fef3c7') +
         statTile(t('transactions'), String(txCount), '#475569', '#f1f5f9') +
         statTile(t('cashSales'), formatCurrency(cashSales), '#15803d', '#dcfce7') +
@@ -4674,10 +4914,14 @@
         return v;
       }
       var lines = [];
+      var totalExpenses = getPeriodExpensesTotal(st.curStart);
+      var netProfit = st.sum(st.curSales, 'profit') - totalExpenses;
       lines.push(cell('Sari-Sari Smart Report'));
       lines.push(cell('Period') + ',' + cell(periodLabel));
       lines.push(cell(t('totalSales')) + ',' + cell(st.sum(st.curSales, 'amount').toFixed(2)));
       lines.push(cell(t('reportsProfit')) + ',' + cell(st.sum(st.curSales, 'profit').toFixed(2)));
+      lines.push(cell(t('reportsExpenses')) + ',' + cell(totalExpenses.toFixed(2)));
+      lines.push(cell(t('reportsNetProfit')) + ',' + cell(netProfit.toFixed(2)));
       lines.push(cell(t('reportItemsSold')) + ',' + cell(st.curSales.reduce(function(a, s) { return a + (s.quantity || 1); }, 0)));
       lines.push(cell(t('transactions')) + ',' + cell(st.curSales.length));
       lines.push('');
@@ -4691,6 +4935,11 @@
         if (getStockStatus(p) !== 'plenty') {
           lines.push([cell(p.name), cell(p.quantity)].join(','));
         }
+      });
+      lines.push('');
+      lines.push(cell(t('expenseListTitle')));
+      getExpenses().filter(function(e) { return e.date >= st.curStart; }).forEach(function(e) {
+        lines.push([cell(e.date), cell(expenseCategoryLabel(e.category)), cell((e.amount || 0).toFixed(2)), cell(e.note || '')].join(','));
       });
       var csv = lines.join('\r\n');
       var blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -4929,6 +5178,10 @@
       applyTranslations();
       loadReportPeriod();
       renderReports();
+    } else if (pageName === 'expenses') {
+      // Expense Log page (V2.71) — no day-open guard; the log is date-stamped
+      applyTranslations();
+      renderExpenses();
     } else if (pageName === 'help') {
       // Help page
       applyTranslations();
@@ -4961,6 +5214,10 @@
   window.saveRecordPayment = saveRecordPayment;
   window.renderReports = renderReports;
   window.setReportPeriod = setReportPeriod;
+  window.renderExpenses = renderExpenses;
+  window.addExpense = addExpense;
+  window.deleteExpense = deleteExpense;
+  window.goToExpenses = goToExpenses;
   window.renderHelp = renderHelp;
   window.completeSetup = completeSetup;
   window.showMorningCheck = showMorningCheck;

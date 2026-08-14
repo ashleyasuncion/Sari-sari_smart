@@ -79,6 +79,12 @@
             </div>
           </div>
 
+          <!-- Store Expenses entry point (V2.71) -->
+          <button class="btn btn-outline btn-large" id="btnExpenses" onclick="goToExpenses()" style="margin-bottom:10px;justify-content:space-between;">
+            <span data-i18n="dayExpensesBtn">Store Expenses Today</span>
+            <span id="dayExpensesTotal" style="font-weight:700;color:var(--danger);">₱0.00</span>
+          </button>
+
           <button class="btn btn-outline btn-large close-day-btn" id="btnCloseDay" onclick="showClosingScreen()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <span data-i18n="closeDay">Isara ang Tindahan 🌙</span>

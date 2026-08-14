@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sari-Sari Smart - Store Expenses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="app-container" id="app">
+      <!-- HEADER (V2.68 centered-title rule) -->
+      <header class="app-header" style="background:var(--primary);color:white;">
+        <button class="header-btn" onclick="historyBack()" style="color:white;background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:6px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <h1 style="font-size:var(--text-xl);font-weight:700;flex:1;text-align:center;" data-i18n="pageExpenses">Store Expenses</h1>
+        <button class="header-btn header-tutorial-btn" id="headerTutorialBtn" onclick="startTutorial('expenses', true)" aria-label="Tutorial" style="color:white;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="app-content" id="appContent">
+        <div style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:12px;" data-i18n="expensesSubtitle">Record store expenses — rent, utilities, transport, wages, and more.</div>
+
+        <!-- Total today -->
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+          <span style="font-weight:600;color:var(--text);" data-i18n="expensesTotalToday">Total Today</span>
+          <span id="expenseTodayTotal" style="font-weight:700;color:var(--danger);font-size:var(--text-lg);">₱0.00</span>
+        </div>
+
+        <!-- Add expense form -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+          <div style="font-weight:700;color:var(--primary);margin-bottom:12px;" data-i18n="expenseAddTitle">Add Expense</div>
+          <div class="form-group">
+            <label data-i18n="expenseAmount">Amount (₱)</label>
+            <input type="number" id="expenseAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal">
+          </div>
+          <div class="form-group">
+            <label data-i18n="expenseCategory">Category</label>
+            <select id="expenseCategory" class="form-input">
+              <option value="" data-i18n="expenseCategoryPlaceholder">Select category...</option>
+              <option value="utilities" data-i18n="expUtilities">Utilities</option>
+              <option value="rent" data-i18n="expRent">Rent</option>
+              <option value="transport" data-i18n="expTransport">Transport</option>
+              <option value="permits" data-i18n="expPermits">Permits &amp; Fees</option>
+              <option value="labor" data-i18n="expLabor">Labor</option>
+              <option value="supplies" data-i18n="expSupplies">Supplies</option>
+              <option value="maintenance" data-i18n="expMaintenance">Maintenance</option>
+              <option value="other" data-i18n="expOther">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="expenseDate">Date</label>
+            <input type="date" id="expenseDate" class="form-input">
+          </div>
+          <div class="form-group">
+            <label data-i18n="expenseNote">Note (optional)</label>
+            <input type="text" id="expenseNote" class="form-input" placeholder="e.g. electric bill" autocomplete="off">
+          </div>
+          <button class="btn btn-primary btn-full" onclick="addExpense()" data-i18n="expenseSave">Save Expense</button>
+        </div>
+
+        <!-- Expense list -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;">
+          <div style="font-weight:700;color:var(--primary);margin-bottom:12px;" data-i18n="expenseListTitle">All Expenses</div>
+          <div class="closing-items" id="expenseList">
+            <div class="empty-state">No expenses recorded yet.</div>
+          </div>
+        </div>
+      </main>
+
+      <div class="toast-container" id="toastContainer"></div>
+    </div>
+    <div class="phone-home-bar"></div>
+  </div>
+
+  <!-- TUTORIAL OVERLAY (outside phone-frame for correct position:fixed behavior) -->
+  <div id="tutorialRoot">
+    <div class="tutorial-overlay" id="tutorialOverlay" style="display:none;">
+      <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
+      <div class="tutorial-highlight" id="tutorialHighlight"></div>
+      <div class="tutorial-box" id="tutorialBox">
+        <div class="tutorial-step-indicator">
+          <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">3</span>
+        </div>
+        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
+        <div class="tutorial-actions">
+          <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
+          <button class="btn btn-secondary btn-sm" id="tutorialPrev" onclick="previousTutorial()" data-i18n="prev" style="display:none;">Previous</button>
+          <button class="btn btn-primary btn-sm" id="tutorialNext" onclick="advanceTutorial()" data-i18n="next">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

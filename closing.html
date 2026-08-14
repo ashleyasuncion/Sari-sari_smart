@@ -67,6 +67,17 @@
                 <span class="closing-total-value" id="closingTotalToday">₱0.00</span>
               </div>
               <div class="closing-profit-hint" data-i18n="closingProfitHint">Selling price of items sold minus their cost.</div>
+              <!-- Store Expenses Today (V2.71) -->
+              <div class="closing-diff-row" style="border-top:none;margin-top:0;padding-top:4px;">
+                <span data-i18n="closingExpensesToday">Store Expenses Today</span>
+                <span class="closing-diff-value" id="closingExpensesToday" style="color:var(--danger);">₱0.00</span>
+              </div>
+              <!-- Net Profit (gross profit - store expenses, V2.71) -->
+              <div class="closing-total-row" style="margin-top:0;">
+                <span class="closing-total-label" data-i18n="closingNetProfit">Net Profit</span>
+                <span class="closing-total-value" id="closingNetProfit">₱0.00</span>
+              </div>
+              <div class="closing-profit-hint" data-i18n="closingNetProfitHint">Net Profit = profit from items sold - store expenses.</div>
               <!-- Last restock info -->
               <div class="closing-diff-row" id="closingRestockInfo" style="border-top:none;padding-top:4px;padding-bottom:0;">
                 <span style="font-size:var(--text-xs);color:var(--text-muted);" id="closingRestockText">Last restock: --</span>

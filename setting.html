@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sari-Sari Smart - Settings</title>
+  <title>TindaGo - Settings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,84 +28,78 @@
 
       <!-- CONTENT -->
       <main class="app-content" id="appContent">
-        <!-- Tutorial Selector -->
+        <!-- ── Store Profile ── -->
         <div class="settings-section">
-          <div class="settings-section-title" data-i18n="tutSection">Tutorials</div>
-          <div class="tutorial-selector-row">
-            <select id="tutorialSelector" class="form-input">
-              <option value="" data-i18n="tutSelector">Select a tutorial...</option>
-              <option value="main" data-i18n="tutMain">Main Tutorial</option>
-              <option value="morning" data-i18n="tutMorning">Morning Check Tutorial</option>
-              <option value="day" data-i18n="tutDay">Day Mode Tutorial</option>
-              <option value="checkout" data-i18n="tutCheckout">Checkout Tutorial</option>
-              <option value="closing" data-i18n="tutClosing">Closing Tutorial</option>
-              <option value="inventory" data-i18n="tutInventory">Stock Tutorial</option>
-              <option value="debts" data-i18n="tutDebts">Debts Tutorial</option>
-              <option value="setting" data-i18n="tutSetting">Settings Tutorial</option>
-              <option value="add_product" data-i18n="tutAddProduct">Add Product Tutorial</option>
-              <option value="restock" data-i18n="tutRestock">Restock Day Tutorial</option>
-              <option value="new_debt" data-i18n="tutNewDebt">New Debt Tutorial</option>
-              <option value="product_detail" data-i18n="tutProductDetail">Product Detail Tutorial</option>
-              <option value="debtor_detail" data-i18n="tutDebtorDetail">Customer Debt Detail Tutorial</option>
-              <option value="record_payment" data-i18n="tutRecordPayment">Record Payment Tutorial</option>
-              <option value="report" data-i18n="tutReport">Reports Tutorial</option>
-              <option value="help" data-i18n="tutHelp">Help Tutorial</option>
+          <div class="settings-section-title" data-i18n="settingsSectionProfile">Store Profile</div>
+          <div class="settings-section-item">
+            <label data-i18n="settingsStore">Store Name</label>
+            <input type="text" id="settingsStoreName" class="form-input" onchange="saveSettings()">
+          </div>
+          <div class="settings-section-item">
+            <label data-i18n="settingsOwner">Owner Name</label>
+            <input type="text" id="settingsOwnerName" class="form-input" onchange="saveSettings()">
+          </div>
+          <div class="settings-section-item">
+            <label data-i18n="settingsLanguage">Language</label>
+            <select id="settingsLanguage" class="form-input" onchange="saveSettings()">
+              <option value="en">English</option>
+              <option value="fil">Filipino</option>
             </select>
-            <button class="btn btn-primary" onclick="launchTutorial()" data-i18n="tutLaunch">Launch</button>
           </div>
         </div>
 
+        <!-- ── Display ── -->
         <div class="settings-section">
-          <div class="settings-section-title" data-i18n="moreSection">More</div>
-          <a href="reports.html" class="btn btn-outline btn-full" data-i18n="reportsTitle" style="text-decoration:none;margin-bottom:8px;">Ulat</a>
-          <a href="help.html" class="btn btn-outline btn-full" data-i18n="helpTitle" style="text-decoration:none;">Help</a>
-        </div>
-
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="settingsLanguage">Wika</div>
-          <select id="settingsLanguage" class="form-input" onchange="saveSettings()">
-            <option value="en">English</option>
-            <option value="fil">Filipino</option>
-          </select>
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="textSize">Text Size</div>
-          <div class="text-size-options">
-            <button class="text-size-btn active" data-size="standard" onclick="setTextSize('standard')" data-i18n="standard">Standard</button>
-            <button class="text-size-btn" data-size="large" onclick="setTextSize('large')" data-i18n="large">Large</button>
-            <button class="text-size-btn" data-size="extra-large" onclick="setTextSize('extra-large')" data-i18n="extraLarge">Extra Large</button>
+          <div class="settings-section-title" data-i18n="settingsSectionDisplay">Display</div>
+          <div class="settings-section-item">
+            <label data-i18n="textSize">Text Size</label>
+            <div class="text-size-options">
+              <button class="text-size-btn active" data-size="standard" onclick="setTextSize('standard')" data-i18n="standard">Standard</button>
+              <button class="text-size-btn" data-size="large" onclick="setTextSize('large')" data-i18n="large">Large</button>
+              <button class="text-size-btn" data-size="extra-large" onclick="setTextSize('extra-large')" data-i18n="extraLarge">Extra Large</button>
+            </div>
           </div>
         </div>
+
+        <!-- ── Inventory Defaults ── -->
         <div class="settings-section">
-          <div class="settings-section-title" data-i18n="settingsStore">Pangalan ng Tindahan</div>
-          <input type="text" id="settingsStoreName" class="form-input" onchange="saveSettings()">
+          <div class="settings-section-title" data-i18n="settingsSectionDefaults">Inventory Defaults</div>
+          <div class="settings-section-item">
+            <label data-i18n="defaultMarkupLabel">Default Markup (%)</label>
+            <input type="number" id="settingsDefaultMarkup" class="form-input" min="0" max="200" step="1" onchange="saveSettings()">
+            <div class="markup-hint" data-i18n="defaultMarkupHint">Applied to new products</div>
+          </div>
+          <div class="settings-section-item">
+            <label data-i18n="alertThreshold">Low Stock Threshold</label>
+            <input type="number" id="settingsLowStockThreshold" class="form-input" min="0" max="999" step="1" onchange="saveSettings()">
+            <div class="markup-hint" data-i18n="alertThresholdDesc">Alert when stock falls below this number</div>
+          </div>
+          <div class="settings-section-item">
+            <label data-i18n="defaultCreditLimitLabel">Default Credit Limit (₱)</label>
+            <input type="number" id="settingsDefaultCreditLimit" class="form-input" min="0" max="10000" step="1" onchange="saveSettings()">
+            <div class="markup-hint" data-i18n="defaultCreditLimitHint">Applied to new customers. Set to 0 for no limit.</div>
+          </div>
         </div>
+
+        <!-- ── Support ── -->
         <div class="settings-section">
-          <div class="settings-section-title" data-i18n="settingsOwner">Pangalan ng May-ari</div>
-          <input type="text" id="settingsOwnerName" class="form-input" onchange="saveSettings()">
+          <div class="settings-section-title" data-i18n="settingsSectionSupport">Support</div>
+          <a href="help.html" class="btn btn-outline btn-full" data-i18n="helpTitle" style="text-decoration:none;margin-bottom:8px;">Help</a>
+          <a href="reports.html" class="btn btn-outline btn-full" data-i18n="reportsTitle" style="text-decoration:none;">Reports</a>
         </div>
+
+        <!-- ── Data ── -->
         <div class="settings-section">
-          <div class="settings-section-title" data-i18n="defaultMarkupLabel">Default na Markup (%)</div>
-          <input type="number" id="settingsDefaultMarkup" class="form-input" min="0" max="200" step="1" onchange="saveSettings()">
-          <div class="markup-hint" data-i18n="defaultMarkupHint">Gagamitin sa mga bagong produkto</div>
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="alertThreshold">Low Stock Threshold</div>
-          <input type="number" id="settingsLowStockThreshold" class="form-input" min="0" max="999" step="1" onchange="saveSettings()">
-          <div class="markup-hint" data-i18n="alertThresholdDesc">Alert when stock falls below this number</div>
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="defaultCreditLimitLabel">Default na Limit ng Utang (₱)</div>
-          <input type="number" id="settingsDefaultCreditLimit" class="form-input" min="0" max="10000" step="1" onchange="saveSettings()">
-          <div class="markup-hint" data-i18n="defaultCreditLimitHint">Gagamitin sa mga bagong kostumer. Maglagay ng 0 kung walang limit.</div>
-        </div>
-        <div class="settings-section">
-          <div class="settings-section-title" data-i18n="dataMgmt">Data Management</div>
-          <button class="btn btn-secondary btn-full" onclick="resetData()" style="margin-bottom:8px;">
-            <span data-i18n="resetDataBtn">I-reset ang Data</span>
+          <div class="settings-section-title" data-i18n="settingsSectionData">Data</div>
+          <button class="btn btn-secondary btn-full" onclick="exportData()" style="margin-bottom:8px;">
+            <span data-i18n="exportDataBtn">Export Data</span>
           </button>
-          <button class="btn btn-secondary btn-full" onclick="exportData()">
-            <span data-i18n="exportDataBtn">I-export ang Data</span>
+          <button class="btn btn-secondary btn-full" disabled style="margin-bottom:8px;opacity:0.5;cursor:not-allowed;">
+            <span data-i18n="importDataBtn">Import Data</span>
+            <span style="font-size:var(--text-xs);color:var(--text-muted);margin-left:6px;">(Mobile only)</span>
+          </button>
+          <button class="btn btn-danger btn-full" onclick="resetData()">
+            <span data-i18n="resetDataBtn">Reset All Data</span>
           </button>
         </div>
       </main>
@@ -124,7 +118,7 @@
         <div class="tutorial-step-indicator">
           <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
         </div>
-        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
+        <div class="tutorial-text" id="tutorialText">Welcome to TindaGo!</div>
         <div class="tutorial-actions">
           <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
           <button class="btn btn-secondary btn-sm" id="tutorialPrev" onclick="previousTutorial()" data-i18n="prev" style="display:none;">Previous</button>

@@ -1,5 +1,5 @@
 /* ============================================
-   SARI-SARI SMART - Three Moment Redesign
+   TINDA GO - Three Moment Redesign
    ============================================ */
 
 ;(function() {
@@ -178,10 +178,16 @@
       settingsLanguage: 'Language',
       settingsStore: 'Store Name',
       settingsOwner: 'Owner Name',
+      settingsSectionProfile: 'Store Profile',
+      settingsSectionDisplay: 'Display',
+      settingsSectionDefaults: 'Inventory Defaults',
+      settingsSectionData: 'Data',
+      settingsSectionSupport: 'Support',
       resetData: 'Reset Data',
       exportData: 'Export Data',
+      importDataBtn: 'Import Data',
       setupBtn: "Let's start!",
-      setupTitle: 'Welcome to Sari-Sari Smart!',
+      setupTitle: 'Welcome to TindaGo!',
       setupSubtitle: "Let's get started. Tell us about your store.",
       setupStorePlaceholder: "e.g. Maria's Store",
       setupOwnerPlaceholder: 'e.g. Maria Santos',
@@ -267,7 +273,7 @@
       large: 'Large',
       extraLarge: 'Extra Large',
       // Main Tutorial (multi-page walkthrough)
-      mainTutorial1: 'Welcome to Sari-Sari Smart! This quick tour will guide you through your store\'s daily routine — from morning check to closing.',
+      mainTutorial1: 'Welcome to TindaGo! This quick tour will guide you through your store\'s daily routine — from morning check to closing.',
       mainTutorial2: 'The Stock card shows items running low or out of stock. Tap Stock in the nav to view and manage your inventory.',
       mainTutorial3: 'The Debt card shows how much customers owe you. Tap Debts to view and track payments.',
       mainTutorial4: 'When ready, tap "Start the Day" to open your store for business and start recording sales.',
@@ -332,6 +338,7 @@
       addProductTutorial3: 'Set the markup percentage. The markup helper automatically suggests the right selling price.',
       addProductTutorial4: 'Enter the selling price or accept the suggested price from the markup helper.',
       addProductTutorial5: 'Tap "Save" to add the product to your inventory. You can edit it later from the Stock page.',
+      tutorialReplayHint: 'You can always tap the ? button to replay this tutorial.',
       // Tutorial Labels
       tutMain: 'Main Tutorial',
       tutMorning: 'Morning Check Tutorial',
@@ -406,9 +413,9 @@
       restockTutorial3: 'Enter the real count you see on your shelf next to what the app thinks.',
       restockTutorial4: 'Green check = count matches. Red = unrecorded sales were found.',
       restockTutorial5: 'After checking, tap Continue to Purchases to record what you bought.',
-      restockTutorial6: 'Step 2: Search for a product, enter cost per unit and quantity, tap Add Item.',
+      restockTutorial6: 'Step 2: Search for a product, enter cost per unit and quantity, tap Add Item. Use the Back button to return to Step 1 if needed.',
       restockTutorial7: 'Review your purchases. Total cost is shown at the bottom.',
-      restockTutorial8: 'Tap Done to save. Your inventory is updated. Find the reminder on Morning page.',
+      restockTutorial8: 'Tap Done to save. Your inventory is updated. You can also go Back to make changes before finishing.',
       // New Debt tutorial
       tutNewDebt: 'New Debt Tutorial',
       newDebtTutorial1: 'This page lets you manually record a new debt for a customer.',
@@ -440,7 +447,7 @@
       reportTutorial4: 'Recent transactions appear here with details on each sale. Scroll to see more.',
       reportTutorial5: 'The Best-Selling Products section shows your top-performing items.',
       reportTutorial6: 'Low-stock items are listed here so you know what needs restocking.',
-      helpTutorial1: 'This is the Help page — your guide to using Sari-Sari Smart effectively.',
+      helpTutorial1: 'This is the Help page — your guide to using TindaGo effectively.',
       helpTutorial2: 'The Tutorial Selector lets you choose from different tutorials. Select a tutorial from the dropdown and tap "Launch" to start a guided tour of any page.',
       helpTutorial3: 'The "How to Use" button opens a detailed guide with step-by-step instructions for recording sales, adding stock, tracking debts, viewing reports, and customizing settings.',
       helpTutorial4: 'The Contact section shows how to reach support for questions or feedback about the app.',
@@ -522,8 +529,8 @@
       howToUse: 'How to Use',
       contactInfo: 'Contact',
       aboutApp: 'About App',
-      contactText: 'For questions or feedback, email support@sarisarismart.com',
-      aboutText: 'Sari-Sari Smart v3.0 — a store management app for sari-sari store owners.',
+      contactText: 'For questions or feedback, email support@tindago.com',
+      aboutText: 'TindaGo v3.0 — a store management app for sari-sari store owners.',
       howToSales: 'Record your daily cash sales and specific item sales on the Sales page.',
       howToStock: 'Add products, restock, and track inventory levels on the Stocks page.',
       howToDebts: 'Track customer debts and record payments on the Debts page.',
@@ -558,27 +565,17 @@
       brandPlaceholder: 'e.g. Ligo, Bear Brand',
       packageSizePlaceholder: 'e.g. 155g, 1L',
       catAll: 'All',
-      catFood: 'Food',
-      catCanned: 'Canned Goods',
-      catCondiments: 'Condiments',
-      catSnacks: 'Snacks',
-      catBeverages: 'Beverages',
-      catPersonalCare: 'Personal Care',
-      catHousehold: 'Household',
-      catDryGoods: 'Dry Goods',
-      catOther: 'Other',
-      unitPiece: 'piece',
-      unitSachet: 'sachet',
-      unitPack: 'pack',
-      unitBox: 'box',
-      unitBottle: 'bottle',
-      unitCan: 'can',
-      unitKg: 'kg',
-      unitG: 'g',
-      unitL: 'L',
-      unitMl: 'mL',
-      unitBundle: 'bundle',
-      unitDozen: 'dozen'
+      catSoftDrinks: 'Soft Drinks', catBottledWater: 'Bottled Water', catInstantCoffee: 'Instant Coffee',
+      catInstantNoodles: 'Instant Noodles', catRice: 'Rice', catCannedSardines: 'Canned Sardines',
+      catCannedTuna: 'Canned Tuna', catEggs: 'Eggs', catBread: 'Bread / Pandesal', catBiscuits: 'Biscuits / Cookies',
+      catChocolate: 'Chocolate / Candy', catChips: 'Chips / Snacks', catSalt: 'Salt', catSugar: 'Sugar',
+      catShampoo: 'Shampoo Sachets', catBathSoap: 'Bath Soap', catLaundry: 'Laundry Detergent', catToothcare: 'Toothpaste / Toothbrush',
+      catMosquito: 'Mosquito Coils', catCigarettes: 'Cigarettes', catOther: 'Other',
+      catMore: 'More ▾', catLess: 'Less ▴',
+      unitPiece: 'piece', unitSachet: 'sachet', unitPack: 'pack', unitBox: 'box',
+      unitBottle: 'bottle', unitCan: 'can', unitKg: 'kg', unitG: 'g',
+      unitL: 'L', unitMl: 'mL', unitBundle: 'bundle', unitDozen: 'dozen',
+      unitSack: 'sack', unitLoaf: 'loaf', unitTube: 'tube', unitBar: 'bar', unitSticks: 'sticks'
     },
     fil: {
       greeting: 'Magandang araw!',
@@ -651,10 +648,16 @@
       settingsLanguage: 'Wika',
       settingsStore: 'Pangalan ng Tindahan',
       settingsOwner: 'Pangalan ng May-ari',
+      settingsSectionProfile: 'Profile ng Tindahan',
+      settingsSectionDisplay: 'Display',
+      settingsSectionDefaults: 'Default ng Inventory',
+      settingsSectionData: 'Data',
+      settingsSectionSupport: 'Suporta',
       resetData: 'I-reset ang Data',
       exportData: 'I-export ang Data',
+      importDataBtn: 'I-import ang Data',
       setupBtn: 'Magsimula na!',
-      setupTitle: 'Maligayang pagdating sa Sari-Sari Smart!',
+      setupTitle: 'Maligayang pagdating sa TindaGo!',
       setupSubtitle: 'Magsimula tayo. Sabihin sa amin ang tungkol sa iyong tindahan.',
       setupStorePlaceholder: 'Hal. Tindahan ni Maria',
       setupOwnerPlaceholder: 'Hal. Maria Santos',
@@ -740,7 +743,7 @@
       large: 'Malaki',
       extraLarge: 'Pinakamalaki',
       // Main Tutorial (multi-page walkthrough)
-      mainTutorial1: 'Maligayang pagdating sa Sari-Sari Smart! Ang tour na ito ay gagabay sa iyo sa pang-araw-araw na gawain ng iyong tindahan.',
+      mainTutorial1: 'Maligayang pagdating sa TindaGo! Ang tour na ito ay gagabay sa iyo sa pang-araw-araw na gawain ng iyong tindahan.',
       mainTutorial2: 'Ang Stock card ay nagpapakita ng mga item na nauubos o wala na. I-tap ang Stock sa nav para tingnan ang iyong inventory.',
       mainTutorial3: 'Ang Debt card ay nagpapakita ng utang ng mga kostumer. I-tap ang Debts para makita at subaybayan ang mga bayad.',
       mainTutorial4: 'Kapag handa na, i-tap ang "Simulan ang Araw" para buksan ang tindahan at magsimulang magtala ng benta.',
@@ -805,6 +808,7 @@
       addProductTutorial3: 'Itakda ang markup percentage. Ang markup helper ay awtomatikong nagmumungkahi ng tamang selling price.',
       addProductTutorial4: 'Ilagay ang presyo ng benta o tanggapin ang mungkahi mula sa markup helper.',
       addProductTutorial5: 'I-tap "Save" para idagdag ang produkto sa iyong inventory. Maaari mo itong i-edit mamaya mula sa Stock page.',
+      tutorialReplayHint: 'Maaari mong i-tap ang ? button kahit kailan para i-replay ang tutorial na ito.',
       // Tutorial Labels
       tutMain: 'Main na Tutorial',
       tutMorning: 'Morning Check na Tutorial',
@@ -908,7 +912,7 @@
       reportTutorial4: 'Ang mga recent transactions ay lumalabas dito na may detalye ng bawat benta.',
       reportTutorial5: 'Ang Best-Selling Products section ay nagpapakita ng iyong mga top-performing items.',
       reportTutorial6: 'Ang low-stock items ay nakalista dito para malaman mo kung ano ang kailangan i-restock.',
-      helpTutorial1: 'Ito ang Help page — ang iyong gabay sa paggamit ng Sari-Sari Smart nang epektibo.',
+      helpTutorial1: 'Ito ang Help page — ang iyong gabay sa paggamit ng TindaGo nang epektibo.',
       helpTutorial2: 'Ang Tutorial Selector ay nagbibigay-daan sa iyo na pumili ng iba\'t ibang tutorial. Pumili ng tutorial mula sa dropdown at i-tap ang "Launch" para magsimula ng guided tour.',
       helpTutorial3: 'Ang "How to Use" button ay nagbubukas ng detalyadong gabay na may step-by-step na tagubilin para sa pag-record ng benta, pagdagdag ng stock, pagsubaybay ng utang, at iba pa.',
       helpTutorial4: 'Ang Contact section ay nagpapakita kung paano makipag-ugnayan sa support para sa mga tanong o feedback.',
@@ -990,14 +994,14 @@
       howToUse: 'Paano Gamitin',
       contactInfo: 'Makipag-ugnayan',
       aboutApp: 'Tungkol sa App',
-      contactText: 'Para sa mga tanong o feedback, mag-email sa support@sarisarismart.com',
-      aboutText: 'Sari-Sari Smart v3.0 — isang store management app para sa mga may-ari ng sari-sari store.',
+      contactText: 'Para sa mga tanong o feedback, mag-email sa support@tindago.com',
+      aboutText: 'TindaGo v3.0 — isang store management app para sa mga may-ari ng sari-sari store.',
       howToSales: 'Itala ang iyong araw-araw na cash sales at specific item sales sa Sales page.',
       howToStock: 'Magdagdag ng produkto, mag-restock, at subaybayan ang inventory sa Stocks page.',
       howToDebts: 'Subaybayan ang mga utang ng kostumer at magtala ng bayad sa Debts page.',
       howToReports: 'Tingnan ang performance ng iyong tindahan sa Reports page.',
       howToSettings: 'I-customize ang wika, laki ng text, pangalan ng tindahan at may-ari sa Settings.',
-      moreSection: 'Higit Pa',
+      moreSection: 'Iba Pa',
       stocksLink: 'Stock',
       debtsLink: 'Utang',
       // Add product
@@ -1022,27 +1026,17 @@
       brandPlaceholder: 'Hal. Ligo, Bear Brand',
       packageSizePlaceholder: 'Hal. 155g, 1L',
       catAll: 'Lahat',
-      catFood: 'Pagkain',
-      catCanned: 'Delata',
-      catCondiments: 'Pampalasa',
-      catSnacks: 'Meryenda',
-      catBeverages: 'Inumin',
-      catPersonalCare: 'Pampaganda',
-      catHousehold: 'Pambahay',
-      catDryGoods: 'Tuyong Paninda',
-      catOther: 'Iba pa',
-      unitPiece: 'piraso',
-      unitSachet: 'sachet',
-      unitPack: 'pack',
-      unitBox: 'kahon',
-      unitBottle: 'bote',
-      unitCan: 'lata',
-      unitKg: 'kg',
-      unitG: 'g',
-      unitL: 'L',
-      unitMl: 'mL',
-      unitBundle: 'bundle',
-      unitDozen: 'dosena'
+      catSoftDrinks: 'Softdrinks', catBottledWater: 'Tubig', catInstantCoffee: 'Kape 3-in-1',
+      catInstantNoodles: 'Pansit Instant', catRice: 'Bigas', catCannedSardines: 'Sardinas',
+      catCannedTuna: 'Tuna en Lata', catEggs: 'Itlog', catBread: 'Tinapay / Pandesal', catBiscuits: 'Galletas / Biskwit',
+      catChocolate: 'Tsokolate / Kendi', catChips: 'Chips / Meryenda', catSalt: 'Asin', catSugar: 'Asukal',
+      catShampoo: 'Shampoo Sachet', catBathSoap: 'Sabon', catLaundry: 'Detergent', catToothcare: 'Toothpaste / Toothbrush',
+      catMosquito: 'Katol', catCigarettes: 'Sigarilyo', catOther: 'Iba pa',
+      catMore: 'Dagdag ▾', catLess: 'Bawas ▴',
+      unitPiece: 'piraso', unitSachet: 'sachet', unitPack: 'pack', unitBox: 'kahon',
+      unitBottle: 'bote', unitCan: 'lata', unitKg: 'kg', unitG: 'g',
+      unitL: 'L', unitMl: 'mL', unitBundle: 'bundle', unitDozen: 'dosena',
+      unitSack: 'sako', unitLoaf: 'loaf', unitTube: 'tube', unitBar: 'bar', unitSticks: 'sticks'
     }
   };
 
@@ -1162,16 +1156,19 @@
   // PRODUCT DETAILS — units, brands, categories
   // ============================================
   // Category keys (keep in sync with the i18n cat* keys).
-  var PRODUCT_CATEGORIES = ['food', 'canned', 'condiments', 'snacks', 'beverages', 'personal_care', 'household', 'dry_goods', 'other'];
+  var PRODUCT_CATEGORIES = ['soft_drinks','bottled_water','instant_coffee','instant_noodles','rice','canned_sardines','canned_tuna','eggs','bread','biscuits','chocolate','chips','salt','sugar','shampoo','bath_soap','laundry','toothcare','mosquito','cigarettes'];
   // Unit keys (keep in sync with the i18n unit* keys).
-  var PRODUCT_UNITS = ['piece', 'sachet', 'pack', 'box', 'bottle', 'can', 'kg', 'g', 'L', 'mL', 'bundle', 'dozen'];
+  var PRODUCT_UNITS = ['piece', 'sachet', 'pack', 'box', 'bottle', 'can', 'kg', 'g', 'L', 'mL', 'bundle', 'dozen', 'sack', 'loaf', 'tube', 'bar', 'sticks'];
 
   function productCategoryLabel(key) {
     if (!key) return '';
     var map = {
-      food: 'catFood', canned: 'catCanned', condiments: 'catCondiments',
-      snacks: 'catSnacks', beverages: 'catBeverages', personal_care: 'catPersonalCare',
-      household: 'catHousehold', dry_goods: 'catDryGoods', other: 'catOther'
+      soft_drinks:'catSoftDrinks',bottled_water:'catBottledWater',instant_coffee:'catInstantCoffee',
+      instant_noodles:'catInstantNoodles',rice:'catRice',canned_sardines:'catCannedSardines',
+      canned_tuna:'catCannedTuna',eggs:'catEggs',bread:'catBread',biscuits:'catBiscuits',
+      chocolate:'catChocolate',chips:'catChips',salt:'catSalt',sugar:'catSugar',
+      shampoo:'catShampoo',bath_soap:'catBathSoap',laundry:'catLaundry',toothcare:'catToothcare',
+      mosquito:'catMosquito',cigarettes:'catCigarettes'
     };
     return t(map[key] || 'catOther');
   }
@@ -1181,7 +1178,8 @@
     var map = {
       piece: 'unitPiece', sachet: 'unitSachet', pack: 'unitPack', box: 'unitBox',
       bottle: 'unitBottle', can: 'unitCan', kg: 'unitKg', g: 'unitG',
-      L: 'unitL', mL: 'unitMl', bundle: 'unitBundle', dozen: 'unitDozen'
+      L: 'unitL', mL: 'unitMl', bundle: 'unitBundle', dozen: 'unitDozen',
+      sack: 'unitSack', loaf: 'unitLoaf', tube: 'unitTube', bar: 'unitBar', sticks: 'unitSticks'
     };
     return t(map[key] || key);
   }
@@ -1311,10 +1309,12 @@
       var d = localStorage.getItem('sss_v3_lastRestockDate');
       if (!d) return -1;
       var then = new Date(JSON.parse(d));
+      if (isNaN(then.getTime())) { localStorage.removeItem('sss_v3_lastRestockDate'); return -1; }
       var now = new Date();
       var diff = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+      if (diff < 0 || diff > 365) { localStorage.removeItem('sss_v3_lastRestockDate'); return -1; }
       return diff;
-    } catch(e) { return -1; }
+    } catch(e) { localStorage.removeItem('sss_v3_lastRestockDate'); return -1; }
   }
 
   // ─── Overdue store detection (left open across business days) ───
@@ -1490,7 +1490,8 @@
         { textKey: 'mainTutorial11', highlight: '#manageStockSearch', page: 'inventory' },
         { textKey: 'mainTutorial12', highlight: 'a[href="add_product.html"].btn-primary', page: 'inventory' },
         { textKey: 'mainTutorial13', highlight: '#manageTotalDebt', page: 'debts' },
-        { textKey: 'mainTutorial14', highlight: '#settingsLanguage', page: 'setting' }
+        { textKey: 'mainTutorial14', highlight: '#settingsLanguage', page: 'setting' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn', page: 'setting' }
       ]
     },
     morning: {
@@ -1501,7 +1502,8 @@
         { textKey: 'morningTutorial2', highlight: '#morningStockTitle' },
         { textKey: 'morningTutorial3', highlight: '#morningDebtTitle' },
         { textKey: 'morningTutorial4', highlight: '#morningYesterdayTitle' },
-        { textKey: 'morningTutorial5', highlight: '#btnStartDay' }
+        { textKey: 'morningTutorial5', highlight: '#btnStartDay' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     day: {
@@ -1513,7 +1515,8 @@
         { textKey: 'dayTutorial3', highlight: '#dayItemsSold' },
         { textKey: 'dayTutorial4', highlight: '#dayUtang' },
         { textKey: 'dayTutorial5', highlight: '#dayTransactionList' },
-        { textKey: 'dayTutorial6', highlight: '#btnCloseDay' }
+        { textKey: 'dayTutorial6', highlight: '#btnCloseDay' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     checkout: {
@@ -1524,7 +1527,8 @@
         { textKey: 'checkoutTutorial2', highlight: '#btnAddToCart' },
         { textKey: 'checkoutTutorial3', highlight: '#saleCartSection' },
         { textKey: 'checkoutTutorial4', highlight: '#salePayCredit' },
-        { textKey: 'checkoutTutorial5', highlight: '#btnCompleteSale' }
+        { textKey: 'checkoutTutorial5', highlight: '#btnCompleteSale' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     closing: {
@@ -1538,7 +1542,8 @@
         { textKey: 'closingTutorial5', highlight: '#closingSoldItems' },
         { textKey: 'closingTutorial6', highlight: '#closingLowStock' },
         { textKey: 'closingTutorial7', highlight: '#closingDebts' },
-        { textKey: 'closingTutorial8', highlight: '#btnCompleteDay' }
+        { textKey: 'closingTutorial8', highlight: '#btnCompleteDay' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     inventory: {
@@ -1549,7 +1554,8 @@
         { textKey: 'inventoryTutorial2', highlight: '#manageStockSearch' },
         { textKey: 'inventoryTutorial3', highlight: 'a[href="add_product.html"].btn-primary' },
         { textKey: 'inventoryTutorial4', highlight: '#manageInventoryList' },
-        { textKey: 'inventoryTutorial5', highlight: '.inv-manage-item:first-child' }
+        { textKey: 'inventoryTutorial5', highlight: '.inv-manage-item:first-child' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     debts: {
@@ -1560,7 +1566,8 @@
         { textKey: 'debtsTutorial2', highlight: '#manageTotalDebt' },
         { textKey: 'debtsTutorial3', highlight: 'a[href="setting.html"]' },
         { textKey: 'debtsTutorial4', highlight: '#manageDebtsList' },
-        { textKey: 'debtsTutorial5', highlight: '.debt-manage-item:first-child .debt-manage-pay-btn' }
+        { textKey: 'debtsTutorial5', highlight: '.debt-manage-item:first-child .debt-manage-pay-btn' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     setting: {
@@ -1571,7 +1578,8 @@
         { textKey: 'settingTutorial2', highlight: '#settingsLanguage' },
         { textKey: 'settingTutorial3', highlight: '.text-size-options' },
         { textKey: 'settingTutorial4', highlight: '#settingsStoreName' },
-        { textKey: 'settingTutorial5', highlight: '#settingsOwnerName' }
+        { textKey: 'settingTutorial5', highlight: '#settingsOwnerName' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     add_product: {
@@ -1582,7 +1590,8 @@
         { textKey: 'addProductTutorial2', highlight: '#productName' },
         { textKey: 'addProductTutorial3', highlight: '#productCost' },
         { textKey: 'addProductTutorial4', highlight: '#productPrice' },
-        { textKey: 'addProductTutorial5', highlight: '.btn-primary.btn-full' }
+        { textKey: 'addProductTutorial5', highlight: '.btn-primary.btn-full' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     restock: {
@@ -1596,7 +1605,8 @@
         { textKey: 'restockTutorial5', highlight: '#restockContinueBtn' },
         { textKey: 'restockTutorial6', highlight: '#restockPurchaseProduct' },
         { textKey: 'restockTutorial7', highlight: '#restockPurchaseList' },
-        { textKey: 'restockTutorial8', highlight: '#restockDoneBtn' }
+        { textKey: 'restockTutorial8', highlight: '#restockDoneBtn' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     new_debt: {
@@ -1606,7 +1616,8 @@
         { textKey: 'newDebtTutorial1', highlight: null },
         { textKey: 'newDebtTutorial2', highlight: '#newDebtCustomer' },
         { textKey: 'newDebtTutorial3', highlight: '#newDebtAmount' },
-        { textKey: 'newDebtTutorial4', highlight: '.btn-primary.btn-full' }
+        { textKey: 'newDebtTutorial4', highlight: '.btn-primary.btn-full' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     product_detail: {
@@ -1616,7 +1627,8 @@
         { textKey: 'productDetailTutorial1', highlight: null },
         { textKey: 'productDetailTutorial2', highlight: '#pdStockAlert' },
         { textKey: 'productDetailTutorial3', highlight: '#pdActions' },
-        { textKey: 'productDetailTutorial4', highlight: '#pdDeleteBtn' }
+        { textKey: 'productDetailTutorial4', highlight: '#pdDeleteBtn' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     debtor_detail: {
@@ -1627,7 +1639,7 @@
         { textKey: 'customerDebtDetailTutorial2', highlight: '#cddBalanceCard' },
         { textKey: 'customerDebtDetailTutorial3', highlight: '#cddLedger' },
         { textKey: 'customerDebtDetailTutorial4', highlight: '#cddRecordPaymentBtn' },
-        { textKey: 'customerDebtDetailTutorial5', highlight: null }
+        { textKey: 'customerDebtDetailTutorial5', highlight: '#headerTutorialBtn' }
       ]
     },
     record_payment: {
@@ -1637,7 +1649,8 @@
         { textKey: 'recordPaymentTutorial1', highlight: '#rpAmountField' },
         { textKey: 'recordPaymentTutorial2', highlight: '#rpRemainingPreview' },
         { textKey: 'recordPaymentTutorial3', highlight: '#rpNoteField' },
-        { textKey: 'recordPaymentTutorial4', highlight: '#rpPayBtn' }
+        { textKey: 'recordPaymentTutorial4', highlight: '#rpPayBtn' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     expenses: {
@@ -1646,7 +1659,8 @@
       steps: [
         { textKey: 'expensesTutorial1', highlight: null },
         { textKey: 'expensesTutorial2', highlight: '#expenseCategory' },
-        { textKey: 'expensesTutorial3', highlight: '#expenseList' }
+        { textKey: 'expensesTutorial3', highlight: '#expenseList' },
+        { textKey: 'tutorialReplayHint', highlight: '#headerTutorialBtn' }
       ]
     },
     report: {
@@ -1869,6 +1883,12 @@
       window.location.href = nextStepData.page + '.html?tutorial=true';
     } else {
       _tutorialState.step = nextStep;
+      // Restock tutorial parity: when advancing into Step 2 territory
+      // (step index >= 5), trigger the step transition so Step 2 elements
+      // are visible and highlightable.
+      if (tutorialId === 'restock' && nextStep === 5 && typeof window.restockContinueToPurchases === 'function') {
+        window.restockContinueToPurchases();
+      }
       renderTutorialStep();
     }
   }
@@ -1888,8 +1908,15 @@
     if (prevStepData.page && prevStepData.page !== currentPage) {
       saveTutorialState(tutorialId, prevStep, _tutorialState.isReplay);
       window.location.href = prevStepData.page + '.html?tutorial=true';
+
     } else {
       _tutorialState.step = prevStep;
+      // Restock tutorial parity: when going back into Step 1 territory
+      // (step index <= 4), trigger the back transition so Step 1 elements
+      // are visible and highlightable.
+      if (tutorialId === 'restock' && prevStep <= 4 && typeof window.restockBackToStep1 === 'function') {
+        window.restockBackToStep1();
+      }
       renderTutorialStep();
     }
   }
@@ -1948,29 +1975,149 @@
   // SAMPLE DATA
   // ============================================
   function getSampleProducts() {
-    // lowStockThreshold is intentionally present on SOME products and absent
-    // on others so both code paths (per-product threshold vs global Settings
-    // fallback) can be exercised — see getStockStatus().
+    // 120-item sari-sari store inventory. Quantities use variety (0 / low / plenty)
+    // so all three stock statuses (out / low / plenty) are represented for demos.
     return [
-      { id: 'p1', name: 'Bigas', category: 'food', brand: '', unit: 'kg', packageSize: '1kg', costPrice: 45, sellingPrice: 55, quantity: 20, lowStockThreshold: 10 },
-      { id: 'p2', name: 'Mantika', category: 'dry_goods', brand: '', unit: 'L', packageSize: '1L', costPrice: 22, sellingPrice: 30, quantity: 3 },
-      { id: 'p3', name: 'Asin', category: 'condiments', brand: '', unit: 'sachet', packageSize: '', costPrice: 10, sellingPrice: 15, quantity: 0 },
-      { id: 'p4', name: 'Canned Tuna', category: 'canned', brand: 'Ligo', unit: 'can', packageSize: '155g', costPrice: 18, sellingPrice: 25, quantity: 30, lowStockThreshold: 12 },
-      { id: 'p5', name: 'Instant Noodles', category: 'food', brand: 'Lucky Me', unit: 'pack', packageSize: '60g', costPrice: 10, sellingPrice: 15, quantity: 8 },
-      { id: 'p6', name: 'Kape 3in1', category: 'beverages', brand: 'Nescaf\u00e9', unit: 'sachet', packageSize: '', costPrice: 5, sellingPrice: 8, quantity: 50, lowStockThreshold: 20 },
-      { id: 'p7', name: 'Asukal', category: 'food', brand: '', unit: 'kg', packageSize: '1kg', costPrice: 50, sellingPrice: 65, quantity: 10 },
-      { id: 'p8', name: 'Gatas Powder', category: 'beverages', brand: 'Bear Brand', unit: 'sachet', packageSize: '25g', costPrice: 28, sellingPrice: 38, quantity: 6, lowStockThreshold: 10 },
-      { id: 'p9', name: 'Sardinas', category: 'canned', brand: '555', unit: 'can', packageSize: '155g', costPrice: 15, sellingPrice: 22, quantity: 25 },
-      { id: 'p10', name: 'Shampoo Sachet', category: 'personal_care', brand: 'Sunsilk', unit: 'sachet', packageSize: '', costPrice: 3, sellingPrice: 5, quantity: 100 },
-      { id: 'p11', name: 'Sabon', category: 'personal_care', brand: 'Safeguard', unit: 'piece', packageSize: '', costPrice: 10, sellingPrice: 16, quantity: 2, lowStockThreshold: 5 },
-      { id: 'p12', name: 'Toyo', category: 'condiments', brand: 'Silver Swan', unit: 'bottle', packageSize: '350mL', costPrice: 12, sellingPrice: 18, quantity: 15 },
-      // One sample per previously-uncovered category (snacks / household / other).
-      { id: 'p13', name: 'Chichirya', category: 'snacks', brand: 'Jack \'n Jill', unit: 'pack', packageSize: '90g', costPrice: 8, sellingPrice: 12, quantity: 40 },
-      { id: 'p14', name: 'Detergent', category: 'household', brand: 'Surf', unit: 'sachet', packageSize: '50g', costPrice: 6, sellingPrice: 10, quantity: 35, lowStockThreshold: 15 },
-      { id: 'p15', name: 'Lighter', category: 'other', brand: '', unit: 'piece', packageSize: '', costPrice: 7, sellingPrice: 12, quantity: 24 },
-      // Extra unit coverage (bundle / dozen).
-      { id: 'p16', name: 'Pisi (Bamboo Ties)', category: 'dry_goods', brand: '', unit: 'bundle', packageSize: '25 pcs', costPrice: 20, sellingPrice: 30, quantity: 12 },
-      { id: 'p17', name: 'Itlog', category: 'food', brand: '', unit: 'dozen', packageSize: '', costPrice: 90, sellingPrice: 115, quantity: 4 }
+      // ── Soft Drinks (6) ──
+      { id:'s1', name:'Coca-Cola Original Taste', category:'soft_drinks', brand:'Coca-Cola', unit:'bottle', packageSize:'290ml', quantity:20, costPrice:18, sellingPrice:22.5, lowStockThreshold:6 },
+      { id:'s2', name:'Pepsi', category:'soft_drinks', brand:'Pepsi', unit:'bottle', packageSize:'330ml', quantity:20, costPrice:18, sellingPrice:22.5, lowStockThreshold:6 },
+      { id:'s3', name:'Royal Tru-Orange', category:'soft_drinks', brand:'Royal', unit:'bottle', packageSize:'330ml', quantity:0, costPrice:18, sellingPrice:22.5, lowStockThreshold:6 },
+      { id:'s4', name:'Sprite', category:'soft_drinks', brand:'Sprite', unit:'bottle', packageSize:'330ml', quantity:20, costPrice:18, sellingPrice:22.5, lowStockThreshold:6 },
+      { id:'s5', name:'Mountain Dew', category:'soft_drinks', brand:'Mountain Dew', unit:'bottle', packageSize:'330ml', quantity:20, costPrice:18, sellingPrice:22.5, lowStockThreshold:6 },
+      { id:'s6', name:'RC Cola', category:'soft_drinks', brand:'RC Cola', unit:'bottle', packageSize:'330ml', quantity:3, costPrice:15, sellingPrice:18.75, lowStockThreshold:6 },
+      // ── Bottled Water (6) ──
+      { id:'s7', name:'Wilkins Pure', category:'bottled_water', brand:'Wilkins', unit:'bottle', packageSize:'500ml', quantity:20, costPrice:10, sellingPrice:13, lowStockThreshold:6 },
+      { id:'s8', name:'Absolute Purified Water', category:'bottled_water', brand:'Absolute', unit:'bottle', packageSize:'500ml', quantity:20, costPrice:10, sellingPrice:13, lowStockThreshold:6 },
+      { id:'s9', name:'Nature\u2019s Spring', category:'bottled_water', brand:'Nature\u2019s Spring', unit:'bottle', packageSize:'500ml', quantity:20, costPrice:9, sellingPrice:11.7, lowStockThreshold:6 },
+      { id:'s10', name:'Summit Water', category:'bottled_water', brand:'Summit', unit:'bottle', packageSize:'500ml', quantity:0, costPrice:10, sellingPrice:13, lowStockThreshold:6 },
+      { id:'s11', name:'Viva Mineral Water', category:'bottled_water', brand:'Viva', unit:'bottle', packageSize:'500ml', quantity:4, costPrice:9, sellingPrice:11.7, lowStockThreshold:6 },
+      { id:'s12', name:'Aquabest Purified Water', category:'bottled_water', brand:'Aquabest', unit:'bottle', packageSize:'500ml', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      // ── Instant Coffee (6) ──
+      { id:'s13', name:'Nescaf\u00e9 Classic', category:'instant_coffee', brand:'Nescaf\u00e9', unit:'sachet', packageSize:'25g', quantity:20, costPrice:9, sellingPrice:11.7, lowStockThreshold:6 },
+      { id:'s14', name:'Great Taste 3-in-1', category:'instant_coffee', brand:'Great Taste', unit:'sachet', packageSize:'25g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      { id:'s15', name:'Kopiko Brown Coffee', category:'instant_coffee', brand:'Kopiko', unit:'sachet', packageSize:'25g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      { id:'s16', name:'San Mig Coffee 3-in-1', category:'instant_coffee', brand:'San Mig Coffee', unit:'sachet', packageSize:'20g', quantity:3, costPrice:7, sellingPrice:9.1, lowStockThreshold:6 },
+      { id:'s17', name:'Caf\u00e9 Puro', category:'instant_coffee', brand:'Caf\u00e9 Puro', unit:'sachet', packageSize:'25g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      { id:'s18', name:'UCC 3-in-1 Coffee', category:'instant_coffee', brand:'UCC', unit:'sachet', packageSize:'20g', quantity:20, costPrice:10, sellingPrice:13, lowStockThreshold:6 },
+      // ── Instant Noodles (6) ──
+      { id:'s19', name:'Lucky Me! Pancit Canton Original', category:'instant_noodles', brand:'Lucky Me!', unit:'pack', packageSize:'60g', quantity:20, costPrice:11, sellingPrice:13.75, lowStockThreshold:6 },
+      { id:'s20', name:'Payless Pancit Canton', category:'instant_noodles', brand:'Payless', unit:'pack', packageSize:'60g', quantity:0, costPrice:9, sellingPrice:11.25, lowStockThreshold:6 },
+      { id:'s21', name:'Nissin Ramen', category:'instant_noodles', brand:'Nissin', unit:'pack', packageSize:'55g', quantity:20, costPrice:10, sellingPrice:12.5, lowStockThreshold:6 },
+      { id:'s22', name:'QuickChow Pancit Canton', category:'instant_noodles', brand:'QuickChow', unit:'pack', packageSize:'60g', quantity:20, costPrice:9, sellingPrice:11.25, lowStockThreshold:6 },
+      { id:'s23', name:'Ho-Mi Instant Noodles', category:'instant_noodles', brand:'Ho-Mi', unit:'pack', packageSize:'55g', quantity:4, costPrice:8, sellingPrice:10, lowStockThreshold:6 },
+      { id:'s24', name:'Yakisoba Instant Noodles', category:'instant_noodles', brand:'Yakisoba', unit:'pack', packageSize:'60g', quantity:20, costPrice:11, sellingPrice:13.75, lowStockThreshold:6 },
+      // ── Rice (6) ──
+      { id:'s25', name:'Do\u00f1a Maria Jasponica', category:'rice', brand:'Do\u00f1a Maria', unit:'sack', packageSize:'5kg', quantity:20, costPrice:360, sellingPrice:414, lowStockThreshold:2 },
+      { id:'s26', name:'Dinorado Rice', category:'rice', brand:'Dinarado', unit:'sack', packageSize:'5kg', quantity:20, costPrice:330, sellingPrice:379.5, lowStockThreshold:2 },
+      { id:'s27', name:'Sinandomeng Rice', category:'rice', brand:'Sinandomeng', unit:'sack', packageSize:'5kg', quantity:20, costPrice:300, sellingPrice:345, lowStockThreshold:2 },
+      { id:'s28', name:'Maharlika Rice', category:'rice', brand:'Maharlika', unit:'sack', packageSize:'5kg', quantity:0, costPrice:320, sellingPrice:368, lowStockThreshold:2 },
+      { id:'s29', name:'Jasmine Rice', category:'rice', brand:'Jasmine', unit:'sack', packageSize:'5kg', quantity:1, costPrice:350, sellingPrice:402.5, lowStockThreshold:2 },
+      { id:'s30', name:'Jasmate Rice', category:'rice', brand:'Jasmate', unit:'sack', packageSize:'5kg', quantity:20, costPrice:340, sellingPrice:391, lowStockThreshold:2 },
+      // ── Canned Sardines (6) ──
+      { id:'s31', name:'Ligo Sardines in Tomato Sauce', category:'canned_sardines', brand:'Ligo', unit:'can', packageSize:'155g', quantity:20, costPrice:20, sellingPrice:25, lowStockThreshold:4 },
+      { id:'s32', name:'Mega Sardines in Tomato Sauce', category:'canned_sardines', brand:'Mega', unit:'can', packageSize:'155g', quantity:20, costPrice:20, sellingPrice:25, lowStockThreshold:4 },
+      { id:'s33', name:'Young\u2019s Town Sardines', category:'canned_sardines', brand:'Young\u2019s Town', unit:'can', packageSize:'155g', quantity:20, costPrice:18, sellingPrice:22.5, lowStockThreshold:4 },
+      { id:'s34', name:'555 Sardines', category:'canned_sardines', brand:'555', unit:'can', packageSize:'155g', quantity:20, costPrice:21, sellingPrice:26.25, lowStockThreshold:4 },
+      { id:'s35', name:'Argentina Sardines', category:'canned_sardines', brand:'Argentina', unit:'can', packageSize:'155g', quantity:2, costPrice:19, sellingPrice:23.75, lowStockThreshold:4 },
+      { id:'s36', name:'Atami Sardines', category:'canned_sardines', brand:'Atami', unit:'can', packageSize:'155g', quantity:20, costPrice:18, sellingPrice:22.5, lowStockThreshold:4 },
+      // ── Canned Tuna (6) ──
+      { id:'s37', name:'Century Tuna Flakes', category:'canned_tuna', brand:'Century Tuna', unit:'can', packageSize:'180g', quantity:20, costPrice:34, sellingPrice:42.5, lowStockThreshold:4 },
+      { id:'s38', name:'555 Tuna Flakes', category:'canned_tuna', brand:'555', unit:'can', packageSize:'155g', quantity:20, costPrice:28, sellingPrice:35, lowStockThreshold:4 },
+      { id:'s39', name:'Mega Tuna Flakes', category:'canned_tuna', brand:'Mega', unit:'can', packageSize:'180g', quantity:20, costPrice:30, sellingPrice:37.5, lowStockThreshold:4 },
+      { id:'s40', name:'San Marino Tuna Flakes', category:'canned_tuna', brand:'San Marino', unit:'can', packageSize:'180g', quantity:0, costPrice:29, sellingPrice:36.25, lowStockThreshold:4 },
+      { id:'s41', name:'Ligo Tuna Flakes', category:'canned_tuna', brand:'Ligo', unit:'can', packageSize:'180g', quantity:3, costPrice:30, sellingPrice:37.5, lowStockThreshold:4 },
+      { id:'s42', name:'Family\u2019s Choice Tuna', category:'canned_tuna', brand:'Family\u2019s Choice', unit:'can', packageSize:'180g', quantity:20, costPrice:27, sellingPrice:33.75, lowStockThreshold:4 },
+      // ── Eggs (6) ──
+      { id:'s43', name:'Bounty Fresh Chicken Egg', category:'eggs', brand:'Bounty Fresh', unit:'piece', packageSize:'Large', quantity:20, costPrice:9, sellingPrice:10.8, lowStockThreshold:12 },
+      { id:'s44', name:'Magnolia Chicken Egg', category:'eggs', brand:'Magnolia', unit:'piece', packageSize:'Large', quantity:20, costPrice:9.5, sellingPrice:11.4, lowStockThreshold:12 },
+      { id:'s45', name:'Sarimanok Chicken Egg', category:'eggs', brand:'Sarimanok', unit:'piece', packageSize:'Large', quantity:8, costPrice:8.5, sellingPrice:10.2, lowStockThreshold:12 },
+      { id:'s46', name:'Local Farm Chicken Egg', category:'eggs', brand:'Local Farm', unit:'piece', packageSize:'Medium', quantity:20, costPrice:8, sellingPrice:9.6, lowStockThreshold:12 },
+      { id:'s47', name:'Free Range Chicken Egg', category:'eggs', brand:'Free Range Farm', unit:'piece', packageSize:'Large', quantity:20, costPrice:12, sellingPrice:14.4, lowStockThreshold:12 },
+      { id:'s48', name:'Organic Chicken Egg', category:'eggs', brand:'Organic Farm', unit:'piece', packageSize:'Large', quantity:20, costPrice:13, sellingPrice:15.6, lowStockThreshold:12 },
+      // ── Bread / Pandesal (6) ──
+      { id:'s49', name:'Gardenia Pinoy Tasty', category:'bread', brand:'Gardenia', unit:'loaf', packageSize:'400g', quantity:20, costPrice:45, sellingPrice:54, lowStockThreshold:4 },
+      { id:'s50', name:'Gardenia Classic White Bread', category:'bread', brand:'Gardenia', unit:'loaf', packageSize:'400g', quantity:20, costPrice:48, sellingPrice:57.6, lowStockThreshold:4 },
+      { id:'s51', name:'Pinoy Tasty White Bread', category:'bread', brand:'Pinoy Tasty', unit:'loaf', packageSize:'450g', quantity:0, costPrice:40, sellingPrice:48, lowStockThreshold:4 },
+      { id:'s52', name:'Marby White Bread', category:'bread', brand:'Marby', unit:'loaf', packageSize:'400g', quantity:2, costPrice:38, sellingPrice:45.6, lowStockThreshold:4 },
+      { id:'s53', name:'Julie\u2019s Pandesal', category:'bread', brand:'Julie\u2019s', unit:'pack', packageSize:'10pcs', quantity:20, costPrice:30, sellingPrice:36, lowStockThreshold:4 },
+      { id:'s54', name:'Local Bakery Pandesal', category:'bread', brand:'Local Bakery', unit:'pack', packageSize:'10pcs', quantity:20, costPrice:25, sellingPrice:30, lowStockThreshold:4 },
+      // ── Biscuits / Cookies (6) ──
+      { id:'s55', name:'Fita Crackers', category:'biscuits', brand:'Fita', unit:'pack', packageSize:'30g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      { id:'s56', name:'SkyFlakes Crackers', category:'biscuits', brand:'SkyFlakes', unit:'pack', packageSize:'25g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      { id:'s57', name:'Cream-O Chocolate Sandwich', category:'biscuits', brand:'Cream-O', unit:'pack', packageSize:'33g', quantity:20, costPrice:9, sellingPrice:11.7, lowStockThreshold:6 },
+      { id:'s58', name:'Oreo Original', category:'biscuits', brand:'Oreo', unit:'pack', packageSize:'27g', quantity:3, costPrice:10, sellingPrice:13, lowStockThreshold:6 },
+      { id:'s59', name:'Marie Biscuits', category:'biscuits', brand:'Marie', unit:'pack', packageSize:'30g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      { id:'s60', name:'Rebisco Crackers', category:'biscuits', brand:'Rebisco', unit:'pack', packageSize:'32g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:6 },
+      // ── Chocolate / Candy (6) ──
+      { id:'s61', name:'Choc-Nut', category:'chocolate', brand:'Choc-Nut', unit:'piece', packageSize:'24g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:8 },
+      { id:'s62', name:'Flat Tops Chocolate', category:'chocolate', brand:'Flat Tops', unit:'piece', packageSize:'24g', quantity:20, costPrice:7, sellingPrice:9.1, lowStockThreshold:8 },
+      { id:'s63', name:'Cloud 9 Chocolate Bar', category:'chocolate', brand:'Cloud 9', unit:'piece', packageSize:'27g', quantity:20, costPrice:10, sellingPrice:13, lowStockThreshold:8 },
+      { id:'s64', name:'Maxx Candy', category:'chocolate', brand:'Maxx', unit:'piece', packageSize:'single', quantity:20, costPrice:2.5, sellingPrice:3.5, lowStockThreshold:15 },
+      { id:'s65', name:'White Rabbit Candy', category:'chocolate', brand:'White Rabbit', unit:'piece', packageSize:'single', quantity:20, costPrice:3, sellingPrice:4.05, lowStockThreshold:15 },
+      { id:'s66', name:'Kendi Mint Candy', category:'chocolate', brand:'Kendi Mint', unit:'piece', packageSize:'single', quantity:0, costPrice:2, sellingPrice:2.8, lowStockThreshold:15 },
+      // ── Chips / Snacks (6) ──
+      { id:'s67', name:'Piattos Cheese', category:'chips', brand:'Piattos', unit:'pack', packageSize:'85g', quantity:20, costPrice:30, sellingPrice:37.5, lowStockThreshold:6 },
+      { id:'s68', name:'Nova Multigrain Snacks', category:'chips', brand:'Nova', unit:'pack', packageSize:'78g', quantity:20, costPrice:30, sellingPrice:37.5, lowStockThreshold:6 },
+      { id:'s69', name:'Clover Chips Cheese', category:'chips', brand:'Clover Chips', unit:'pack', packageSize:'55g', quantity:20, costPrice:20, sellingPrice:25, lowStockThreshold:6 },
+      { id:'s70', name:'Chippy Barbecue', category:'chips', brand:'Chippy', unit:'pack', packageSize:'110g', quantity:20, costPrice:25, sellingPrice:31.25, lowStockThreshold:6 },
+      { id:'s71', name:'Oishi Prawn Crackers', category:'chips', brand:'Oishi', unit:'pack', packageSize:'60g', quantity:3, costPrice:18, sellingPrice:22.5, lowStockThreshold:6 },
+      { id:'s72', name:'Mang Juan Espesyal', category:'chips', brand:'Mang Juan', unit:'pack', packageSize:'90g', quantity:20, costPrice:25, sellingPrice:31.25, lowStockThreshold:6 },
+      // ── Salt (6) ──
+      { id:'s73', name:'La Filipina Iodized Salt', category:'salt', brand:'La Filipina', unit:'pack', packageSize:'500g', quantity:20, costPrice:15, sellingPrice:19.5, lowStockThreshold:5 },
+      { id:'s74', name:'Diamond Crystal Salt', category:'salt', brand:'Diamond Crystal', unit:'pack', packageSize:'500g', quantity:20, costPrice:18, sellingPrice:23.4, lowStockThreshold:5 },
+      { id:'s75', name:'Morton Iodized Salt', category:'salt', brand:'Morton', unit:'pack', packageSize:'500g', quantity:20, costPrice:22, sellingPrice:28.6, lowStockThreshold:5 },
+      { id:'s76', name:'Local Sea Salt', category:'salt', brand:'Sea Salt', unit:'pack', packageSize:'500g', quantity:20, costPrice:12, sellingPrice:15.6, lowStockThreshold:5 },
+      { id:'s77', name:'Iodized Salt', category:'salt', brand:'Iodized Salt', unit:'pack', packageSize:'500g', quantity:0, costPrice:13, sellingPrice:16.9, lowStockThreshold:5 },
+      { id:'s78', name:'Fine Table Salt', category:'salt', brand:'Fine Salt', unit:'pack', packageSize:'500g', quantity:20, costPrice:12, sellingPrice:15.6, lowStockThreshold:5 },
+      // ── Sugar (6) ──
+      { id:'s79', name:'Victorias Refined Sugar', category:'sugar', brand:'Victorias', unit:'pack', packageSize:'1kg', quantity:20, costPrice:80, sellingPrice:96, lowStockThreshold:5 },
+      { id:'s80', name:'Central Refined Sugar', category:'sugar', brand:'Central Azucarera', unit:'pack', packageSize:'1kg', quantity:20, costPrice:78, sellingPrice:93.6, lowStockThreshold:5 },
+      { id:'s81', name:'Sweet Crystal Sugar', category:'sugar', brand:'Sweet Crystal', unit:'pack', packageSize:'1kg', quantity:20, costPrice:75, sellingPrice:90, lowStockThreshold:5 },
+      { id:'s82', name:'C&H Sugar', category:'sugar', brand:'C&H', unit:'pack', packageSize:'1kg', quantity:0, costPrice:95, sellingPrice:114, lowStockThreshold:5 },
+      { id:'s83', name:'Domino Sugar', category:'sugar', brand:'Domino', unit:'pack', packageSize:'1kg', quantity:2, costPrice:90, sellingPrice:108, lowStockThreshold:5 },
+      { id:'s84', name:'Brown Sugar', category:'sugar', brand:'Brown Sugar', unit:'pack', packageSize:'1kg', quantity:20, costPrice:75, sellingPrice:90, lowStockThreshold:5 },
+      // ── Shampoo Sachets (6) ──
+      { id:'s85', name:'Sunsilk Shampoo', category:'shampoo', brand:'Sunsilk', unit:'sachet', packageSize:'12ml', quantity:20, costPrice:7, sellingPrice:9.45, lowStockThreshold:8 },
+      { id:'s86', name:'Cream Silk Conditioner', category:'shampoo', brand:'Cream Silk', unit:'sachet', packageSize:'12ml', quantity:20, costPrice:7, sellingPrice:9.45, lowStockThreshold:8 },
+      { id:'s87', name:'Pantene Shampoo', category:'shampoo', brand:'Pantene', unit:'sachet', packageSize:'12ml', quantity:20, costPrice:8, sellingPrice:10.8, lowStockThreshold:8 },
+      { id:'s88', name:'Head & Shoulders Shampoo', category:'shampoo', brand:'Head & Shoulders', unit:'sachet', packageSize:'12ml', quantity:20, costPrice:8, sellingPrice:10.8, lowStockThreshold:8 },
+      { id:'s89', name:'Palmolive Shampoo', category:'shampoo', brand:'Palmolive', unit:'sachet', packageSize:'12ml', quantity:20, costPrice:6.5, sellingPrice:8.78, lowStockThreshold:8 },
+      { id:'s90', name:'Rejoice Shampoo', category:'shampoo', brand:'Rejoice', unit:'sachet', packageSize:'12ml', quantity:3, costPrice:7, sellingPrice:9.45, lowStockThreshold:8 },
+      // ── Bath Soap (6) ──
+      { id:'s91', name:'Safeguard Classic', category:'bath_soap', brand:'Safeguard', unit:'bar', packageSize:'60g', quantity:20, costPrice:22, sellingPrice:27.5, lowStockThreshold:6 },
+      { id:'s92', name:'Dove Beauty Bar', category:'bath_soap', brand:'Dove', unit:'bar', packageSize:'90g', quantity:20, costPrice:45, sellingPrice:56.25, lowStockThreshold:5 },
+      { id:'s93', name:'Palmolive Naturals', category:'bath_soap', brand:'Palmolive', unit:'bar', packageSize:'90g', quantity:20, costPrice:25, sellingPrice:31.25, lowStockThreshold:6 },
+      { id:'s94', name:'Bioderm Soap', category:'bath_soap', brand:'Bioderm', unit:'bar', packageSize:'90g', quantity:0, costPrice:20, sellingPrice:25, lowStockThreshold:6 },
+      { id:'s95', name:'Silka Papaya Soap', category:'bath_soap', brand:'Silka', unit:'bar', packageSize:'65g', quantity:20, costPrice:25, sellingPrice:31.25, lowStockThreshold:6 },
+      { id:'s96', name:'Kojic Acid Soap', category:'bath_soap', brand:'Kojic', unit:'bar', packageSize:'65g', quantity:4, costPrice:25, sellingPrice:31.25, lowStockThreshold:6 },
+      // ── Laundry Detergent (6) ──
+      { id:'s97', name:'Surf Powder Detergent', category:'laundry', brand:'Surf', unit:'sachet', packageSize:'40g', quantity:20, costPrice:8, sellingPrice:10.4, lowStockThreshold:8 },
+      { id:'s98', name:'Ariel Powder Detergent', category:'laundry', brand:'Ariel', unit:'sachet', packageSize:'40g', quantity:20, costPrice:9, sellingPrice:11.7, lowStockThreshold:8 },
+      { id:'s99', name:'Tide Powder Detergent', category:'laundry', brand:'Tide', unit:'sachet', packageSize:'40g', quantity:20, costPrice:9, sellingPrice:11.7, lowStockThreshold:8 },
+      { id:'s100', name:'Champion Powder Detergent', category:'laundry', brand:'Champion', unit:'sachet', packageSize:'40g', quantity:20, costPrice:7, sellingPrice:9.1, lowStockThreshold:8 },
+      { id:'s101', name:'Pride Powder Detergent', category:'laundry', brand:'Pride', unit:'sachet', packageSize:'40g', quantity:0, costPrice:7, sellingPrice:9.1, lowStockThreshold:8 },
+      { id:'s102', name:'Breeze Powder Detergent', category:'laundry', brand:'Breeze', unit:'sachet', packageSize:'40g', quantity:3, costPrice:9, sellingPrice:11.7, lowStockThreshold:8 },
+      // ── Toothpaste / Toothbrush (6) ──
+      { id:'s103', name:'Colgate Toothpaste', category:'toothcare', brand:'Colgate', unit:'tube', packageSize:'50g', quantity:20, costPrice:45, sellingPrice:56.25, lowStockThreshold:5 },
+      { id:'s104', name:'Closeup Toothpaste', category:'toothcare', brand:'Closeup', unit:'tube', packageSize:'50g', quantity:20, costPrice:42, sellingPrice:52.5, lowStockThreshold:5 },
+      { id:'s105', name:'Hapee Toothpaste', category:'toothcare', brand:'Hapee', unit:'tube', packageSize:'50g', quantity:20, costPrice:35, sellingPrice:43.75, lowStockThreshold:5 },
+      { id:'s106', name:'Oral-B Toothbrush', category:'toothcare', brand:'Oral-B', unit:'piece', packageSize:'1pc', quantity:20, costPrice:35, sellingPrice:43.75, lowStockThreshold:5 },
+      { id:'s107', name:'Pepsodent Toothpaste', category:'toothcare', brand:'Pepsodent', unit:'tube', packageSize:'50g', quantity:20, costPrice:35, sellingPrice:43.75, lowStockThreshold:5 },
+      { id:'s108', name:'Systema Toothbrush', category:'toothcare', brand:'Systema', unit:'piece', packageSize:'1pc', quantity:2, costPrice:30, sellingPrice:37.5, lowStockThreshold:5 },
+      // ── Mosquito Coils (6) ──
+      { id:'s109', name:'Katol Mosquito Coil', category:'mosquito', brand:'Katol', unit:'pack', packageSize:'10 coils', quantity:20, costPrice:22, sellingPrice:28.6, lowStockThreshold:5 },
+      { id:'s110', name:'Baygon Mosquito Coil', category:'mosquito', brand:'Baygon', unit:'pack', packageSize:'10 coils', quantity:20, costPrice:35, sellingPrice:45.5, lowStockThreshold:5 },
+      { id:'s111', name:'Off! Mosquito Repellent', category:'mosquito', brand:'Off!', unit:'sachet', packageSize:'1pc', quantity:20, costPrice:12, sellingPrice:15.6, lowStockThreshold:5 },
+      { id:'s112', name:'Raid Mosquito Coil', category:'mosquito', brand:'Raid', unit:'pack', packageSize:'10 coils', quantity:20, costPrice:30, sellingPrice:39, lowStockThreshold:5 },
+      { id:'s113', name:'Lion Tiger Mosquito Coil', category:'mosquito', brand:'Lion Tiger', unit:'pack', packageSize:'10 coils', quantity:0, costPrice:20, sellingPrice:26, lowStockThreshold:5 },
+      { id:'s114', name:'Local Mosquito Coil', category:'mosquito', brand:'Local Brand', unit:'pack', packageSize:'10 coils', quantity:4, costPrice:18, sellingPrice:23.4, lowStockThreshold:5 },
+      // ── Cigarettes (6) ──
+      { id:'s115', name:'Marlboro Red', category:'cigarettes', brand:'Marlboro', unit:'pack', packageSize:'20 sticks', quantity:20, costPrice:140, sellingPrice:154, lowStockThreshold:5 },
+      { id:'s116', name:'Fortune Red', category:'cigarettes', brand:'Fortune', unit:'pack', packageSize:'20 sticks', quantity:20, costPrice:120, sellingPrice:132, lowStockThreshold:5 },
+      { id:'s117', name:'Winston Red', category:'cigarettes', brand:'Winston', unit:'pack', packageSize:'20 sticks', quantity:20, costPrice:130, sellingPrice:143, lowStockThreshold:5 },
+      { id:'s118', name:'Camel Blue', category:'cigarettes', brand:'Camel', unit:'pack', packageSize:'20 sticks', quantity:20, costPrice:130, sellingPrice:143, lowStockThreshold:5 },
+      { id:'s119', name:'Philip Morris Red', category:'cigarettes', brand:'Philip Morris', unit:'pack', packageSize:'20 sticks', quantity:20, costPrice:125, sellingPrice:137.5, lowStockThreshold:5 },
+      { id:'s120', name:'Mighty Red', category:'cigarettes', brand:'Mighty', unit:'pack', packageSize:'20 sticks', quantity:0, costPrice:110, sellingPrice:121, lowStockThreshold:5 }
     ];
   }
 
@@ -2023,7 +2170,11 @@
     // V2.71: normalize the expense log (older saves have no field at all)
     if (!state.expenseLog || !Array.isArray(state.expenseLog)) state.expenseLog = [];
 
+    // Seed sample products if none exist, or migrate from the old 17-item
+    // dataset (ids start with 'p') to the new 120-item dataset (ids start with 's').
     if (!state.products || state.products.length === 0) {
+      state.products = getSampleProducts();
+    } else if (state.products[0] && /^p\d+$/.test(state.products[0].id)) {
       state.products = getSampleProducts();
     }
 
@@ -2119,12 +2270,23 @@
 
     var lowItems = getLowStockItems();
     if (lowItems.length > 0) {
-      var warnHtml = lowItems.map(function(p) {
+      // Show out-of-stock first, then low-stock; only display top 2.
+      var sorted = lowItems.slice().sort(function(a, b) {
+        var sa = getStockStatus(a) === 'out' ? 0 : 1;
+        var sb = getStockStatus(b) === 'out' ? 0 : 1;
+        return sa - sb;
+      });
+      var shown = sorted.slice(0, 2);
+      var moreCount = lowItems.length - shown.length;
+      var warnHtml = shown.map(function(p) {
         var status = getStockStatus(p);
         var icon = status === 'out' ? '\ud83d\udd34' : '\u26a0\ufe0f';
         var label = status === 'out' ? t('noStock') : p.quantity + ' left';
         return icon + ' ' + p.name + ' \u2014 ' + label;
       }).join('<br>');
+      if (moreCount > 0) {
+        warnHtml += '<br><span style="color:var(--text-muted);font-size:var(--text-xs);">+' + moreCount + ' more</span>';
+      }
       if (dom.morningStockTitle) dom.morningStockTitle.textContent = '\u26a0\ufe0f ' + t('stockWarn', { n: lowItems.length });
       if (dom.morningStockDesc) dom.morningStockDesc.innerHTML = warnHtml;
     } else {
@@ -2907,18 +3069,22 @@
       }
     }
 
-    var lowItems = getLowStockItems();
+    var lowItems = state.products.filter(function(p) { return getStockStatus(p) === 'low'; })
+      .slice().sort(function(a, b) { return a.quantity - b.quantity; });
+    var outItems = state.products.filter(function(p) { return getStockStatus(p) === 'out'; })
+      .slice().sort(function(a, b) { return a.name.localeCompare(b.name); });
+    var displayItems = lowItems.concat(outItems).slice(0, 5);
     if (dom.closingLowStock) {
-      if (lowItems.length === 0) {
+      if (displayItems.length === 0) {
         dom.closingLowStock.innerHTML = '<div class="empty-state" style="padding:12px 0;">' + t('allStockOk') + '</div>';
       } else {
-        dom.closingLowStock.innerHTML = lowItems.map(function(p) {
+        dom.closingLowStock.innerHTML = displayItems.map(function(p) {
           var status = getStockStatus(p);
           var cls = status === 'out' ? 'danger' : 'warning';
           return '<div class="closing-item">' +
             '<span class="closing-item-name">' + p.name + '</span>' +
             '<span class="closing-item-value ' + cls + '">' +
-              (status === 'out' ? t('noStock') : p.quantity + ' left') +
+              p.quantity + ' left' +
             '</span>' +
           '</div>';
         }).join('');
@@ -3133,13 +3299,74 @@
   }
 
   // Category chip row above the inventory list (selection over typing).
+  // Default: horizontal scroll with first 6 categories visible + "More ▾".
+  // Expanded: all categories wrap onto multiple lines.
+  var CAT_CHIP_VISIBLE_DEFAULT = 6; // 'All' + first 5 categories
+  var catFiltersExpanded = false;
+
   function renderInventoryCatFilters() {
     if (!dom.inventoryCatFilters) return;
-    var chips = '<button class="cat-chip' + (inventoryCatFilter === '' ? ' active' : '') + '" onclick="setInventoryCatFilter(\'\')">' + t('catAll') + '</button>';
-    PRODUCT_CATEGORIES.forEach(function(k) {
-      chips += '<button class="cat-chip' + (inventoryCatFilter === k ? ' active' : '') + '" onclick="setInventoryCatFilter(\'' + k + '\')">' + productCategoryLabel(k) + '</button>';
-    });
+    var allKeys = [''].concat(PRODUCT_CATEGORIES);
+    var isExpanded = catFiltersExpanded;
+    dom.inventoryCatFilters.className = 'cat-chips' + (isExpanded ? ' expanded' : '');
+
+    var chips = '';
+    var visibleCount = isExpanded ? allKeys.length : Math.min(CAT_CHIP_VISIBLE_DEFAULT, allKeys.length);
+    for (var i = 0; i < visibleCount; i++) {
+      var k = allKeys[i];
+      var label = k === '' ? t('catAll') : productCategoryLabel(k);
+      var activeClass = inventoryCatFilter === k ? ' active' : '';
+      chips += '<button class="cat-chip' + activeClass + '" onclick="setInventoryCatFilter(\'' + k + '\')">' + label + '</button>';
+    }
+    if (allKeys.length > CAT_CHIP_VISIBLE_DEFAULT) {
+      var moreLabel = isExpanded ? t('catLess') : t('catMore');
+      chips += '<button class="cat-chip-more" onclick="toggleCatFilters()">' + moreLabel + '</button>';
+    }
     dom.inventoryCatFilters.innerHTML = chips;
+  }
+
+  function toggleCatFilters() {
+    catFiltersExpanded = !catFiltersExpanded;
+    renderInventoryCatFilters();
+  }
+
+  // Collapsible sections on closing page
+  var collapsedSections = {};
+  window.toggleCollapse = function(sectionId) {
+    collapsedSections[sectionId] = !collapsedSections[sectionId];
+    var isCollapsed = collapsedSections[sectionId];
+    var arrow = document.getElementById(sectionId + 'Toggle');
+    var content = document.getElementById('closing' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1));
+    if (arrow) {
+      var svg = arrow.querySelector('.collapse-arrow');
+      if (svg) svg.classList.toggle('open', !isCollapsed);
+    }
+    if (content) {
+      if (isCollapsed) {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        content.offsetHeight; // force reflow
+        content.classList.add('collapsed');
+      } else {
+        content.classList.remove('collapsed');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        setTimeout(function() { content.style.maxHeight = ''; }, 250);
+      }
+    }
+  }
+
+  // Prevent mouse-wheel from horizontally scrolling the chip row on desktop.
+  // In collapsed mode the row is overflow-x:auto but we don't want a vertical
+  // mouse-wheel scroll to be hijacked as a horizontal scroll.  We allow
+  // horizontal only when deltaX > deltaY (trackpad two-finger horizontal swipe).
+  if (dom.inventoryCatFilters) {
+    dom.inventoryCatFilters.addEventListener('wheel', function(e) {
+      if (catFiltersExpanded) return; // expanded = wrap layout, no scroll
+      var verticalIntent = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+      if (verticalIntent) {
+        // User wants to scroll the page — block the container from capturing it.
+        e.preventDefault();
+      }
+    }, { passive: false });
   }
 
   function setInventoryCatFilter(cat) {
@@ -3798,7 +4025,7 @@
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'sari-sari-smart-data-' + todayStr() + '.json';
+    a.download = 'tindago-data-' + todayStr() + '.json';
     a.click();
     URL.revokeObjectURL(url);
     showToast('Data exported!');
@@ -3997,7 +4224,7 @@
         break;
       case 'exportCsv':
         (function() {
-          var csv = 'Sari-Sari Smart - Data Export\n';
+          var csv = 'TindaGo - Data Export\n';
           csv += 'Exported: ' + new Date().toISOString() + '\n\n';
           csv += '=== PRODUCTS ===\n';
           csv += 'Name,Quantity,Cost,Sell Price,Markup\n';
@@ -4018,7 +4245,7 @@
           var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
           var link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = 'sari-sari-smart-data.csv';
+          link.download = 'tindago-data.csv';
           link.click();
           showToast('CSV exported!');
         })();
@@ -4916,7 +5143,7 @@
       var lines = [];
       var totalExpenses = getPeriodExpensesTotal(st.curStart);
       var netProfit = st.sum(st.curSales, 'profit') - totalExpenses;
-      lines.push(cell('Sari-Sari Smart Report'));
+      lines.push(cell('TindaGo Report'));
       lines.push(cell('Period') + ',' + cell(periodLabel));
       lines.push(cell(t('totalSales')) + ',' + cell(st.sum(st.curSales, 'amount').toFixed(2)));
       lines.push(cell(t('reportsProfit')) + ',' + cell(st.sum(st.curSales, 'profit').toFixed(2)));
@@ -4946,7 +5173,7 @@
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
-      a.download = 'sari-sari-smart-report-' + _reportPeriod + '-' + st.today + '.csv';
+      a.download = 'tindago-report-' + _reportPeriod + '-' + st.today + '.csv';
       document.body.appendChild(a);
       a.click();
       setTimeout(function() { URL.revokeObjectURL(url); a.remove(); }, 100);
@@ -5086,10 +5313,39 @@
       loadInventoryCatFilter();
       renderInventoryCatFilters();
       renderManageInventory();
+      // Back-to-top: show when cat filters scroll out of view.
+      (function() {
+        var btn = document.getElementById('backToTopBtn');
+        var catFilters = document.getElementById('inventoryCatFilters');
+        var content = document.getElementById('appContent');
+        if (!btn || !catFilters || !content) return;
+        content.addEventListener('scroll', function() {
+          var catRect = catFilters.getBoundingClientRect();
+          var contentRect = content.getBoundingClientRect();
+          btn.style.display = catRect.bottom < contentRect.top ? 'flex' : 'none';
+        });
+      })();
+      // bfcache: Chrome's back/forward cache restores the frozen DOM with
+      // stale quantities. DOMContentLoaded does not fire on restore, so
+      // re-run loadState + render when the page comes back from bfcache.
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;   // normal first load handled by init()
+        loadState();
+        loadInventoryCatFilter();
+        renderInventoryCatFilters();
+        renderManageInventory();
+        applyTranslations();
+      });
     } else if (pageName === 'debts') {
       // Debts management page
       applyTranslations();
       renderManageDebts();
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;
+        loadState();
+        applyTranslations();
+        renderManageDebts();
+      });
     } else if (pageName === 'setting') {
       // Settings page
       applyTranslations();
@@ -5165,23 +5421,54 @@
       // Product Detail page
       applyTranslations();
       renderProductDetail();
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;
+        loadState();
+        applyTranslations();
+        renderProductDetail();
+      });
     } else if (pageName === 'debtor_detail') {
       // Debtor Detail page
       applyTranslations();
       renderDebtorDetail();
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;
+        loadState();
+        applyTranslations();
+        renderDebtorDetail();
+      });
     } else if (pageName === 'record_payment') {
       // Record Payment page
       applyTranslations();
       renderRecordPayment();
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;
+        loadState();
+        applyTranslations();
+        renderRecordPayment();
+      });
     } else if (pageName === 'reports') {
       // Reports page
       applyTranslations();
       loadReportPeriod();
       renderReports();
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;
+        loadState();
+        applyTranslations();
+        loadReportPeriod();
+        renderReports();
+      });
     } else if (pageName === 'expenses') {
       // Expense Log page (V2.71) — no day-open guard; the log is date-stamped
       applyTranslations();
       renderExpenses();
+      window.addEventListener('pageshow', function(ev) {
+        if (!ev.persisted) return;
+        loadState();
+        applyTranslations();
+        renderExpenses();
+      });
     } else if (pageName === 'help') {
       // Help page
       applyTranslations();
@@ -5256,6 +5543,7 @@
   window.savePayment = savePayment;
   window.renderManageInventory = renderManageInventory;
   window.setInventoryCatFilter = setInventoryCatFilter;
+  window.toggleCatFilters = toggleCatFilters;
   window.editProduct = editProduct;
   window.openAddProduct = openAddProduct;
   window.closeAddProduct = closeAddProduct;

@@ -1,5 +1,5 @@
 /* ============================================
-   SARI-SARI SMART - Restock Day Module
+   TINDA GO - Restock Day Module
    ============================================ */
 ;(function() {
   'use strict';
@@ -25,7 +25,8 @@
       'restockPurchaseAddBtn', 'restockPurchaseList',
       'restockPurchaseTotal', 'restockDoneBtn',
       'restockCancelBtn', 'toastContainer',
-      'restockCorrectionHeader', 'restockPurchaseHeader'
+      'restockCorrectionHeader', 'restockPurchaseHeader',
+      'restockStickyBar'
     ];
     ids.forEach(function(id) {
       dom[id] = document.getElementById(id);
@@ -184,6 +185,14 @@
     if (dom.restockStep2) dom.restockStep2.style.display = step === 2 ? 'block' : 'none';
     if (dom.restockCorrectionHeader) dom.restockCorrectionHeader.textContent = t('restockStep1Label');
     if (dom.restockPurchaseHeader) dom.restockPurchaseHeader.textContent = t('restockStep2Label');
+    // Sticky action bars: Step 1 bar visible on step 1, Step 2 bar visible on step 2
+    var stickyBar = document.getElementById('restockStickyBar');
+    if (stickyBar) stickyBar.style.display = step === 1 ? 'flex' : 'none';
+    var stickyBar2 = document.getElementById('restockStickyBar2');
+    if (stickyBar2) stickyBar2.style.display = step === 2 ? 'flex' : 'none';
+    // Hide back-to-top when switching steps
+    var backToTop = document.getElementById('restockBackToTopBtn');
+    if (backToTop) backToTop.style.display = 'none';
     restockTemp.step = step;
     saveAll();
   }
@@ -271,16 +280,15 @@
   }
 
   function continueToPurchases() {
-    // Apply corrections to products
-    restockTemp.corrections.forEach(function(c) {
-      var product = products.find(function(p) { return p.id === c.productId; });
-      if (product) {
-        product.quantity = c.newQty;
-      }
-    });
-    saveProductsOnly();
+    // Defer correction application to completeRestock() so the user can
+    // go back to Step 1 without data inconsistency (restock back-nav parity).
     showStep(2);
     renderPurchaseList();
+  }
+
+  function backToStep1() {
+    showStep(1);
+    renderCorrections();
   }
 
   // ─── Step 2: Record Purchases ───
@@ -374,6 +382,15 @@
   }
 
   function completeRestock() {
+    // Apply deferred corrections to product quantities (now that the user
+    // has confirmed both steps and is clicking Done).
+    restockTemp.corrections.forEach(function(c) {
+      var product = products.find(function(p) { return p.id === c.productId; });
+      if (product) {
+        product.quantity = c.newQty;
+      }
+    });
+
     // Apply purchases to product quantities
     restockTemp.purchases.forEach(function(item) {
       // Try to find by selected product ID first, then by name
@@ -427,11 +444,7 @@
   }
 
   function cancelRestock() {
-    // Revert any corrections already applied
-    restockTemp.corrections.forEach(function(c) {
-      var product = products.find(function(p) { return p.id === c.productId; });
-      if (product) product.quantity = c.oldQty;
-    });
+    // Corrections were deferred (not applied to products), so no revert needed.
     restockTemp = { step: 1, corrections: [], purchases: [] };
     saveAll();
     showToast(t('restockCancelled'));
@@ -459,11 +472,26 @@
     if (dom.restockPurchaseProduct) {
       dom.restockPurchaseProduct.addEventListener('input', onPurchaseSearch);
     }
+    // Back-to-top: show when product list header scrolls out of view (step 1 only).
+    (function() {
+      var btn = document.getElementById('restockBackToTopBtn');
+      var productList = document.getElementById('restockProductList');
+      var content = document.getElementById('appContent');
+      if (!btn || !productList || !content) return;
+      content.addEventListener('scroll', function() {
+        // Only show on step 1
+        if (restockTemp.step !== 1) { btn.style.display = 'none'; return; }
+        var listRect = productList.getBoundingClientRect();
+        var contentRect = content.getBoundingClientRect();
+        btn.style.display = listRect.top < contentRect.top ? 'flex' : 'none';
+      });
+    })();
   }
 
   // ─── Expose to window ───
   window.restockOnCorrectionChange = onCorrectionChange;
   window.restockContinueToPurchases = continueToPurchases;
+  window.restockBackToStep1 = backToStep1;
   window.restockSelectProduct = selectProduct;
   window.restockAddPurchase = addPurchase;
   window.restockRemovePurchase = removePurchase;

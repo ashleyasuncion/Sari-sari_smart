@@ -1,5 +1,5 @@
 /* ============================================
-   SARI-SARI SMART - Three Moment Redesign
+   TINDA GO - Three Moment Redesign
    ============================================ */
 
 :root {
@@ -131,7 +131,7 @@ body {
 .app-content {
   flex: 1; overflow-y: auto; overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 16px 16px 80px; /* padding-bottom for nav */
+  padding: 16px 16px 16px;
 }
 .app-content::-webkit-scrollbar { width: 3px; }
 .app-content::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 2px; }
@@ -266,6 +266,20 @@ body {
   font-size: var(--text-sm); font-weight: 600; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
 }
+.closing-collapsible {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; padding: 4px 0;
+  transition: color var(--transition);
+}
+.closing-collapsible:hover { color: var(--text-secondary); }
+.collapse-arrow {
+  transition: transform 0.2s ease; flex-shrink: 0;
+}
+.collapse-arrow.open { transform: rotate(180deg); }
+.collapsing {
+  overflow: hidden; transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+.collapsing.collapsed { max-height: 0 !important; opacity: 0; padding: 0 !important; }
 .closing-input-group {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 12px;
@@ -853,6 +867,8 @@ select.form-input {
 .btn-secondary:hover { background: #cbd5e1; }
 .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
 .btn-outline:hover { background: var(--primary-bg); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #b91c1c; }
 .btn-large { width: 100%; padding: 16px; font-size: var(--text-lg); }
 .btn-full { width: 100%; }
 .btn-sm { padding: 8px 16px; font-size: var(--text-sm); }
@@ -923,6 +939,12 @@ select.form-input {
 .settings-section-title {
   font-weight: 600; font-size: var(--text-sm); color: var(--text-muted);
   text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+}
+.settings-section-item { margin-bottom: 12px; }
+.settings-section-item:last-child { margin-bottom: 0; }
+.settings-section-item label {
+  display: block; font-size: var(--text-sm); font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 4px;
 }
 
 /* ─── MARKUP HELPER ─── */
@@ -1344,8 +1366,18 @@ select.form-input {
 /* ── Product details: category chips, brand/size sub-lines, tags (v2.59) ── */
 .cat-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.cat-chips::-webkit-scrollbar { display: none; }
+.cat-chips.expanded {
+  flex-wrap: wrap;
+  overflow-x: visible;
 }
 .cat-chip {
   border: 1px solid var(--border-light);
@@ -1357,6 +1389,8 @@ select.form-input {
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .cat-chip:hover { border-color: var(--primary); color: var(--primary); }
 .cat-chip.active {
@@ -1364,6 +1398,20 @@ select.form-input {
   border-color: var(--primary);
   color: #fff;
 }
+.cat-chip-more {
+  border: 1px solid var(--primary);
+  background: var(--primary-bg);
+  color: var(--primary);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cat-chip-more:hover { background: var(--primary); color: #fff; }
 .inv-manage-sub {
   font-size: var(--text-xs);
   color: var(--primary);
@@ -1383,6 +1431,44 @@ select.form-input {
   padding: 3px 10px;
   font-size: var(--text-xs);
   font-weight: 600;
+}
+
+/* ─── Back-to-top button ─── */
+.back-to-top {
+  position: absolute;
+  bottom: 80px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  z-index: 15;
+  transition: all var(--transition);
+  animation: fadeIn 0.2s ease;
+}
+.back-to-top:hover { color: var(--primary); border-color: var(--primary); box-shadow: var(--shadow-lg); }
+
+/* ─── Restock Sticky Action Bar ─── */
+.restock-sticky-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 15;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
 }
 
 @media (prefers-reduced-motion: reduce) {

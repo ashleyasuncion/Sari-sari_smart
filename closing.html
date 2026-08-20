@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sari-Sari Smart - Isara</title>
+  <title>TindaGo - Isara</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -85,26 +85,35 @@
             </div>
           </div>
 
-          <!-- Mga Nabenta -->
+          <!-- Mga Nabenta (collapsible) -->
           <div class="closing-section">
-            <div class="closing-section-title" data-i18n="closingSectionSold">Mga Nabenta</div>
-            <div class="closing-items" id="closingSoldItems">
+            <div class="closing-section-title closing-collapsible" onclick="toggleCollapse('soldItems')" id="soldItemsToggle">
+              <span data-i18n="closingSectionSold">Mga Nabenta</span>
+              <svg class="collapse-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="closing-items collapsing" id="closingSoldItems">
               <div class="empty-state" style="padding:12px 0;">Walang naitalang benta ngayong araw.</div>
             </div>
           </div>
 
-          <!-- Mga Kulang sa Stock -->
+          <!-- Mga Kulang sa Stock (collapsible) -->
           <div class="closing-section">
-            <div class="closing-section-title" data-i18n="closingSectionLowStock">Mga Kulang sa Stock</div>
-            <div class="closing-items" id="closingLowStock">
+            <div class="closing-section-title closing-collapsible" onclick="toggleCollapse('lowStock')" id="lowStockToggle">
+              <span data-i18n="closingSectionLowStock">Mga Kulang sa Stock</span>
+              <svg class="collapse-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="closing-items collapsing" id="closingLowStock">
               <div class="empty-state" style="padding:12px 0;">✅ Lahat ng stock ay okay.</div>
             </div>
           </div>
 
-          <!-- Utang Hindi Pa Bayad -->
+          <!-- Utang Hindi Pa Bayad (collapsible) -->
           <div class="closing-section">
-            <div class="closing-section-title" data-i18n="closingSectionDebts">Utang Hindi Pa Bayad</div>
-            <div class="closing-items" id="closingDebts">
+            <div class="closing-section-title closing-collapsible" onclick="toggleCollapse('debts')" id="debtsToggle">
+              <span data-i18n="closingSectionDebts">Utang Hindi Pa Bayad</span>
+              <svg class="collapse-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="closing-items collapsing" id="closingDebts">
               <div class="empty-state" style="padding:12px 0;">✅ Walang utang na natitira.</div>
             </div>
           </div>
@@ -188,7 +197,7 @@
         <div class="tutorial-step-indicator">
           <span id="tutorialCurrent">1</span>/<span id="tutorialTotal">8</span>
         </div>
-        <div class="tutorial-text" id="tutorialText">Welcome to Sari-Sari Smart!</div>
+        <div class="tutorial-text" id="tutorialText">Welcome to TindaGo!</div>
         <div class="tutorial-actions">
           <button class="btn btn-secondary btn-sm" id="tutorialSkip" onclick="endTutorial()" data-i18n="skip" style="display:none;">Skip</button>
           <button class="btn btn-secondary btn-sm" id="tutorialPrev" onclick="previousTutorial()" data-i18n="prev" style="display:none;">Previous</button>
